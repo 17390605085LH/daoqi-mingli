@@ -178,10 +178,22 @@ function renderAllSections() {
   // 8. 趋吉避凶
   cards.push(buildJixiongCard(d));
 
-  // 9. 山医堂主
+  // 9. 紫微斗数
+  cards.push(buildZiweiCard(d, isFree));
+
+  // 10. 面相分析
+  cards.push(buildMianXiangCard(d, isFree));
+
+  // 11. 手相分析
+  cards.push(buildShouXiangCard(d, isFree));
+
+  // 12. 风水布局
+  cards.push(buildFengshuiCard(d, isFree));
+
+  // 13. 山医堂主
   cards.push(buildExpertCard());
 
-  // 10. 升级 CTA
+  // 14. 升级 CTA
   if (isFree) {
     cards.push(buildUpgradeCard());
   }
@@ -370,6 +382,119 @@ function buildJixiongCard(d) {
   return cardTemplate('compass', '趋吉避凶建议', '基于命局的行动指南',
     `<div style="margin-bottom:var(--space-md);"><h4 style="color:var(--color-jade);margin-bottom:var(--space-sm);">宜</h4><ul style="list-style:none;display:grid;gap:var(--space-xs);">${yi}</ul></div>
     <div><h4 style="color:var(--color-cinnabar);margin-bottom:var(--space-sm);">忌</h4><ul style="list-style:none;display:grid;gap:var(--space-xs);">${ji}</ul></div>`);
+}
+
+// ===== 紫微斗数 =====
+function buildZiweiCard(d, isFree) {
+  const zw = d.ziwei;
+  let starsHtml = '';
+  for (const [palace, stars] of Object.entries(zw.allStarsInPalaces)) {
+    if (stars.length > 0) {
+      starsHtml += `<div style="padding:var(--space-xs);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:2px;"><span style="color:var(--color-text-muted);font-size:0.8rem;">${palace}</span> <span style="color:var(--color-gold);">${stars.join(' ')}</span></div>`;
+    }
+  }
+
+  let keyHtml = '';
+  for (const [palace, analysis] of Object.entries(zw.keyAnalysis)) {
+    keyHtml += `<div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:var(--color-gold);">${palace}</strong><br><span style="font-size:0.9rem;">${analysis}</span></div>`;
+  }
+
+  const content = `<p><span style="color:var(--color-gold);font-weight:600;">命宫：${zw.mingPalace}</span> · ${zw.mingInterpret}</p>
+    <p style="margin-top:var(--space-sm);"><span style="color:var(--color-jade);font-weight:600;">身宫：${zw.shenPalace}</span> · ${zw.shenInterpret}</p>
+    <p style="margin-top:var(--space-sm);">五行局：<strong>${zw.wuxingJu}</strong>局 · 紫微在<span style="color:var(--color-gold);">${zw.ziweiPosition}</span></p>
+    <div style="margin-top:var(--space-md);"><strong style="color:var(--color-text-muted);">重点宫位分析</strong><div style="margin-top:var(--space-sm);">${keyHtml}</div></div>`;
+
+  if (isFree) {
+    content += `<div class="lock-overlay" style="margin-top:var(--space-lg);">
+      <p>付费版解锁全盘十四主星飞布、四化星、辅星详解</p>
+      <a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整紫微命盘</a></div>`;
+  } else {
+    content += `<div style="margin-top:var(--space-lg);"><strong style="color:var(--color-text-muted);">全盘主星分布</strong><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:var(--space-sm);">${starsHtml}</div></div>`;
+  }
+
+  return cardTemplate('globe', '紫微斗数', `命宫${zw.mingPalace} · ${zw.wuxingJu}局`, content);
+}
+
+// ===== 面相分析 =====
+function buildMianXiangCard(d, isFree) {
+  const mx = d.mianxiang;
+  let gongsHtml = '';
+  for (const [name, analysis] of Object.entries(mx.keyGongs)) {
+    gongsHtml += `<div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:var(--color-gold);">${name}</strong><br><span style="font-size:0.9rem;">${analysis}</span></div>`;
+  }
+
+  const content = `<p><strong>面型：</strong>${mx.faceShape}</p>
+    <p style="margin-top:var(--space-sm);"><strong>三停：</strong>${mx.santing}</p>
+    <div style="margin-top:var(--space-md);">${gongsHtml}</div>`;
+
+  if (isFree) {
+    content += `<div class="lock-overlay" style="margin-top:var(--space-lg);"><p>付费版解锁十二宫全面相详解、痣相分析、气色推断</p><a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整面相分析</a></div>`;
+  } else {
+    const feats = mx.features;
+    content += `<div style="margin-top:var(--space-lg);display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-sm);">
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>额头：</strong>${feats.forehead}</div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>眉眼：</strong>${feats.eyes}</div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>鼻子：</strong>${feats.nose}</div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>嘴唇：</strong>${feats.mouth}</div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>耳朵：</strong>${feats.ears}</div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>事业：</strong>${mx.career}</div>
+    </div>`;
+  }
+
+  return cardTemplate('eye', '面相分析', '五行面相特征解读', content);
+}
+
+// ===== 手相分析 =====
+function buildShouXiangCard(d, isFree) {
+  const sx = d.shouxiang;
+  const lines = sx.lines;
+
+  const content = `<p><strong>掌型：</strong>${sx.palmType}</p>
+    <div style="margin-top:var(--space-md);">
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:var(--color-gold);">生命线</strong><br><span style="font-size:0.9rem;">${lines.lifeLine}</span></div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:var(--color-gold);">智慧线</strong><br><span style="font-size:0.9rem;">${lines.headLine}</span></div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:var(--color-gold);">感情线</strong><br><span style="font-size:0.9rem;">${lines.heartLine}</span></div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong style="color:var(--color-gold);">命运线</strong><br><span style="font-size:0.9rem;">${lines.fateLine}</span></div>
+    </div>`;
+
+  if (isFree) {
+    content += `<div class="lock-overlay" style="margin-top:var(--space-lg);"><p>付费版解锁丘位分析、婚姻线与子女线、健康线、贵人线</p><a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整手相分析</a></div>`;
+  } else {
+    content += `<div style="margin-top:var(--space-lg);"><strong style="color:var(--color-text-muted);">掌丘分析</strong><p style="margin-top:var(--space-sm);">${sx.mounts}</p></div>
+    <div style="margin-top:var(--space-md);padding:var(--space-md);background:rgba(201,168,76,0.05);border-radius:var(--radius-sm);border-left:3px solid var(--color-gold);"><strong>总结：</strong>${sx.summary}<br><span style="font-size:0.9rem;color:var(--color-text-muted);margin-top:var(--space-xs);display:block;">${sx.advice}</span></div>`;
+  }
+
+  return cardTemplate('hand', '手相分析', '掌纹与掌丘解读', content);
+}
+
+// ===== 风水布局 =====
+function buildFengshuiCard(d, isFree) {
+  const fs = d.fengshui;
+  const yf = fs.yongShenFengshui;
+
+  const content = `<p style="margin-bottom:var(--space-md);">${fs.generalAdvice}</p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-sm);">
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>🚪 大门</strong><br><span style="font-size:0.9rem;">${yf.door}</span></div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>🛋 客厅</strong><br><span style="font-size:0.9rem;">${yf.livingRoom}</span></div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>🛏 卧室</strong><br><span style="font-size:0.9rem;">${yf.bedroom}</span></div>
+      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>🍳 厨房</strong><br><span style="font-size:0.9rem;">${yf.kitchen}</span></div>
+    </div>`;
+
+  if (isFree) {
+    content += `<div class="lock-overlay" style="margin-top:var(--space-lg);"><p>付费版解锁完整风水布局方案、玄关/阳台/书房/卫生间详解</p><a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整风水布局</a></div>`;
+  } else {
+    content += `<div style="margin-top:var(--space-lg);">
+      <div style="padding:var(--space-md);background:rgba(74,158,139,0.08);border-radius:var(--radius-sm);margin-bottom:var(--space-sm);"><strong style="color:var(--color-jade);">色彩方案</strong><br>${yf.colors}</div>
+      <div style="padding:var(--space-md);background:rgba(74,158,139,0.08);border-radius:var(--radius-sm);margin-bottom:var(--space-sm);"><strong style="color:var(--color-jade);">🌱 绿植</strong><br>${yf.plants}</div>
+      <div style="padding:var(--space-md);background:rgba(201,168,76,0.08);border-radius:var(--radius-sm);"><strong style="color:var(--color-gold);">⚠ 规避</strong><br>${yf.avoid}</div>
+    </div>`;
+    if (fs.secondaryFengshui) {
+      const sf = fs.secondaryFengshui;
+      content += `<div style="margin-top:var(--space-lg);padding:var(--space-md);border:1px dashed rgba(201,168,76,0.2);border-radius:var(--radius-sm);"><strong style="color:var(--color-gold);">辅助布局建议</strong><p style="margin-top:var(--space-sm);font-size:0.9rem;">${sf.livingRoom}</p></div>`;
+    }
+  }
+
+  return cardTemplate('home', '田宅风水布局', '基于命局喜用神的居家调理', content);
 }
 
 function buildExpertCard() {
