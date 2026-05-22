@@ -415,16 +415,63 @@ function buildZiweiCard(d, isFree) {
   return cardTemplate('globe', '紫微斗数', `命宫${zw.mingPalace} · ${zw.wuxingJu}局`, content);
 }
 
-// ===== 面相分析 =====
+// ===== 面相分析（含图示）=====
 function buildMianXiangCard(d, isFree) {
   const mx = d.mianxiang;
+  // 面相 SVG 图示
+  const faceSVG = `<svg viewBox="0 0 300 380" width="300" height="380" style="max-width:100%;">
+    <!-- 面部轮廓 -->
+    <ellipse cx="150" cy="200" rx="90" ry="140" fill="none" stroke="var(--color-gold)" stroke-width="1.5" opacity="0.4"/>
+    <!-- 发型 -->
+    <path d="M70,150 Q80,70 150,55 Q220,70 230,150" fill="none" stroke="var(--color-text-muted)" stroke-width="1"/>
+    <!-- 上停 -->
+    <rect x="70" y="80" width="160" height="75" rx="4" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.2)"/>
+    <text x="150" y="105" text-anchor="middle" fill="var(--color-gold)" font-size="11">上停 · 天庭</text>
+    <text x="150" y="125" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">少年运 · 15-30岁</text>
+    <!-- 中停 -->
+    <rect x="70" y="160" width="160" height="80" rx="4" fill="rgba(74,158,139,0.05)" stroke="rgba(74,158,139,0.2)"/>
+    <text x="150" y="185" text-anchor="middle" fill="var(--color-jade)" font-size="11">中停 · 眉眼鼻</text>
+    <text x="150" y="205" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">中年运 · 31-50岁</text>
+    <!-- 下停 -->
+    <rect x="70" y="245" width="160" height="75" rx="4" fill="rgba(107,91,149,0.05)" stroke="rgba(107,91,149,0.2)"/>
+    <text x="150" y="270" text-anchor="middle" fill="var(--color-purple)" font-size="11">下停 · 口颏</text>
+    <text x="150" y="290" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">晚年运 · 51岁后</text>
+    <!-- 眉毛 -->
+    <path d="M100,175 Q125,168 150,172" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
+    <path d="M150,172 Q175,168 200,175" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
+    <!-- 眼睛 -->
+    <ellipse cx="120" cy="200" rx="14" ry="8" fill="none" stroke="var(--color-text)" stroke-width="1"/>
+    <circle cx="120" cy="200" r="3" fill="var(--color-text)"/>
+    <ellipse cx="180" cy="200" rx="14" ry="8" fill="none" stroke="var(--color-text)" stroke-width="1"/>
+    <circle cx="180" cy="200" r="3" fill="var(--color-text)"/>
+    <!-- 鼻子 -->
+    <path d="M150,208 L145,245 Q150,252 155,245 Z" fill="none" stroke="var(--color-text)" stroke-width="1"/>
+    <!-- 嘴巴 -->
+    <path d="M125,270 Q150,278 175,270" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
+    <!-- 耳朵 -->
+    <ellipse cx="60" cy="190" rx="12" ry="22" fill="none" stroke="var(--color-text)" stroke-width="1"/>
+    <ellipse cx="240" cy="190" rx="12" ry="22" fill="none" stroke="var(--color-text)" stroke-width="1"/>
+    <!-- 印堂命宫 -->
+    <circle cx="150" cy="168" r="6" fill="var(--color-gold)" opacity="0.6"/>
+    <line x1="150" y1="168" x2="150" y2="100" stroke="var(--color-gold)" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <text x="160" y="113" fill="var(--color-gold)" font-size="8">命宫</text>
+    <!-- 财帛宫 -->
+    <circle cx="150" cy="235" r="6" fill="var(--color-jade)" opacity="0.6"/>
+    <text x="160" y="165" fill="var(--color-jade)" font-size="8">财帛宫</text>
+    <!-- 颧骨 -->
+    <circle cx="105" cy="215" r="4" fill="var(--color-text-muted)" opacity="0.4"/>
+    <circle cx="195" cy="215" r="4" fill="var(--color-text-muted)" opacity="0.4"/>
+  </svg>`;
+
   let gongsHtml = '';
-  for (const [name, analysis] of Object.entries(mx.keyGongs)) {
-    gongsHtml += `<div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:var(--color-gold);">${name}</strong><br><span style="font-size:0.9rem;">${analysis}</span></div>`;
+  const gongs = Object.entries(mx.keyGongs).slice(0, 4);
+  for (const [name, analysis] of gongs) {
+    gongsHtml += `<div style="padding:var(--space-xs);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:2px;font-size:0.85rem;"><strong style="color:var(--color-gold);">${name}</strong> ${analysis}</div>`;
   }
 
-  const content = `<p><strong>面型：</strong>${mx.faceShape}</p>
-    <p style="margin-top:var(--space-sm);"><strong>三停：</strong>${mx.santing}</p>
+  const content = `<div style="text-align:center;margin-bottom:var(--space-md);">${faceSVG}</div>
+    <p><strong>面型：</strong>${mx.faceShape}</p>
+    <p style="margin-top:var(--space-sm);"><strong>三停分析：</strong>${mx.santing}</p>
     <div style="margin-top:var(--space-md);">${gongsHtml}</div>`;
 
   if (isFree) {
@@ -444,18 +491,52 @@ function buildMianXiangCard(d, isFree) {
   return cardTemplate('eye', '面相分析', '五行面相特征解读', content);
 }
 
-// ===== 手相分析 =====
+// ===== 手相分析（含掌纹图示）=====
 function buildShouXiangCard(d, isFree) {
   const sx = d.shouxiang;
   const lines = sx.lines;
 
-  const content = `<p><strong>掌型：</strong>${sx.palmType}</p>
-    <div style="margin-top:var(--space-md);">
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:var(--color-gold);">生命线</strong><br><span style="font-size:0.9rem;">${lines.lifeLine}</span></div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:var(--color-gold);">智慧线</strong><br><span style="font-size:0.9rem;">${lines.headLine}</span></div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:var(--color-gold);">感情线</strong><br><span style="font-size:0.9rem;">${lines.heartLine}</span></div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong style="color:var(--color-gold);">命运线</strong><br><span style="font-size:0.9rem;">${lines.fateLine}</span></div>
-    </div>`;
+  // 掌纹 SVG 图示
+  const handSVG = `<svg viewBox="0 0 280 340" width="280" height="340" style="max-width:100%;">
+    <!-- 手掌轮廓 -->
+    <path d="M140,60 Q100,55 80,90 L65,160 L60,200 L65,250 Q75,290 100,310 L140,320 L180,310 Q205,290 215,250 L220,200 L215,160 L200,90 Q180,55 140,60Z" fill="none" stroke="var(--color-gold)" stroke-width="1.5" opacity="0.3"/>
+    <!-- 手指 -->
+    <rect x="115" y="20" width="14" height="42" rx="6" fill="none" stroke="var(--color-text-muted)" stroke-width="1" opacity="0.5"/>
+    <rect x="95" y="18" width="14" height="40" rx="6" fill="none" stroke="var(--color-text-muted)" stroke-width="1" opacity="0.5"/>
+    <rect x="130" y="22" width="14" height="40" rx="6" fill="none" stroke="var(--color-text-muted)" stroke-width="1" opacity="0.5"/>
+    <rect x="150" y="28" width="14" height="34" rx="6" fill="none" stroke="var(--color-text-muted)" stroke-width="1" opacity="0.5"/>
+    <rect x="170" y="38" width="14" height="24" rx="6" fill="none" stroke="var(--color-text-muted)" stroke-width="1" opacity="0.5"/>
+    <!-- 生命线 (绿色) -->
+    <path d="M130,110 Q135,90 145,95 Q170,100 180,140 Q190,190 185,240 Q180,280 160,300" fill="none" stroke="var(--color-jade)" stroke-width="2"/>
+    <text x="195" y="160" fill="var(--color-jade)" font-size="8">生命线</text>
+    <!-- 智慧线 (金色) -->
+    <path d="M130,108 Q150,100 170,105 Q195,112 205,130 Q215,150 210,170" fill="none" stroke="var(--color-gold)" stroke-width="2"/>
+    <text x="215" y="145" fill="var(--color-gold)" font-size="8">智慧线</text>
+    <!-- 感情线 (红色) -->
+    <path d="M80,175 Q120,165 160,172 Q190,178 200,170" fill="none" stroke="var(--color-cinnabar)" stroke-width="2"/>
+    <text x="75" y="185" fill="var(--color-cinnabar)" font-size="8">感情线</text>
+    <!-- 命运线 (紫色) -->
+    <path d="M140,280 Q142,250 143,220 Q145,180 148,150 Q152,120 155,100" fill="none" stroke="var(--color-purple)" stroke-width="1.5"/>
+    <text x="110" y="240" fill="var(--color-purple)" font-size="8">命运线</text>
+    <!-- 掌丘标注 -->
+    <circle cx="155" cy="290" r="12" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.2)"/>
+    <text x="155" y="294" text-anchor="middle" fill="var(--color-text-muted)" font-size="7">金星丘</text>
+    <circle cx="195" cy="220" r="10" fill="rgba(74,158,139,0.05)" stroke="rgba(74,158,139,0.2)"/>
+    <text x="195" y="224" text-anchor="middle" fill="var(--color-text-muted)" font-size="7">太阴丘</text>
+  </svg>`;
+
+  const content = `<div style="display:flex;flex-wrap:wrap;gap:var(--space-md);align-items:flex-start;">
+    <div style="flex:0 0 150px;text-align:center;">${handSVG}</div>
+    <div style="flex:1;min-width:200px;">
+      <p><strong>掌型：</strong>${sx.palmType}</p>
+      <div style="margin-top:var(--space-sm);font-size:0.9rem;">
+        <p><span style="color:var(--color-jade);font-weight:600;">● 生命线</span> — ${lines.lifeLine}</p>
+        <p><span style="color:var(--color-gold);font-weight:600;">● 智慧线</span> — ${lines.headLine}</p>
+        <p><span style="color:var(--color-cinnabar);font-weight:600;">● 感情线</span> — ${lines.heartLine}</p>
+        <p><span style="color:var(--color-purple);font-weight:600;">● 命运线</span> — ${lines.fateLine}</p>
+      </div>
+    </div>
+  </div>`;
 
   if (isFree) {
     content += `<div class="lock-overlay" style="margin-top:var(--space-lg);"><p>付费版解锁丘位分析、婚姻线与子女线、健康线、贵人线</p><a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整手相分析</a></div>`;
