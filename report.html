@@ -277,7 +277,7 @@ if (!birthData || !birthData.name || !birthData.year) {
   throw new Error('redirect');
 }
 
-const IS_TESTING = true;
+const IS_TESTING = false;
 const hasFacePhoto = sessionStorage.getItem('hasFacePhoto') === 'true';
 const hasPalmPhoto = sessionStorage.getItem('hasPalmPhoto') === 'true';
 const userLocation = birthData.location || '';
@@ -294,15 +294,27 @@ async function loadReport() {
     params.set('day', birthData.day);
     params.set('hour', birthData.hour || '子时');
     params.set('calendar', birthData.calendar || 'solar');
-    const resp = await fetch('/api/bazi?' + params.toString());
+
+    // Try current origin first, fallback to relative path
+    const apiBase = window.location.origin;
+    let resp;
+    try {
+      resp = await fetch(apiBase + '/api/bazi?' + params.toString());
+    } catch (e) {
+      // Fallback to relative path
+      resp = await fetch('/api/bazi?' + params.toString());
+    }
+    if (!resp.ok) throw new Error('API error: ' + resp.status);
     baziResult = await resp.json();
+    if (baziResult.error) throw new Error(baziResult.error);
     if (loading) loading.remove();
     renderHeader();
     renderAllTabs();
     initTabs();
     lucide.createIcons();
   } catch (err) {
-    if (loading) loading.innerHTML = '<p style="color:#C75B5B;">数据加载失败，请返回重新填写</p><a href="form.html" class="btn btn-primary" style="margin-top:1rem;">返回填写</a>';
+    console.error('loadReport error:', err);
+    if (loading) loading.innerHTML = '<p style="color:#C75B5B;">数据加载失败，请稍后重试。</p><p style="color:#8B8577;font-size:0.85rem;margin-top:8px;">'+err.message+'</p><a href="form.html" class="btn btn-primary" style="margin-top:1rem;">返回填写</a>';
   }
 }
 
