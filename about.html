@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="favicon.svg">
+  <title>关于我们 · 道器命理</title>
+  <meta name="description" content="了解道器命理的理念与服务宗旨。">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">道器</a>
+      <ul class="nav-links">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="index.html#services">服务</a></li>
+        <li><a href="form.html">立即测算</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="菜单">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- About Page -->
+  <main class="form-page">
+    <div class="form-container" style="max-width: 800px;">
+      <div class="form-header">
+        <h1>关于我们</h1>
+        <p>以科学态度诠释传统命理</p>
+      </div>
+
+      <div class="card" style="margin-bottom: var(--space-lg);">
+        <h2 style="color: var(--color-gold); margin-bottom: var(--space-md);">道器合一 · 数智命理</h2>
+        <p style="color: var(--color-text-muted); line-height: 1.9; margin-bottom: var(--space-md);">
+          道器命理创立于2024年，致力于将传统命理学与现代技术相结合。我们秉持"以科学态度诠释传统智慧"的理念，基于《渊海子平》《滴天髓》《三命通会》等经典典籍，运用智能排盘系统为用户提供精准的命理分析服务。
+        </p>
+        <p style="color: var(--color-text-muted); line-height: 1.9;">
+          收费并非目的，而是阴阳平衡之道——能量需要流转方能生生不息。我们希望用合理的价格，让命理服务回归其本质：帮助人们认识自己、顺势而为。
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom: var(--space-lg);">
+        <h3 style="margin-bottom: var(--space-md);">我们的宗旨</h3>
+        <ul style="list-style: none; display: grid; gap: var(--space-sm); color: var(--color-text-muted);">
+          <li style="padding-left: var(--space-md); position: relative;">
+            <span style="position: absolute; left: 0; color: var(--color-gold);">✓</span>
+            帮助他人，而非欺骗他人——每一份报告都基于严谨的排盘与五行分析
+          </li>
+          <li style="padding-left: var(--space-md); position: relative;">
+            <span style="position: absolute; left: 0; color: var(--color-gold);">✓</span>
+            能量流转，阴阳平衡——收费是服务价值的体现，也是自然规律的体现
+          </li>
+          <li style="padding-left: var(--space-md); position: relative;">
+            <span style="position: absolute; left: 0; color: var(--color-gold);">✓</span>
+            仅供参考，自主决策——命理是指引，不是定命；您的选择权始终在您手中
+          </li>
+          <li style="padding-left: var(--space-md); position: relative;">
+            <span style="position: absolute; left: 0; color: var(--color-gold);">✓</span>
+            真实专业，诚信服务——拒绝虚假宣传，用实力赢得信任
+          </li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-bottom: var(--space-lg);">
+        <h3 style="margin-bottom: var(--space-md);">免责声明</h3>
+        <p style="color: var(--color-text-muted); line-height: 1.9;">
+          道器命理提供的分析报告仅供参考和研究使用。我们不对用户因依赖本服务做出的任何决策承担任何责任。命理学是传统文化的一部分，不代表任何科学证实的事实。用户应保持理性思考，自主决策，自担风险。
+        </p>
+      </div>
+
+      <div style="text-align: center; margin-top: var(--space-xl);">
+        <a href="index.html" class="btn btn-primary">返回首页</a>
+        <a href="form.html" class="btn btn-ghost" style="padding: 0.875rem 2rem;">立即测算</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-copy">© 2026 道器命理 · 仅供参考</p>
+    </div>
+  </footer>
+
+  <script>
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>
