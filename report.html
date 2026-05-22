@@ -458,7 +458,48 @@ function buildBaziPanel(d) {
         <span style="color:#C75B5B;margin-left:var(--space-md);">忌：${d.yongShen.avoid}</span>
       </div>`)}
 
-    ${techCard('clock', '人生阶段详析', '少年 · 青年 · 中年 · 晚年',
+    ${d.daoyi ? techCard('activity', '🩺 道医体质辨识', '五行偏颇 → 体质归类 → 调养方案',
+      '<div style="margin-bottom:var(--space-md);">' +
+        '<div style="font-size:1.5rem;color:' + (d.daoyi.season === '夏季' ? '#DC3545' : d.daoyi.season === '冬季' ? '#4682B4' : d.daoyi.season === '秋季' ? '#A8A9AD' : d.daoyi.season === '春季' ? '#6B8E23' : '#CD853F') + ';font-weight:700;font-family:var(--font-heading);margin-bottom:4px;">' + d.daoyi.primaryType + '</div>' +
+        '<p style="font-size:0.9rem;line-height:1.7;color:#E8E0D4;">' + d.daoyi.primaryDesc + '</p>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">' +
+        '<div>' +
+          '<div style="font-weight:600;color:#C9A84C;margin-bottom:6px;">📋 典型症状</div>' +
+          '<ul style="list-style:none;font-size:0.85rem;">' + d.daoyi.primarySymptoms.map(s => '<li style="padding:4px 0;border-bottom:1px solid rgba(201,168,76,0.06);">🔸 ' + s + '</li>').join('') + '</ul>' +
+        '</div>' +
+        '<div>' +
+          '<div style="font-weight:600;color:#C9A84C;margin-bottom:6px;">🎯 关联体质</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+            d.daoyi.secondaryTypes.map(t => '<span style="padding:4px 10px;background:rgba(74,158,139,0.08);border-radius:100px;font-size:0.8rem;color:#4A9E8B;">' + t + '</span>').join('') +
+          '</div>' +
+          '<div style="font-weight:600;color:#C9A84C;margin-top:var(--space-md);margin-bottom:6px;">🏥 薄弱脏腑</div>' +
+          '<p style="font-size:0.9rem;"><strong style="color:#C75B5B;">脏：' + d.daoyi.weakOrgan + '</strong> · <strong style="color:#C75B5B;">腑：' + d.daoyi.weakFu + '</strong></p>' +
+          '<p style="font-size:0.85rem;color:#8B8577;">' + d.daoyi.organAdvice + '</p>' +
+        '</div>' +
+      '</div>' +
+      '<div style="margin-top:var(--space-md);padding:var(--space-sm);background:rgba(74,158,139,0.06);border-radius:8px;border-left:3px solid #4A9E8B;">' +
+        '<strong style="color:#4A9E8B;">🥗 饮食建议</strong>' +
+        '<p style="margin-top:4px;font-size:0.9rem;line-height:1.7;">' + d.daoyi.dietAdvice + '</p>' +
+      '</div>' +
+      '<div style="margin-top:var(--space-sm);display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);">' +
+        '<div style="padding:var(--space-sm);background:rgba(201,168,76,0.05);border-radius:8px;">' +
+          '<strong style="color:#C9A84C;">💆 穴位调理</strong>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;">' +
+            d.daoyi.acupoints.map(a => '<span style="padding:3px 8px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:100px;font-size:0.78rem;font-family:monospace;">' + a + '</span>').join('') +
+          '</div>' +
+        '</div>' +
+        '<div style="padding:var(--space-sm);background:rgba(201,168,76,0.05);border-radius:8px;">' +
+          '<strong style="color:#C9A84C;">🏃 日常调养</strong>' +
+          '<p style="margin-top:6px;font-size:0.85rem;line-height:1.6;">' + d.daoyi.dailyAdvice + '</p>' +
+        '</div>' +
+      '</div>' +
+      '<div style="margin-top:var(--space-sm);padding:var(--space-sm);background:rgba(107,91,149,0.05);border-radius:8px;">' +
+        '<strong style="color:#6B5B95;">🌿 药方方向</strong>' +
+        '<p style="margin-top:4px;font-size:0.9rem;">' + d.daoyi.herbalDirection + '</p>' +
+      '</div>') : ''}
+
+    ${techCard('clock', '人生阶段详析', '童蒙 · 少年 · 青年 · 而立 · 不惑 · 知命 · 耳顺 · 古稀 · 耄耋',
       `<p style="margin-bottom:var(--space-md);color:#8B8577;">基于日主<strong style="color:#C9A84C;">${d.dayMaster}${d.dayWuxing}</strong>（${d.strength}）的五运六气推演，以下为各年龄阶段在不同维度的详细解读：</p>
       ${lifeStages}`)}
 
@@ -488,102 +529,149 @@ function buildBaziPanel(d) {
   `;
 }
 
-// ===== 人生阶段详细分析引擎 =====
+// ===== 九段十年运详细分析引擎 =====
 function buildLifeStageAnalysis(d) {
-  const dayWx = d.dayWuxing;
-  const strength = d.strength;
-  const dayStem = d.dayMaster;
-  const yongWx = d.yongShen.yongWuxing[0];
-  const avoidWx = d.yongShen.avoid;
+  const dayWx = d.dayWuxing, strength = d.strength, dayStem = d.dayMaster;
+  const yongWx = d.yongShen.yongWuxing[0], avoidWx = d.yongShen.avoid;
+  const ind = d.luckyGuide.industries.slice(0,3).join('、');
+  const dirs = d.luckyGuide.directions;
+  const isStrong = strength.includes('强'), isWeak = strength.includes('弱');
 
-  // Stage-specific data based on day stem
-  const stemProfiles = {
-    '甲': { academic: '学业聪颖，理解力强，适合学术研究和专业深造', love: '感情主动热情，喜欢有担当的伴侣', marriage: '婚姻需包容对方，避免大男子/大女子主义', career: '领导力强，适合管理岗位或自主创业', health: '注意肝胆保养，忌酗酒熬夜' },
-    '乙': { academic: '学习灵活，善于举一反三，适合文科艺术', love: '感情细腻温和，追求精神契合', marriage: '婚姻和谐但容易迁就对方，需保持自我', career: '适合文化教育、艺术创作、咨询行业', health: '注意颈椎和神经系统，多运动' },
-    '丙': { academic: '学习热情高但持久力不足，需培养专注', love: '感情热烈奔放，桃花运较旺', marriage: '婚姻需注意沟通方式，避免急躁冲突', career: '适合互联网、演艺、能源行业', health: '注意心血管和眼睛，避免上火' },
-    '丁': { academic: '专注力强，精于钻研，适合技术类学习', love: '感情专注但容易多疑，需建立信任', marriage: '婚姻稳定，但需多表达爱意避免冷漠', career: '适合技术研发、精密制造、金融分析', health: '注意心脏和血液循环' },
-    '戊': { academic: '学习扎实稳健，厚积薄发型', love: '感情真诚可靠，不善表达但行动力强', marriage: '婚姻责任重，是家庭的坚实依靠', career: '适合地产、建筑、农业、资源行业', health: '注意脾胃消化，饮食规律' },
-    '己': { academic: '学习勤奋但吸收稍慢，适合实践类', love: '感情温和包容，善解人意', marriage: '婚姻需要对方主导，自己善于配合', career: '适合服务、教育、行政管理', health: '注意脾胃湿气，适度运动' },
-    '庚': { academic: '逻辑思维强，适合数学、工程、法律', love: '感情刚直果断，不喜欢拖泥带水', marriage: '婚姻需要柔韧，不可过于强势', career: '适合机械、法律、金融、军警', health: '注意呼吸系统和筋骨' },
-    '辛': { academic: '精益求精，适合设计、珠宝、医学', love: '感情追求完美，对伴侣要求高', marriage: '婚姻需降低完美主义，多些包容', career: '适合珠宝、医疗、精密制造', health: '注意肺部呼吸和皮肤' },
-    '壬': { academic: '博学多才，领悟力极强', love: '感情丰富浪漫，异性缘好', marriage: '婚姻需稳定心意，避免飘忽不定', career: '适合贸易、传媒、旅游、外交', health: '注意肾泌尿系统' },
-    '癸': { academic: '内敛深思，适合哲学、心理、玄学', love: '感情细腻深沉，不轻易动心', marriage: '婚姻需主动沟通，避免将心事隐藏', career: '适合咨询、研究、玄学、医疗', health: '注意肾脏和内分泌' },
+  // Profile data by day stem
+  const P = {
+    '甲': {ac:'聪颖善悟，理解力强，适合学术研究与专业深耕',lv:'主动热情，欣赏有担当、有魄力的伴侣',mg:'需包容对方，避免强势主导',cr:'领导力强，适合管理岗或自主创业',hl:'注意肝胆保养，忌酗酒熬夜',wl:'青年正财稳步增长，中年可适当投资',ch:'子女独立性强，有主见'},
+    '乙': {ac:'灵活善变通，举一反三，文科艺术天赋突出',lv:'细腻温和，追求精神层面的契合与理解',mg:'和谐但易迁就，需保有自己的底线',cr:'适合文化教育、艺术创作、咨询顾问',hl:'注意颈椎与神经系统，保持规律运动',wl:'细水长流型，适合储蓄与长期理财',ch:'子女善良正直，学业顺利'},
+    '丙': {ac:'热情高但持久力不足，需培养专注与深度',lv:'热烈奔放，桃花较旺，易引人注目',mg:'注意沟通方式，避免急躁引发冲突',cr:'适合互联网、演艺、能源、传播行业',hl:'注意心血管和眼睛，忌熬夜上火',wl:'波动较大，高涨期善于抓机会，低谷需守',ch:'子女个性较强，需耐心引导'},
+    '丁': {ac:'专注力强，精于钻研，适合技术型深度学习',lv:'专注而深情，但易多疑，需建立信任感',mg:'稳定持久，需多表达爱意避免冷漠',cr:'适合技术研发、精密制造、金融分析',hl:'注意心脏和血液循环，作息规律',wl:'正财稳定，中年后有投资眼光',ch:'子女聪慧内敛，有独特才华'},
+    '戊': {ac:'扎实稳健，厚积薄发，适合系统化学习',lv:'真诚可靠，不善表达但行动力强',mg:'责任感重，是家庭的坚实依靠',cr:'适合地产、建筑、农业、资源型行业',hl:'注意脾胃消化，饮食规律，忌生冷',wl:'稳定增长型，适合固定资产配置',ch:'子女踏实稳重，令人省心'},
+    '己': {ac:'勤奋踏实但吸收稍慢，实践型学习更有效',lv:'温和包容，善解人意，处事圆融',mg:'需对方主导，自己善于配合与调和',cr:'适合服务、教育、行政、人力管理',hl:'注意脾胃湿气，适度运动排汗',wl:'勤俭致富型，积少成多，不宜冒险',ch:'子女温和听话，家庭氛围好'},
+    '庚': {ac:'逻辑缜密，数学工程法律类天赋突出',lv:'刚直果断，不喜拖泥带水，要求明确',mg:'需柔韧变通，不可过于刚硬强势',cr:'适合机械、法律、金融、军警类',hl:'注意呼吸系统和筋骨，防风寒',wl:'果断型，善于把握时机，偏财运不俗',ch:'子女坚韧有主见，独立性强'},
+    '辛': {ac:'精益求精，设计、珠宝、医学类极富天赋',lv:'追求完美，对伴侣标准高，宁缺毋滥',mg:'需降低完美主义，学会包容不完美',cr:'适合珠宝、医疗、精密制造、审计',hl:'注意肺部呼吸和皮肤保养',wl:'精打细算型，善于发现价值洼地',ch:'子女追求品质，审美不俗'},
+    '壬': {ac:'博学多才，领悟力极强，触类旁通',lv:'丰富浪漫，异性缘好，但需稳定心意',mg:'需稳定心性，避免飘忽让对方不安',cr:'适合贸易、传媒、旅游、外交、物流',hl:'注意肾泌尿系统，多喝水',wl:'流通型，资金周转快，善用杠杆',ch:'子女聪慧灵活，多才多艺'},
+    '癸': {ac:'内敛深思，哲学、心理、玄学领域造诣深',lv:'细腻深沉，不轻易动心，一旦动心则深',mg:'需主动沟通，避免将心事深藏不露',cr:'适合咨询、研究、玄学、医疗、心理',hl:'注意肾脏和内分泌，忌过度劳累',wl:'隐性财旺，常有意外之财或副业收入',ch:'子女内心丰富，情感细腻'},
   };
-  const sp = stemProfiles[dayStem] || stemProfiles['甲'];
+  const sp = P[dayStem] || P['甲'];
 
-  // Build 4 stages with 10 dimensions each
   const stages = [
-    {
-      name: '🌱 少年运', age: '0-20岁',
-      items: [
-        { label: '📚 学业', text: sp.academic + (strength.includes('强') ? '少年早慧，学业名列前茅。' : '少年需多鼓励引导，厚积薄发。') },
-        { label: '👨‍👩‍👧 父母', text: `日主${dayWx}性, ${yongWx === '水' ? '父母缘深，多得长辈提携' : yongWx === '火' ? '与父母关系融洽，家庭教育开明' : yongWx === '木' ? '父母培养用心，教育环境好' : yongWx === '金' ? '家教严格，培养出良好习惯' : '家庭氛围和睦，基础稳固'}。` },
-        { label: '🏥 健康', text: `${strength.includes('强') ? '少年体质强健，精力旺盛。' : '少年体质偏弱，需加强锻炼和营养。'}特别注意${sp.health}。` },
-        { label: '🤝 社交', text: strength.includes('强') ? '自信开朗，人缘好，易成孩子王。' : '性格偏内向，需鼓励多参与集体活动。' },
-        { label: '👫 朋友', text: `交友以${yongWx}性为佳，互补成长。${avoidWx === '火' ? '少近火爆脾气之人' : avoidWx === '水' ? '远离心机深沉之辈' : avoidWx === '金' ? '少与过于刚硬之人争执' : avoidWx === '木' ? '近朱者赤，交友宜选稳重者' : '远离过于优柔之人'}。` },
-      ]
-    },
-    {
-      name: '🔥 青年运', age: '20-35岁',
-      items: [
-        { label: '❤️ 爱情', text: sp.love + (strength.includes('强') ? '桃花较旺，早年即可遇到心仪对象。' : '感情含蓄，需主动争取，良缘在后。') },
-        { label: '💍 婚姻', text: sp.marriage + ` 适婚年龄建议${strength.includes('强') ? '25-28' : '28-32'}岁，早婚需磨合，晚婚更稳。` },
-        { label: '💼 事业', text: sp.career + ` 青年时期${strength.includes('强') ? '锐意进取，25岁后事业快速上升' : '稳扎稳打，30岁后渐入佳境'}。` },
-        { label: '🏠 家庭', text: `青年组建家庭${yongWx === '土' ? '稳定踏实，适合早立家业' : yongWx === '水' ? '需要磨合期，包容对方差异' : yongWx === '火' ? '家庭氛围热烈，但需注意情绪管理' : yongWx === '金' ? '家庭责任明确，分工合理' : '家庭生活温馨，注重精神建设'}。` },
-        { label: '💰 财运', text: strength.includes('强') ? '青年财运起步快，正财为主，宜储蓄。' : '财运平稳增长，不宜冒险投资，量入为出。' },
-        { label: '🏥 健康', text: `青年时期精力充沛，但勿透支。重点注意${sp.health}方面的保养。` },
-        { label: '🤝 社交', text: '社交圈快速扩大，贵人多为同龄人或长辈。' },
-      ]
-    },
-    {
-      name: '🏔 中年运', age: '35-55岁',
-      items: [
-        { label: '💼 事业', text: `中年事业${strength.includes('强') ? '迎来高峰期，40岁前可达事业巅峰，宜守不宜冒进' : '稳步上升，45岁左右有重要机遇，需把握'}。行业建议：${d.luckyGuide.industries.slice(0,3).join('、')}。` },
-        { label: '💰 财运', text: `中年财运${yongWx === '金' ? '丰厚，正偏财俱佳，投资眼光精准' : yongWx === '水' ? '流动大，需稳健理财，避免投机' : yongWx === '木' ? '细水长流，以积蓄为主' : yongWx === '火' ? '波动较大，高风险高回报，需谨慎' : '稳定增长，适合长期投资'}。` },
-        { label: '👨‍👩‍👧 子女', text: `子女缘分${strength.includes('强') ? '深厚，教育有方，子女独立性强' : '温和，与子女关系融洽，需多陪伴'}。${dayWx === '火' ? '子女个性较强，需耐心引导。' : dayWx === '水' ? '子女聪慧灵活，多才多艺。' : dayWx === '木' ? '子女善良正直，学业顺利。' : dayWx === '金' ? '子女坚韧，有自己的主见。' : '子女踏实稳重，让人省心。'}` },
-        { label: '💍 婚姻', text: `中年婚姻${yongWx === '水' ? '需增加生活情趣，避免平淡' : yongWx === '火' ? '需注意小事争吵，大方向不变' : yongWx === '木' ? '相敬如宾，共同成长' : yongWx === '金' ? '关系稳固，相互成就' : '夫唱妇随或妻贤夫安，家庭和睦'}。此阶段为婚姻稳定关键期。` },
-        { label: '🏥 健康', text: `中年需重点关注${sp.health}，同时注意${avoidWx === '火' ? '三高和心血管' : avoidWx === '水' ? '肾虚和腰椎' : avoidWx === '木' ? '肝功能和精神压力' : avoidWx === '金' ? '呼吸道和骨骼' : '消化系统和体重管理'}。建议每年体检。` },
-        { label: '🤝 社交', text: '社交圈趋于核心化，重质不重量。贵人多为行业内的合作伙伴。' },
-      ]
-    },
-    {
-      name: '🍂 晚年运', age: '55岁以上',
-      items: [
-        { label: '🏠 家庭', text: `晚年家庭${yongWx === '土' ? '根基稳固，儿孙绕膝之福' : yongWx === '水' ? '自由自在，旅居养老为佳' : yongWx === '木' ? '闲适安宁，享受田园生活' : yongWx === '金' ? '经济充裕，生活品质高' : '温馨和睦，享天伦之乐'}。晚年宜居${d.luckyGuide.directions[0]}方。` },
-        { label: '💰 财运', text: `晚年财运${strength.includes('强') ? '稳固，有积蓄和不动产支撑，生活无忧' : '需提前做好养老规划，不宜再进行高风险投资'}。` },
-        { label: '👶 子孙', text: `子孙运${dayWx === '土' ? '旺，后代孝顺，家族延续兴旺' : dayWx === '水' ? '较旺，子孙聪明灵活' : dayWx === '木' ? '良好，子孙善良正直' : dayWx === '火' ? '旺盛，子孙活力充沛' : '尚可，子孙生活稳定'}。` },
-        { label: '🏥 健康', text: `晚年健康重点养护${sp.health}，建议${yongWx === '水' ? '多饮水、适当游泳' : yongWx === '火' ? '适量运动、保持心情愉快' : yongWx === '木' ? '多散步、太极拳' : yongWx === '金' ? '呼吸练习、瑜伽' : '慢走、园艺活动'}。` },
-        { label: '🤝 社交', text: '老友三五知己足矣，宜培养书法、园艺等雅好以养心性。' },
-      ]
-    }
+    { name:'👶 童蒙运', age:'0-10岁', items:[
+      ['📚 学业','此阶段为启蒙关键期。' + (isStrong?'日主强旺，开智较早，学语识字快人一步，好奇心旺盛。':'日主偏弱，启蒙需耐心引导，不宜强压，寓教于乐效果更佳。') + '建议多接触自然与艺术，培养多元兴趣。'],
+      ['👨‍👩‍👧 父母','日主' + dayWx + '性，' + (yongWx==='水'?'父母缘深，多得长辈宠爱与悉心照护。':yongWx==='火'?'家庭氛围温暖，父母关爱有加，童年幸福感强。':yongWx==='木'?'父母教育用心，注重品格与习惯培养。':yongWx==='金'?'家教规矩但不失温情，从小养成良好习惯。':'家庭和睦安稳，根基扎实，童年无忧。'])],
+      ['🏥 健康',isStrong?'先天体质较好，抵抗力强，少生病。但仍需注意' + sp.hl + '，从小打好健康基础。':'先天体质偏弱，易感风寒，需加强营养和户外活动。重点关注' + sp.hl + '。'],
+      ['🤝 社交',isStrong?'性格外向活泼，容易融入集体，是小朋友中的活跃分子。':'性格偏安静，需鼓励参与集体游戏，培养社交信心。'],
+      ['👫 朋友','宜与' + yongWx + '性小朋友为伴，互补互助。' + (avoidWx==='火'?'少近脾气暴躁的玩伴。':avoidWx==='水'?'远离心思过重、爱耍心机的孩子。':avoidWx==='金'?'少与过于争强好胜者争执。':avoidWx==='木'?'近稳重踏实的朋友，受益良多。':'远离优柔寡断之人，培养果断。'])],
+      ['🧘 心态','童年心态' + (isStrong?'乐观自信，但需引导谦逊，避免骄傲。':'温和敏感，多给予肯定和鼓励，建立自信心。')],
+      ['⚠️ 注意','此阶段重在' + (isStrong?'培养耐心和共情能力，避免自我中心。':'建立安全感和自信心，避免过度保护。') + '家长宜多陪伴，少说教。']
+    ]},
+    { name:'🌱 少年运', age:'10-20岁', items:[
+      ['📚 学业',sp.ac + '。' + (isStrong?'少年时期学业优异，尤其擅长' + (dayWx==='火'?'文科表达和创意类':'理科逻辑和推理类') + '科目，竞赛易获奖。':'少年需找到适合自己的学习方法，' + (dayWx==='火'?'激发内在热情后进步飞速':'打好基础后厚积薄发') + '。中学阶段是关键转折点。')],
+      ['💼 事业','此阶段以学业为主，但' + (isStrong?'已显露领导才能和组织天赋，适合担任班干部或社团负责人，为未来事业打下基础。':'虽不显山露水，但做事靠谱，老师和同学信赖，打下扎实的人脉根基。')],
+      ['👨‍👩‍👧 父母',(isStrong?'独立性早现，可能与父母有思想碰撞，需相互理解。':'依赖父母指导，亲子关系融洽，父母是最好的后盾。') + '青春期沟通尤为关键，宜以朋友方式相处。'],
+      ['🏥 健康','青春期发育' + (isStrong?'迅速，精力充沛，适合参与体育竞技。':'正常，需保证充足睡眠和营养均衡。') + '重点注意' + sp.hl + '。'],
+      ['🤝 社交',isStrong?'社交圈广，朋友众多，是团队中的核心人物。':'社交圈精而不广，有三五知己足矣。但需主动拓展。'],
+      ['👫 朋友','益友以' + yongWx + '性为主，' + (yongWx==='水'?'灵活聪慧之友助其开阔视野':yongWx==='火'?'热情积极之友相互激励':yongWx==='木'?'善良正直之友共同成长':yongWx==='金'?'刚毅果敢之友砥砺前行':'稳重踏实之友互为依靠') + '。远离' + avoidWx + '性损友。'],
+      ['🧘 心态',isStrong?'积极向上，目标感强，但需防止急于求成带来的焦虑。':'心态平和，不急不躁，但需增强竞争意识和进取心。'],
+      ['⚠️ 注意','此阶段为性格定型关键期。' + (isStrong?'宜培养耐心和同理心，多读经典涵养心性。':'宜多尝试不同领域，找到自己的热爱和方向。')]
+    ]},
+    { name:'🔥 青年运', age:'20-30岁', items:[
+      ['📚 学业',(isStrong?'大学及深造阶段如鱼得水，学术成果初现，' + dirs[0] + '方求学更利。':'大学阶段需加倍努力，但一旦找到方向则进步神速。适合选择与实践结合紧密的专业。')],
+      ['💼 事业',sp.cr + '。' + (isStrong?'22-25岁即可崭露头角，职场晋升快，25岁后进入快车道。':'初入职场需低调积累，25岁后渐入佳境，30岁前后有重要跃升机会。') + '建议行业方向：' + ind + '。'],
+      ['💰 财运',sp.wl + '。' + (isStrong?'青年时期正财收入稳步增长，但消费欲望也高，需养成储蓄习惯，为而立之年打基础。':'财运起步平稳，不宜投机，专注提升专业能力才是最佳投资。兼职或副业有意外收获。')],
+      ['❤️ 爱情',sp.lv + '。' + (isStrong?'桃花较旺，22-26岁易遇正缘，感情经历丰富但需注意专一。':'感情含蓄慢热，良缘在后（25岁后），不必焦虑。提升自我吸引力比主动追求更有效。')],
+      ['💍 婚姻','适婚年龄建议' + (isStrong?'26-29岁':'28-32岁') + '。' + sp.mg + '。' + (dayWx==='火'?'早婚需磨合脾气，晚婚更沉稳。':dayWx==='水'?'早婚易不稳定，建议心智成熟后再考虑。':dayWx==='金'?'婚姻需双方都有事业基础，不宜裸婚。':dayWx==='木'?'婚姻宜找一个包容的伴侣，互补为佳。':'婚姻稳定，配偶多为踏实可靠型。')],
+      ['👨‍👩‍👧 父母',(isStrong?'此阶段独立性强，与父母保持适度距离反而关系更融洽。':'与父母关系亲密，遇事多与家人商量，得益良多。') + '父母健康状况需开始关注。'],
+      ['👶 子女','若有子女，' + sp.ch + '。' + (isStrong?'精力充沛可胜任带娃重任。':'需家人协助，但亲子关系建立良好。')],
+      ['🏠 家庭','组建家庭' + (yongWx==='土'?'稳定踏实，适合早立家业，买房置业运好。':yongWx==='水'?'需磨合期，互相包容差异后感情渐深。':yongWx==='火'?'氛围热烈，但需注意情绪管理和财务规划。':yongWx==='金'?'责任明确，分工合理，家庭运转高效。':'温馨和睦，注重精神层面的沟通。')],
+      ['🏥 健康','青年精力充沛，但勿透支。重点注意' + sp.hl + '，养成定期运动习惯可受益终身。'],
+      ['🤝 社交','社交圈快速扩大，贵人多为同龄人或稍年长的前辈。' + (isStrong?'善用社交资本，人脉即财脉。':'真诚待人，口碑相传，自然积累。')],['👫 朋友',isStrong?'朋友遍天下，但需区分酒肉之交与真心挚友。':'朋友虽少但真，关键时刻必有贵人出手相助。'],
+      ['🧘 心态',isStrong?'意气风发，但需戒骄戒躁，稳扎稳打方能行远。':'稳步前行，虽慢但方向正确，终有花开之日。'],
+      ['⚠️ 注意','此十年决定事业和婚姻的基本盘。' + (isStrong?'忌眼高手低、频繁跳槽，选定方向深耕。':'忌妄自菲薄、不敢争取，机会来临时要敢出手。')]
+    ]},
+    { name:'🎯 而立运', age:'30-40岁', items:[
+      ['💼 事业',(isStrong?'30-35岁为事业黄金上升期，宜承担更大责任，管理岗或创业均可。':'30岁后事业渐入佳境，35岁左右有重要突破机遇，务必把握。') + '此阶段宜在' + dirs[0] + '方发展，行业聚焦' + ind + '。'],
+      ['💰 财运',sp.wl + '。' + (isStrong?'30-38岁财运高峰期，正财偏财俱佳，但需合理配置资产，忌贪。':'财运平稳增长，适合稳健投资（如房产、指数基金），不宜冒险投机。')],
+      ['❤️ 爱情',(isStrong?'感情趋于成熟稳定，若已婚则夫妻同心协力打拼事业。':'感情日益深厚，伴侣是最坚实的支持者。') + '单身者在此阶段遇到的对象多为正缘。'],
+      ['💍 婚姻',sp.mg + '。' + (yongWx==='水'?'此阶段需经营情趣，避免感情趋于平淡。':yongWx==='火'?'控制脾气是必修课，小事不计较则感情稳固。':yongWx==='金'?'彼此成就，共同成长，是事业的最佳拍档。':yongWx==='木'?'相敬如宾，互相扶持，婚姻质量高。':'夫唱妇随或妻贤夫安，家庭和睦。') + '此为婚姻稳定黄金期。'],
+      ['👨‍👩‍👧 父母','父母渐老，需开始承担赡养责任。' + (isStrong?'经济有余力，可为父母提供更好生活条件。':'力所能及即好，孝心重于物质。')],
+      ['👶 子女',sp.ch + '。' + (isStrong?'子女教育宜放手，培养独立性比过度保护更重要。':'亲子关系融洽，陪伴质量重于陪伴时长。')],
+      ['🏠 家庭',(isStrong?'家庭事业双线并进压力大，需学会取舍和平衡。':'家庭为重，稳中求进，家和万事兴。') + '此阶段买房置业的决策影响深远。'],
+      ['🏥 健康','三十过后身体开始走下坡预警。重点注意' + sp.hl + '，' + (avoidWx==='火'?'控制血压血脂，每年体检。':avoidWx==='水'?'护肾养腰，避免久坐熬夜。':avoidWx==='木'?'疏肝理气，压力管理很重要。':avoidWx==='金'?'护肺养气，戒烟限酒。':'健脾祛湿，饮食规律，运动坚持。')],
+      ['🤝 社交','社交圈从数量转向质量，核心人脉逐步形成。' + (isStrong?'贵人运强，合作机会多。':'真诚待人，慢热但持久的人脉积累方式更有效。')],
+      ['👫 朋友','此阶段朋友以事业伙伴和共同兴趣圈为主。' + (yongWx==='火'?'宜与积极向上者同行，互相激励。':yongWx==='水'?'智慧型朋友给予启发多。':'务实型朋友带来实质帮助。')],
+      ['🧘 心态','三十而立，心态趋于成熟稳重。' + (isStrong?'需学会取舍，不为小事焦虑。':'自信心增强，逐步找到自己的节奏。')],
+      ['⚠️ 注意','此十年为人生分水岭。' + (isStrong?'忌贪多嚼不烂，聚焦核心赛道。':'忌畏首畏尾，该出手时大胆出手。')]
+    ]},
+    { name:'🏔 不惑运', age:'40-50岁', items:[
+      ['💼 事业',(isStrong?'40-45岁为事业巅峰期，行业地位稳固，宜守成为主、适度拓展。':'40岁后事业稳重有升，45岁前后有贵人提携，迎来第二波上升。') + '此阶段经验最丰富，是带团队、传帮带的黄金年龄。'],
+      ['💰 财运',(yongWx==='金'?'财运丰厚期，投资眼光精准，正偏财双收。':yongWx==='水'?'资金流动大，需建立稳健理财体系，避免冲动投资。':yongWx==='木'?'以守为主，保值增值，不宜激进。':yongWx==='火'?'波动中见机遇，但高风险操作需设止损。':'稳步积累，多元化配置为佳。') + '此阶段理财重心从增长转向保值。'],
+      ['❤️ 爱情','感情进入深水区，' + (isStrong?'彼此了解深入，默契大于激情，平淡中见真情。':'感情趋于成熟稳定，互相扶持走过风雨。')],
+      ['💍 婚姻',sp.mg + '。' + (isStrong?'此阶段需避免工作狂倾向，留时间给家庭。':'此阶段伴侣默契度最高，是彼此的定心丸。') + '中年婚姻重在经营，勿因习惯而忽视。'],
+      ['👨‍👩‍👧 父母','父母进入晚年，需更多陪伴和医疗关注。' + (dirs[0] + '方居住对父母健康有利') + '。'],
+      ['👶 子女',sp.ch + '。' + (isStrong?'子女进入青春期或成年期，尊重其选择，退后一步做后盾。':'与子女关系日渐平等，是良师益友型父母。') + '教育投资此阶段回报显现。'],
+      ['🏠 家庭','家庭进入稳定期，' + (yongWx==='土'?'根基深厚，家业兴旺，是家族的中流砥柱。':yongWx==='水'?'灵活调整家庭规划，可能涉及搬家或换房。':yongWx==='火'?'家庭氛围热烈积极，但也需注意成员间的边界感。':yongWx==='金'?'家庭经济稳固，生活品质明显提升。':'家庭成员关系和谐，享受稳定带来的幸福感。')],
+      ['🏥 健康','四十后代谢明显变慢，重点养护' + sp.hl + '。建议' + (yongWx==='水'?'游泳或慢跑，不可久坐':yongWx==='火'?'太极或瑜伽，平和心态':yongWx==='木'?'户外散步或登山，亲近自然':yongWx==='金'?'呼吸吐纳练习，养肺为先':'饮食清淡，控制体重') + '。每年全面体检一次。'],
+      ['🤝 社交','社交圈趋于核心化，重质不重量。贵人多为行业内有话语权的前辈或合作伙伴。'],
+      ['👫 朋友','' + (isStrong?'朋友以利益共享、互相成就为核心关系':'三五知己足矣，无需刻意维系过多社交') + '。'],
+      ['🧘 心态','四十不惑，人生方向清晰。' + (isStrong?'心态从容，懂得取舍之道，不再为小事困扰。':'心态平和，接受不完美，与自己和解。')],
+      ['⚠️ 注意','此十年重在守成和传承。' + (isStrong?'忌贪心冒进，守住已有成果即是成功。':'忌自我设限，仍有很多可能性值得尝试。')]
+    ]},
+    { name:'🌟 知命运', age:'50-60岁', items:[
+      ['💼 事业',(isStrong?'事业稳固，可考虑从一线转向顾问或导师角色，发挥经验价值。':'此阶段经验厚积薄发，仍可在专业领域有精彩表现。') + '宜培养接班人，为退休过渡做准备。'],
+      ['💰 财运',(isStrong?'财富积累达到高峰，重点关注资产配置和传承规划。':'财运稳定，退休金规划已见雏形，生活有保障。') + '此阶段不宜再冒大风险投资。'],
+      ['💍 婚姻','少年夫妻老来伴，' + (yongWx==='水'?'一起旅行或培养共同爱好，是感情保鲜的秘诀。':yongWx==='火'?'少计较、多包容，享受二人世界。':yongWx==='木'?'共同兴趣让晚年生活充满活力。':yongWx==='金'?'经济宽裕，可一起享受高品质生活。':'相互扶持，平淡中见真情。')],
+      ['👶 子女','子女' + (isStrong?'独立发展良好，事业有成，无需过度操心。':'虽平凡但孝顺，常回家看看就是最大的福气。') + '此阶段宜从"管理者"转变为"支持者"。'],
+      ['🏠 家庭','家庭重心从养育子女转向经营夫妻关系。' + (dirs[0] + '方安居有助运势，宜考虑养老居住地。')],
+      ['🏥 健康','五十后身体进入保养关键期。重点关注' + sp.hl + '，' + (avoidWx==='火'?'预防心脑血管疾病，定期监测指标。':avoidWx==='水'?'注意骨质疏松和关节保养，补充钙质。':avoidWx==='木'?'疏肝解郁，保持心情舒畅，预防情绪病。':avoidWx==='金'?'肺部保养和皮肤护理，防晒防燥。':'脾胃保养，少食多餐，饮食温热。')],
+      ['🤝 社交','社交圈进一步精简，以老友和兴趣社群为主。' + (isStrong?'仍可发挥影响力，行业活动适当参与。':'享受小圈子社交，深度交流更滋养心灵。')],
+      ['🧘 心态','五十知天命，' + (isStrong?'心态豁达，看淡得失，开始关注精神生活。':'心态从容平和，接纳人生起伏，珍惜当下。')],
+      ['⚠️ 注意','此十年为职业生涯收尾阶段。' + (isStrong?'宜逐步放权，享受生活，忌过度操劳。':'宜在专业领域留下遗产，如写书、授徒。')]
+    ]},
+    { name:'🍃 耳顺运', age:'60-70岁', items:[
+      ['💰 财运',(isStrong?'退休金充裕，被动收入稳定，可享受财务自由的晚年生活。':'退休后需量入为出，但有积蓄和子女支持，生活无忧。') + '理财以保守为主，注重流动性和安全性。'],
+      ['💍 婚姻','老夫老妻，' + (isStrong?'彼此已是生命中最重要的人，相濡以沫。':'平淡中见真情，一起散步买菜便是最大的幸福。')],
+      ['👶 子女','子女步入中年，' + sp.ch + '。' + (isStrong?'子女事业有成，孙辈绕膝，享受天伦之乐。':'子女虽忙但有孝心，电话常问候，假期常探望。')],
+      ['🏠 家庭','家庭重心转移至享受生活。' + (yongWx==='水'?'适合候鸟式养老，冬南夏北，怡然自得。':yongWx==='火'?'家庭聚会频繁，热闹是其乐也。':yongWx==='木'?'田园生活更能滋养身心，回归自然。':yongWx==='金'?'生活品质高，注重养生和艺术鉴赏。':'粗茶淡饭亦是福，平安喜乐最难得。')],
+      ['🏥 健康','六十后身体机能自然衰退，每年体检不可少。重点养护' + sp.hl + '，适合' + (yongWx==='水'?'太极/游泳等柔和水性运动':yongWx==='火'?'散步/广场舞，保持适度社交活动':yongWx==='木'?'园艺/太极拳，动静结合':yongWx==='金'?'呼吸吐纳/八段锦，养肺固气':'散步/家务，活动即养生') + '。'],
+      ['🤝 社交','老友是宝，' + (isStrong?'仍活跃于社交圈，是老年人的意见领袖。':'三五知己喝茶下棋，足慰平生。') + '宜参加老年大学或兴趣社团。'],
+      ['🧘 心态','六十耳顺，' + (isStrong?'听得进不同意见，心态更加圆融豁达。':'接纳一切发生，内心平静即是最大的福报。')],
+      ['⚠️ 注意','此阶段重在养生和享受。' + (isStrong?'忌逞强不服老，身体信号不能忽视。':'忌过度节俭亏待自己，适度消费提升生活品质。')]
+    ]},
+    { name:'🏯 古稀运', age:'70-80岁', items:[
+      ['💰 财运',(isStrong?'经济宽裕，可适当支持子女和孙辈教育，也可慈善捐赠积福。':'退休金和储蓄足够养老，子女亦会支持和照顾。')],
+      ['👶 子女','子孙运' + (dayWx==='土'?'旺盛，后代孝顺，家族和睦兴旺。':dayWx==='水'?'较旺，子孙聪慧灵活，常来探望陪伴。':dayWx==='火'?'旺盛，子孙活力充沛，是晚年最大的快乐源泉。':dayWx==='木'?'良好，子孙善良正直，家庭关系融洽。':'尚可，子孙生活稳定，不让长辈操心。')],
+      ['🏠 家庭',(yongWx==='土'?'根基深厚，儿孙绕膝是晚年最大的福分。':yongWx==='水'?'随心而居，流动式养老也别有滋味。':yongWx==='木'?'闲适安宁，种花养鸟，享受岁月静好。':yongWx==='金'?'居家舒适，生活讲究品质和仪式感。':'家庭温馨，平淡日子里有真趣味。')],
+      ['🏥 健康','此阶段健康第一，' + (isStrong?'底子好但不可大意，定期体检和适度运动是长寿秘诀。':'身体需加倍呵护，慢病管理要坚持，家人陪伴很重要。') + '重点养护' + sp.hl + '。'],
+      ['🤝 社交','以家人和老友为主，' + (isStrong?'偶尔参加社区活动或老年聚会，保持社会联结。':'居家为主，与家人和一两密友的交流已足够滋养。')],['🧘 心态','七十古来稀，' + (isStrong?'心态豁达通透，不再纠结任何事，活在当下。':'知足常乐，每一天都是恩赐，珍惜眼前人。')],
+      ['⚠️ 注意','防跌倒是重中之重，居家安全需排查。' + (isStrong?'保持脑力活动（下棋/阅读）延缓衰老。':'适度活动但量力而行，不与他人比较。')]
+    ]},
+    { name:'🍑 耄耋运', age:'80岁以上', items:[
+      ['👶 子女','' + sp.ch + '。此阶段子女是最大的依靠，' + (isStrong?'子女孝顺有加，照料周到，晚年幸福安详。':'子女虽各有生活，但心意在，逢年过节团聚是其乐也。')],
+      ['🏠 家庭','家庭是温暖的港湾，' + (isStrong?'晚年福气深厚，家族人丁兴旺，颐养天年。':'静享天伦，简单生活里有人间至味。')],
+      ['🏥 健康','长寿之星，' + sp.hl + '仍是养护重点。心态好是最好的补药，适度活动（室内慢走/太极坐式）即可。'],
+      ['🧘 心态','' + (isStrong?'历尽千帆，云淡风轻，每一天都从容自在。':'随遇而安，岁月静好，内心丰盈胜过一切。')],
+      ['⚠️ 注意','此阶段以"安"为第一要义——安全、安心、安宁。家人陪伴和关怀比任何药物都珍贵。']
+    ]}
   ];
 
-  // Generate the HTML with stage tabs
   let html = '<div class="stage-tabs">';
   stages.forEach((s, i) => {
-    html += `<button class="stage-tab${i===0?' active':''}" data-stage="${i}" onclick="switchStage(${i})">${s.name}<br><span style="font-size:0.7rem;opacity:0.7;">${s.age}</span></button>`;
+    html += '<button class="stage-tab' + (i===0?' active':'') + '" data-stage="' + i + '" onclick="switchStage(' + i + ')">' + s.name + '<br><span style="font-size:0.65rem;opacity:0.7;">' + s.age + '</span></button>';
   });
   html += '</div>';
-
   stages.forEach((s, i) => {
-    html += `<div class="stage-content${i===0?' active':''}" id="stage-${i}">`;
+    html += '<div class="stage-content' + (i===0?' active':'') + '" id="stage-' + i + '">';
     html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">';
-    s.items.forEach(item => {
-      html += `<div style="padding:10px 12px;background:rgba(26,31,46,0.5);border-radius:8px;border-left:2px solid #C9A84C;">
-        <div style="font-weight:600;color:#C9A84C;margin-bottom:4px;font-size:0.9rem;">${item.label}</div>
-        <p style="font-size:0.85rem;line-height:1.6;color:#C8C0B8;margin:0;">${item.text}</p>
-      </div>`;
+    s.items.forEach(function(it) {
+      html += '<div style="padding:10px 12px;background:rgba(26,31,46,0.5);border-radius:8px;border-left:2px solid #C9A84C;">' +
+        '<div style="font-weight:600;color:#C9A84C;margin-bottom:4px;font-size:0.9rem;">' + it[0] + '</div>' +
+        '<p style="font-size:0.85rem;line-height:1.6;color:#C8C0B8;margin:0;">' + it[1] + '</p></div>';
     });
     html += '</div></div>';
   });
-
   return html;
 }
-
-// ===== Stage switcher (called from onclick) =====
 function switchStage(idx) {
-  document.querySelectorAll('.stage-tab').forEach((b, i) => b.classList.toggle('active', i === idx));
-  document.querySelectorAll('.stage-content').forEach((c, i) => {
+  document.querySelectorAll('.stage-tab').forEach(function(b, i) { b.classList.toggle('active', i === idx); });
+  document.querySelectorAll('.stage-content').forEach(function(c, i) {
     c.classList.toggle('active', i === idx);
     c.style.display = i === idx ? 'block' : 'none';
   });
@@ -596,72 +684,82 @@ window.switchStage = switchStage;
 function buildZiweiPanel(d) {
   const zw = d.ziwei;
 
-  // Build Wenmo Tianji style grid
-  // Standard layout: branches in fixed position, palaces rotate
-  const branchOrder = ['巳','午','未','申','辰',null,null,'酉','卯',null,null,'戌','寅','丑','子','亥'];
-  const branchIdx = { '巳':0,'午':1,'未':2,'申':3,'辰':4,'酉':7,'卯':8,'戌':11,'寅':12,'丑':13,'子':14,'亥':15 };
-
-  // Map palace names to branch positions
-  const mingIdx = ZW_PALACES.indexOf(zw.mingPalace);
-  const palaceMap = {}; // branch -> palace name
-  ZW_PALACES.forEach((p, i) => {
-    const offset = (i - mingIdx + 12) % 12;
-    palaceMap[branchOrder.filter(Boolean)[offset]] = p;
-  });
-
-  // Stars by position
-  const starsByBranch = {};
-  for (const [star, pos] of Object.entries(zw.starPositions || {})) {
-    const branch = branchOrder.filter(Boolean)[pos];
-    if (!starsByBranch[branch]) starsByBranch[branch] = [];
-    starsByBranch[branch].push(star);
+  // Build Wenmo Tianji style grid using palaceDetails
+  const rawBranches = ['巳','午','未','申','辰','酉','卯','戌','寅','丑','子','亥'];
+  const branchPalaceMap = {};
+  const pd = zw.palaceDetails || {};
+  const mingIdx2 = ZW_PALACES.indexOf(zw.mingPalace);
+  for (let i = 0; i < 12; i++) {
+    const pname = ZW_PALACES[(mingIdx2 + i) % 12];
+    branchPalaceMap[rawBranches[i]] = { name: pname, details: pd[pname] || {} };
   }
 
   let gridHtml = '<div class="zw-wt-container">';
   const positions = [
-    { branch:'巳', gRow:'1', gCol:'1' }, { branch:'午', gRow:'1', gCol:'2' }, { branch:'未', gRow:'1', gCol:'3' }, { branch:'申', gRow:'1', gCol:'4' },
-    { branch:'辰', gRow:'2', gCol:'1' }, { empty:true, gRow:'2', gCol:'2' }, { empty:true, gRow:'2', gCol:'3' }, { branch:'酉', gRow:'2', gCol:'4' },
-    { branch:'卯', gRow:'3', gCol:'1' }, { empty:true, gRow:'3', gCol:'2' }, { empty:true, gRow:'3', gCol:'3' }, { branch:'戌', gRow:'3', gCol:'4' },
-    { branch:'寅', gRow:'4', gCol:'1' }, { branch:'丑', gRow:'4', gCol:'2' }, { branch:'子', gRow:'4', gCol:'3' }, { branch:'亥', gRow:'4', gCol:'4' },
+    { branch:'巳' }, { branch:'午' }, { branch:'未' }, { branch:'申' },
+    { branch:'辰' }, { empty:true }, { empty:true }, { branch:'酉' },
+    { branch:'卯' }, { empty:true }, { empty:true }, { branch:'戌' },
+    { branch:'寅' }, { branch:'丑' }, { branch:'子' }, { branch:'亥' },
   ];
+  const briColors = { '庙':'#FFD700','旺':'#FFA500','得':'#4A9E8B','利':'#87CEEB','平':'#A0A0A0','陷':'#C75B5B' };
+  const siHuaLabels = { 'lu':'化禄','quan':'化权','ke':'化科','ji':'化忌' };
+  const siHuaColors = { 'lu':'#4A9E8B','quan':'#C9A84C','ke':'#6B5B95','ji':'#C75B5B' };
 
-  positions.forEach(pos => {
+  positions.forEach(function(pos) {
     if (pos.empty) {
       gridHtml += '<div class="zw-wt-empty">☯</div>';
     } else {
-      const palace = palaceMap[pos.branch] || '';
-      const stars = starsByBranch[pos.branch] || [];
-      const isMing = palace === zw.mingPalace;
-      const isShen = palace === zw.shenPalace;
-      let cls = '';
+      var info = branchPalaceMap[pos.branch] || {};
+      var detail = info.details || {};
+      var isMing = info.name === zw.mingPalace;
+      var isShen = info.name === zw.shenPalace;
+      var cls = '';
       if (isMing) cls += ' ming';
       if (isShen) cls += ' shen';
 
-      // Brightness indicators (simplified)
-      const brightnessMap = { '紫微':'庙','天机':'旺','太阳':'庙','武曲':'得','天同':'平','廉贞':'利','天府':'庙','太阴':'旺','贪狼':'平','巨门':'陷','天相':'得','天梁':'旺','七杀':'平','破军':'陷' };
-      let starsHtml = '';
-      stars.forEach(s => {
-        const bri = brightnessMap[s] || '平';
-        const briColor = bri === '庙' ? '#FFD700' : bri === '旺' ? '#FFA500' : bri === '得' ? '#4A9E8B' : bri === '利' ? '#87CEEB' : bri === '平' ? '#A0A0A0' : '#C75B5B';
-        starsHtml += `<span>${s}<sup style="font-size:0.6rem;color:${briColor};">${bri}</sup></span><br>`;
+      var starsHtml = '';
+      var mainStars = detail.mainStars || [];
+      var brightness = detail.mainStarBrightness || {};
+      var siHuas = detail.siHuas || [];
+      var luckyStars = detail.luckyStars || [];
+      var fierceStars = detail.fierceStars || [];
+
+      mainStars.forEach(function(s) {
+        var bri = brightness[s] || '平';
+        starsHtml += '<span>' + s + '<sup style="font-size:0.6rem;color:' + (briColors[bri]||'#A0A0A0') + ';">' + bri + '</sup></span><br>';
       });
+      if (siHuas.length > 0) {
+        var shText = siHuas.map(function(sh) {
+          return '<span class="si-hua ' + sh.type + '" style="color:' + (siHuaColors[sh.type]||'#C9A84C') + ';">' + (siHuaLabels[sh.type]||sh.type) + '</span>';
+        }).join(' ');
+        starsHtml += '<span style="font-size:0.68rem;">' + shText + '</span><br>';
+      }
+      if (luckyStars.length > 0) {
+        starsHtml += '<span style="font-size:0.65rem;color:#4A9E8B;">' + luckyStars.join(' ') + '</span><br>';
+      }
+      if (fierceStars.length > 0) {
+        starsHtml += '<span style="font-size:0.65rem;color:#C75B5B;">' + fierceStars.join(' ') + '</span><br>';
+      }
       if (!starsHtml) starsHtml = '<span style="color:#3a3a3a;">—</span>';
 
-      gridHtml += `<div class="zw-wt-cell${cls}">
-        <span class="zw-branch">${pos.branch}</span>
-        <div class="zw-pname">${palace}</div>
-        <div class="zw-stars">${starsHtml}</div>
-      </div>`;
+      gridHtml += '<div class="zw-wt-cell' + cls + '">' +
+        '<span class="zw-branch">' + pos.branch + '</span>' +
+        '<div class="zw-pname">' + (info.name || '') + '</div>' +
+        '<div class="zw-stars">' + starsHtml + '</div>' +
+      '</div>';
     }
   });
   gridHtml += '</div>';
 
-  // Key palace analysis
-  let keyHtml = '';
-  for (const [palace, analysis] of Object.entries(zw.keyAnalysis)) {
-    keyHtml += `<div style="padding:10px 12px;background:rgba(26,31,46,0.5);border-radius:8px;margin-bottom:4px;font-size:0.9rem;">
-      <strong style="color:#C9A84C;">${palace}</strong> — ${analysis}
-    </div>`;
+  // Key palace analysis - use richer data
+  var keyHtml = '';
+  var ka = zw.keyAnalysis || {};
+  for (var palace in ka) {
+    if (ka.hasOwnProperty(palace)) {
+      keyHtml += '<div style="padding:10px 12px;background:rgba(26,31,46,0.5);border-radius:8px;margin-bottom:6px;font-size:0.9rem;">' +
+        '<strong style="color:#C9A84C;">' + palace + '</strong>' +
+        '<p style="margin-top:4px;line-height:1.6;">' + ka[palace] + '</p></div>';
+    }
   }
 
   const mingStars = zw.mingStars.length ? zw.mingStars.join('、') : '无主星';

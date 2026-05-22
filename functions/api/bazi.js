@@ -255,6 +255,232 @@ function calcCurrentYearLuck(dayStem, yearPillar, yongShen) {
   };
 }
 
+// ============================================================
+// 道医体质分析
+// ============================================================
+function calcDaoYiTiZhi(dayStem, dayZhi, monthBranch, wuxingCount, strength) {
+  const dayWx = STEM_WUXING[dayStem];
+  const monthWx = BRANCH_WUXING[monthBranch];
+  const dayZhiWx = BRANCH_WUXING[dayZhi];
+
+  // 季节寒热
+  const spring = ['寅','卯','辰'];
+  const summer = ['巳','午','未'];
+  const autumn = ['申','酉','戌'];
+  const winter = ['亥','子','丑'];
+
+  let season = '平';
+  let seasonNature = '';
+  if (spring.includes(monthBranch)) { season = '春'; seasonNature = '温升'; }
+  else if (summer.includes(monthBranch)) { season = '夏'; seasonNature = '炎热'; }
+  else if (autumn.includes(monthBranch)) { season = '秋'; seasonNature = '燥凉'; }
+  else { season = '冬'; seasonNature = '寒冷'; }
+
+  // 五行偏性计算
+  const fireMetal = (wuxingCount['火']||0) + (wuxingCount['金']||0);
+  const waterEarth = (wuxingCount['水']||0) + (wuxingCount['土']||0);
+  const woodCount = wuxingCount['木']||0;
+  const fireCount = wuxingCount['火']||0;
+  const waterCount = wuxingCount['水']||0;
+  const earthCount = wuxingCount['土']||0;
+  const metalCount = wuxingCount['金']||0;
+
+  // 脏腑对应
+  const zangFu = {
+    '甲': { zang: '肝', fu: '胆', meridian: '足厥阴肝经/足少阳胆经' },
+    '乙': { zang: '肝', fu: '胆', meridian: '足厥阴肝经' },
+    '丙': { zang: '心', fu: '小肠', meridian: '手少阴心经/手太阳小肠经' },
+    '丁': { zang: '心', fu: '小肠', meridian: '手少阴心经' },
+    '戊': { zang: '脾', fu: '胃', meridian: '足太阴脾经/足阳明胃经' },
+    '己': { zang: '脾', fu: '胃', meridian: '足太阴脾经' },
+    '庚': { zang: '肺', fu: '大肠', meridian: '手太阴肺经/手阳明大肠经' },
+    '辛': { zang: '肺', fu: '大肠', meridian: '手太阴肺经' },
+    '壬': { zang: '肾', fu: '膀胱', meridian: '足少阴肾经/足太阳膀胱经' },
+    '癸': { zang: '肾', fu: '膀胱', meridian: '足少阴肾经' },
+  };
+
+  const zf = zangFu[dayStem];
+
+  // 体质判定（主类型 + 兼夹类型）
+  let primaryType = '';
+  let primaryDesc = '';
+  let primarySymptoms = [];
+  let secondaryTypes = [];
+  let dietAdvice = '';
+  let acupoints = [];
+  let dailyAdvice = '';
+  let herbalDirection = '';
+
+  // 寒湿体质：冬生 + 水多 + 火弱
+  if (season === '冬' && waterCount >= 3 && fireCount <= 1) {
+    primaryType = '寒湿体质（寒湿困脾）';
+    primaryDesc = `生于寒冬${monthBranch}月，水性泛滥而火气衰微。寒水过盛，阳气不足，犹如冰封大地。`;
+    primarySymptoms = [
+      '畏寒怕冷，四肢不温，冬季尤甚',
+      '面色苍白或晦暗，舌淡胖有齿痕',
+      '大便溏薄或黏腻不爽，小便清长',
+      '精神不振，容易疲劳嗜睡',
+      '关节冷痛，遇寒加重，得温则减',
+      '女性多见痛经、白带清稀量多'
+    ];
+    dietAdvice = '宜温补：生姜、肉桂、花椒、羊肉、韭菜、核桃、红枣。忌生冷、冰饮、西瓜、苦瓜。';
+    acupoints = ['关元(CV4)', '命门(GV4)', '足三里(ST36)', '神阙(CV8)', '气海(CV6)'];
+    dailyAdvice = '每日上午10点前晒太阳30分钟；艾灸关元、命门；睡前热水泡脚至微汗';
+    herbalDirection = '温阳散寒，健脾化湿。参考：理中汤、附子理中丸、苓桂术甘汤加减';
+    if (waterCount >= 4) secondaryTypes.push('阳虚体质');
+    if (earthCount >= 3) secondaryTypes.push('痰湿体质');
+  }
+  // 燥热体质：夏生 + 火多 + 水弱
+  else if (season === '夏' && fireCount >= 3 && waterCount <= 1) {
+    primaryType = '燥热体质（火热内盛）';
+    primaryDesc = `生于炎夏${monthBranch}月，火旺水枯，燥气横行。犹如烈日炙烤大地，津液易亏。`;
+    primarySymptoms = [
+      '口干舌燥，咽喉肿痛，口舌生疮',
+      '面红目赤，易长痘痘痤疮',
+      '心烦易怒，失眠多梦，手心发热',
+      '大便干结，小便黄赤短少',
+      '皮肤干燥瘙痒，易过敏',
+      '容易上火、牙龈肿痛、鼻血'
+    ];
+    dietAdvice = '宜清润：绿豆、莲子、百合、银耳、梨、西瓜、苦瓜、菊花茶。忌辛辣、烧烤、羊肉、酒。';
+    acupoints = ['太溪(KI3)', '三阴交(SP6)', '涌泉(KI1)', '曲池(LI11)', '内庭(ST44)'];
+    dailyAdvice = '避免午后暴晒；多饮温水；练习静坐冥想以降心火；子时前入睡养阴';
+    herbalDirection = '清热润燥，养阴生津。参考：白虎汤、竹叶石膏汤、沙参麦冬汤加减';
+    if (metalCount >= 3) secondaryTypes.push('阴虚体质');
+    if (woodCount >= 2) secondaryTypes.push('气郁体质');
+  }
+  // 虚火体质：身弱 + 火不足 + 水也不足（阴虚火旺）
+  else if (strength.includes('弱') && fireCount <= 1 && waterCount <= 1) {
+    primaryType = '虚火体质（阴虚火旺）';
+    primaryDesc = `日主${dayStem}${dayWx}本弱，水不制火而虚火上浮。犹如油灯将尽，火焰飘摇不定。`;
+    primarySymptoms = [
+      '潮热盗汗，午后或夜间发热',
+      '五心烦热（手心、脚心、胸口发热）',
+      '口干不欲饮，咽干鼻燥',
+      '失眠多梦，心悸怔忡',
+      '腰膝酸软，头晕耳鸣',
+      '舌红少苔，脉细数'
+    ];
+    dietAdvice = '宜滋阴降火：枸杞、桑葚、黑芝麻、山药、鸭肉、甲鱼、银耳。忌温燥补品。';
+    acupoints = ['太溪(KI3)', '照海(KI6)', '三阴交(SP6)', '涌泉(KI1)', '复溜(KI7)'];
+    dailyAdvice = '避免熬夜（最忌23点后睡）；节制房事；晨起叩齿吞津；太极拳或八段锦';
+    herbalDirection = '滋阴降火，交通心肾。参考：知柏地黄丸、天王补心丹、黄连阿胶汤加减';
+    secondaryTypes.push('阴虚体质');
+  }
+  // 气虚体质：身弱 + 土不生金
+  else if (strength.includes('弱') && earthCount >= 2 && metalCount <= 1) {
+    primaryType = '气虚体质（脾肺气虚）';
+    primaryDesc = `日主${dayStem}${dayWx}偏弱，土（脾胃）尚可但金（肺气）不足，母弱子虚。`;
+    primarySymptoms = [
+      '气短懒言，语声低微，稍动即喘',
+      '面色萎黄或㿠白，容易出汗',
+      '食欲不振，饭后腹胀',
+      '容易感冒，抵抗力差',
+      '四肢乏力，精神萎靡',
+      '舌淡苔白，脉弱无力'
+    ];
+    dietAdvice = '宜补气健脾：黄芪、党参、山药、红枣、小米、鸡肉、牛肉。忌耗气之品。';
+    acupoints = ['气海(CV6)', '足三里(ST36)', '百会(GV20)', '脾俞(BL20)', '肺俞(BL13)'];
+    dailyAdvice = '规律作息，午时小憩15-30分钟；适度散步，不可过劳；少言养气';
+    herbalDirection = '补中益气，健脾补肺。参考：补中益气汤、四君子汤、玉屏风散加减';
+    if (waterCount <= 1) secondaryTypes.push('阳虚体质');
+  }
+  // 痰湿体质：土多 + 水多
+  else if (earthCount >= 3 && waterCount >= 2) {
+    primaryType = '痰湿体质（脾虚湿盛）';
+    primaryDesc = `命局土湿过重，脾运不健，水湿内停，化为痰饮。犹如沼泽泥泞，气机不畅。`;
+    primarySymptoms = [
+      '体型偏胖，腹部松软肥满',
+      '面部油脂分泌旺盛，容易出油',
+      '痰多胸闷，口中黏腻不爽',
+      '大便黏滞不成形，小便浑浊',
+      '身体沉重，容易困倦嗜睡',
+      '舌体胖大，舌苔厚腻，脉滑'
+    ];
+    dietAdvice = '宜健脾化湿：薏米、赤小豆、冬瓜、茯苓、陈皮、白扁豆。忌油腻、甜腻、奶制品。';
+    acupoints = ['丰隆(ST40)', '阴陵泉(SP9)', '中脘(CV12)', '天枢(ST25)', '足三里(ST36)'];
+    dailyAdvice = '每天快走40分钟以上至微汗；避免久坐；少食多餐；常喝陈皮薏米茶';
+    herbalDirection = '健脾祛湿，化痰降浊。参考：二陈汤、平胃散、参苓白术散加减';
+    if (fireCount <= 1) secondaryTypes.push('阳虚体质');
+  }
+  // 气郁体质：木多 + 金弱
+  else if (woodCount >= 3 && metalCount <= 1) {
+    primaryType = '气郁体质（肝郁气滞）';
+    primaryDesc = `命局木气过旺而无金制衡，犹如林木疯长而无修剪，气机郁结不畅。`;
+    primarySymptoms = [
+      '情绪低落，多愁善感，容易焦虑',
+      '胸闷胁痛，善太息（叹气）',
+      '咽喉有异物感（梅核气）',
+      '失眠多梦，早醒难再眠',
+      '女性经前乳房胀痛、月经不调',
+      '舌淡红苔薄白，脉弦'
+    ];
+    dietAdvice = '宜疏肝理气：玫瑰花、佛手、香橼、薄荷、柑橘、芹菜、茼蒿。忌辛辣刺激。';
+    acupoints = ['太冲(LR3)', '期门(LR14)', '膻中(CV17)', '合谷(LI4)', '阳陵泉(GB34)'];
+    dailyAdvice = '每日户外活动1小时；练习深呼吸（4-7-8呼吸法）；养花草怡情；遇事找人倾诉';
+    herbalDirection = '疏肝解郁，理气和中。参考：逍遥散、柴胡疏肝散、越鞠丸加减';
+    if (fireCount >= 2) secondaryTypes.push('燥热体质');
+  }
+  // 血瘀体质：金弱 + 火多（热灼血瘀）或 寒重（寒凝血瘀）
+  else if ((fireCount >= 3 && metalCount <= 1) || (season === '冬' && waterCount >= 3)) {
+    primaryType = (fireCount >= 3) ? '血瘀体质（热灼血瘀）' : '血瘀体质（寒凝血瘀）';
+    primaryDesc = (fireCount >= 3)
+      ? `火旺灼血，血液黏稠运行不畅，犹如浓汤难流。`
+      : `寒性收引，血脉凝滞不畅，犹如冰封河道。`;
+    primarySymptoms = [
+      '面色晦暗或色素沉着，容易出现瘀斑',
+      '口唇颜色偏暗偏紫',
+      '身体某处固定刺痛，夜间加重',
+      '女性痛经有血块，经色紫暗',
+      '皮肤干燥粗糙如鱼鳞',
+      '舌质紫暗或有瘀斑瘀点，舌下静脉曲张'
+    ];
+    dietAdvice = '宜活血化瘀：山楂、醋、黑豆、茄子、红糖姜茶、三七花。忌寒凉凝固之品（寒瘀者）、忌辛辣煎炸（热瘀者）。';
+    acupoints = ['血海(SP10)', '膈俞(BL17)', '三阴交(SP6)', '合谷(LI4)', '太冲(LR3)'];
+    dailyAdvice = '每日适度运动至微汗，促进血液流通；保持心情愉快；温水泡脚通经活络';
+    herbalDirection = '活血化瘀，通络止痛。参考：血府逐瘀汤、桃红四物汤、丹参饮加减';
+    secondaryTypes.push(strength.includes('弱') ? '气虚体质' : '气郁体质');
+  }
+  // 平和体质（接近平衡）
+  else {
+    primaryType = '平和体质（阴阳平衡）';
+    primaryDesc = `命局五行较为均衡，日主${dayStem}${dayWx}得令得地，阴阳调和，是为吉相。但仍需注意季节保养。`;
+    primarySymptoms = [
+      '面色红润有光泽，精力充沛',
+      '睡眠质量好，一觉到天亮',
+      '大便规律成形，小便正常',
+      '情绪稳定，适应力强',
+      '舌淡红苔薄白，脉和缓有力'
+    ];
+    dietAdvice = '均衡饮食即可，根据季节微调。春养肝、夏养心、秋养肺、冬养肾。';
+    acupoints = ['足三里(ST36)', '关元(CV4)', '涌泉(KI1)', '百会(GV20)'];
+    dailyAdvice = '保持良好作息，适度运动，心态平和。';
+    herbalDirection = '无特别偏性，日常可服用四君子汤或八珍汤保健。';
+  }
+
+  // 脏腑易病倾向
+  const weakOrgan = zf.zang;
+  const weakFu = zf.fu;
+  const organAdvice = `日主${dayStem}应重点养护${weakOrgan}${weakFu}系统。注意${weakOrgan === '肝' ? '少怒、忌酒、勿熬夜（23点为肝经当令）' : weakOrgan === '心' ? '保持心情平和、午时小憩（11-13点为心经当令）' : weakOrgan === '脾' ? '饮食规律、忌暴饮暴食（9-11点为脾经当令）' : weakOrgan === '肺' ? '防感冒、晨起深呼吸（3-5点为肺经当令）' : '不憋尿、多饮水（17-19点为肾经当令）'}。`;
+
+  return {
+    primaryType,
+    primaryDesc,
+    primarySymptoms,
+    secondaryTypes,
+    dietAdvice,
+    acupoints,
+    dailyAdvice,
+    herbalDirection,
+    season,
+    seasonNature,
+    weakOrgan,
+    weakFu,
+    organAdvice,
+    wuxingBias: { fireCount, waterCount, woodCount, earthCount, metalCount }
+  };
+}
+
 // 流月分析
 function calcMonthlyLuck(dayStem, yongShen, currentYear) {
   const yearStem_idx = (currentYear - 4) % 10;
@@ -280,8 +506,43 @@ function calcMonthlyLuck(dayStem, yongShen, currentYear) {
 // 紫微十二宫
 const ZW_PALACES = ['命宫', '兄弟', '夫妻', '子女', '财帛', '疾厄', '迁移', '交友', '官禄', '田宅', '福德', '父母'];
 
-// 紫微主星
+// 紫微主星（14颗）
 const ZW_STARS = ['紫微', '天机', '太阳', '武曲', '天同', '廉贞', '天府', '太阴', '贪狼', '巨门', '天相', '天梁', '七杀', '破军'];
+
+// 六吉星
+const ZW_LUCKY_STARS = ['文昌', '文曲', '左辅', '右弼', '天魁', '天钺'];
+// 六煞星
+const ZW_FIERCE_STARS = ['擎羊', '陀罗', '火星', '铃星', '地空', '地劫'];
+// 其他辅星
+const ZW_AUX_STARS = ['禄存', '天马'];
+
+// 年干四化表
+const SIHUA_TABLE = {
+  '甲': { lu:'廉贞', quan:'破军', ke:'武曲', ji:'太阳' },
+  '乙': { lu:'天机', quan:'天梁', ke:'紫微', ji:'太阴' },
+  '丙': { lu:'天同', quan:'天机', ke:'文昌', ji:'廉贞' },
+  '丁': { lu:'太阴', quan:'天同', ke:'天机', ji:'巨门' },
+  '戊': { lu:'贪狼', quan:'太阴', ke:'右弼', ji:'天机' },
+  '己': { lu:'武曲', quan:'贪狼', ke:'天梁', ji:'文曲' },
+  '庚': { lu:'太阳', quan:'武曲', ke:'太阴', ji:'天同' },
+  '辛': { lu:'巨门', quan:'太阳', ke:'文曲', ji:'文昌' },
+  '壬': { lu:'天梁', quan:'紫微', ke:'左辅', ji:'武曲' },
+  '癸': { lu:'破军', quan:'巨门', ke:'太阴', ji:'贪狼' },
+};
+
+// 天魁天钺表（年干）
+const KUIYUE_TABLE = {
+  '甲': { kui:'丑', yue:'未' }, '戊': { kui:'丑', yue:'未' }, '庚': { kui:'丑', yue:'未' },
+  '乙': { kui:'子', yue:'申' }, '己': { kui:'子', yue:'申' },
+  '丙': { kui:'亥', yue:'酉' },
+  '丁': { kui:'亥', yue:'酉' },
+  '辛': { kui:'午', yue:'寅' },
+  '壬': { kui:'卯', yue:'巳' },
+  '癸': { kui:'卯', yue:'巳' },
+};
+
+// 禄存表（年干）
+const LUCUN_TABLE = { '甲':'寅','乙':'卯','丙':'巳','丁':'午','戊':'巳','己':'午','庚':'申','辛':'酉','壬':'亥','癸':'子' };
 // 主星五行
 const ZW_STAR_WUXING = {
   '紫微': '土', '天机': '木', '太阳': '火', '武曲': '金', '天同': '水', '廉贞': '火',
@@ -305,11 +566,27 @@ const ZW_STAR_MEANING = {
   '破军': '耗星，主变革、破坏、创新'
 };
 
-function calcZiweiDouShu(yearStem, monthIdx, day, hourIdx, gender) {
+function calcZiweiDouShu(yearStemChar, yearBranchChar, year, monthIdx, day, hourIdx, gender) {
+  // 地支到宫位索引映射（固定的地支位置）
+  // 寅=0, 卯=1, 辰=2, 巳=3, 午=4, 未=5, 申=6, 酉=7, 戌=8, 亥=9, 子=10, 丑=11
+  const BRANCH_TO_IDX = { '寅':0,'卯':1,'辰':2,'巳':3,'午':4,'未':5,'申':6,'酉':7,'戌':8,'亥':9,'子':10,'丑':11 };
+  // 宫位到地支映射（命宫起寅）
+  // ZW_BRANCH_MAP will be built dynamically based on ming Palace
+  
   // 命宫：从寅宫起正月，顺数到出生月，再从该宫起子时，逆数到出生时辰
   const mingIdx = (2 + monthIdx - 1 - hourIdx + 12) % 12;
   // 身宫：从寅宫起正月，顺数到出生月，再从该宫起子时，顺数到出生时辰
   const shenIdx = (2 + monthIdx - 1 + hourIdx) % 12;
+  
+  // 12宫对应的地支（命宫所在的地支 = 寅宫顺数mingIdx位）
+  const mingBranchIdx = (2 + mingIdx) % 12;
+  // 建立宫位→地支的映射
+  const ZW_BRANCH_MAP = {};
+  for (let i = 0; i < 12; i++) {
+    const palaceName = ZW_PALACES[(i - mingIdx + 12) % 12]; // 命宫在mingIdx, 按顺序排列
+    const branchIdx = (mingBranchIdx + i) % 12;
+    ZW_BRANCH_MAP[palaceName] = branchIdx;
+  }
 
   // 纳音五行局（简化：基于命宫地支和年干）
   const najiaMap = {
@@ -324,8 +601,11 @@ function calcZiweiDouShu(yearStem, monthIdx, day, hourIdx, gender) {
     '壬子': '木', '癸丑': '木', '甲寅': '水', '乙卯': '水', '丙辰': '土', '丁巳': '土',
     '戊午': '火', '己未': '火', '庚申': '木', '辛酉': '木', '壬戌': '水', '癸亥': '水'
   };
-  const mingGanIdx = (yearStem * 2 + (mingIdx % 2 === 0 ? 0 : 0)) % 10;
-  const najiaKey = STEMS[mingGanIdx % 10] + BRANCHES[mingIdx];
+  const mingBranch = BRANCHES[(2 + mingIdx) % 12];
+  // 命宫天干：以生年天干，用五虎遁诀求之
+  const huDunBase = { '甲':0,'己':0,'乙':2,'庚':2,'丙':4,'辛':4,'丁':6,'壬':6,'戊':8,'癸':8 };
+  const mingGanIdx = ((huDunBase[yearStemChar] || 0) + BRANCHES.indexOf(mingBranch)) % 10;
+  const najiaKey = STEMS[mingGanIdx % 10] + mingBranch;
   const wuxingJu = najiaMap[najiaKey] || '木';
 
   // 紫微星位置（简化算法）
@@ -335,22 +615,42 @@ function calcZiweiDouShu(yearStem, monthIdx, day, hourIdx, gender) {
   // 紫微星在十二宫的位置
   const ziweiIdx = (dayMod === 0 ? (base - 1) : (dayMod - 1) + 2) % 12;
 
-  // 安十四主星
+  // 安十四主星（紫微系逆排6颗 + 天府系顺排8颗）
   const starPositions = {};
-  const ziweiOrder = ['紫微', '天机', null, '太阳', '武曲', '天同', null, null, '廉贞'];
-  const tianfuOrder = ['天府', '太阴', '贪狼', '巨门', '天相', '天梁', '七杀', null, null, null, '破军'];
-
-  let ziweiIdx2 = ziweiIdx;
-  for (let i = 0; i < ziweiOrder.length; i++) {
-    if (ziweiOrder[i]) {
-      starPositions[ziweiOrder[i]] = (ziweiIdx2 + i) % 12;
-    }
-  }
+  // 紫微系（紫微为起点逆排）
+  const ziweiSeries = [
+    { offset: 0, star: '紫微' },
+    { offset: -1, star: '天机' },
+    { offset: 1, star: null },     // 隔一宫
+    { offset: 2, star: '太阳' },
+    { offset: 3, star: '武曲' },
+    { offset: 4, star: '天同' },
+    { offset: 5, star: null },     // 隔二宫
+    { offset: 6, star: null },
+    { offset: 7, star: '廉贞' },
+  ];
+  // 天府系（天府为起点顺排）
+  const tianfuSeries = [
+    { offset: 0, star: '天府' },
+    { offset: 1, star: '太阴' },
+    { offset: 2, star: '贪狼' },
+    { offset: 3, star: '巨门' },
+    { offset: 4, star: '天相' },
+    { offset: 5, star: '天梁' },
+    { offset: 6, star: '七杀' },
+    { offset: 7, star: null },
+    { offset: 8, star: null },
+    { offset: 9, star: null },
+    { offset: 10, star: '破军' },
+  ];
+  // 天府位置 = 4 - 紫微位置（取模12），即紫微+天府=寅(2)
   const tianfuIdx = (4 - ziweiIdx + 12) % 12;
-  for (let i = 0; i < tianfuOrder.length; i++) {
-    if (tianfuOrder[i]) {
-      starPositions[tianfuOrder[i]] = (tianfuIdx + i) % 12;
-    }
+
+  for (const item of ziweiSeries) {
+    if (item.star) starPositions[item.star] = (ziweiIdx + item.offset + 12) % 12;
+  }
+  for (const item of tianfuSeries) {
+    if (item.star) starPositions[item.star] = (tianfuIdx + item.offset) % 12;
   }
 
   // 命宫主星
@@ -391,25 +691,137 @@ function calcZiweiDouShu(yearStem, monthIdx, day, hourIdx, gender) {
     shenInterpret += `身宫有${shenStars.join('、')}坐守，后天运势更添助力。`;
   }
 
-  // 全局解读
-  let overallInt = '';
+  // 安四化
+  const siHua = SIHUA_TABLE[yearStemChar] || SIHUA_TABLE['甲'];
+  const siHuaStars = {};
+  for (const [key, star] of Object.entries(siHua)) {
+    if (starPositions[star] !== undefined) {
+      siHuaStars[star] = { type: key, pos: starPositions[star] };
+    }
+  }
+
+  // 安六吉星
+  const luckyStars = {};
+  // 文昌：戌上逆数时支
+  const wenchangIdx = (10 - hourIdx + 12) % 12;
+  luckyStars['文昌'] = wenchangIdx;
+  // 文曲：辰上顺数时支
+  luckyStars['文曲'] = (4 + hourIdx) % 12;
+  // 左辅：辰上顺数月支
+  const monthBranchIdx = monthIdx;
+  luckyStars['左辅'] = (4 + monthBranchIdx) % 12;
+  // 右弼：戌上逆数月支
+  luckyStars['右弼'] = (10 - monthBranchIdx + 12) % 12;
+  // 天魁
+  const kuiyue = KUIYUE_TABLE[yearStemChar] || KUIYUE_TABLE['甲'];
+  luckyStars['天魁'] = BRANCHES.indexOf(kuiyue.kui);
+  luckyStars['天钺'] = BRANCHES.indexOf(kuiyue.yue);
+
+  // 安禄存
+  const lucunBranch = LUCUN_TABLE[yearStemChar] || '寅';
+  const lucunIdx = BRANCHES.indexOf(lucunBranch);
+
+  // 安六煞星
+  const fierceStars = {};
+  // 擎羊：禄存前一宫
+  fierceStars['擎羊'] = (lucunIdx + 1) % 12;
+  // 陀罗：禄存后一宫
+  fierceStars['陀罗'] = (lucunIdx - 1 + 12) % 12;
+  // 火星、铃星（按年支和时支）
+  const yearBranchIdx = BRANCHES.indexOf(yearBranchChar);
+  const marsBase = (yearBranchIdx % 4) < 2 ? (4 + hourIdx) % 12 : (10 - hourIdx + 12) % 12;
+  fierceStars['火星'] = marsBase;
+  fierceStars['铃星'] = (marsBase + 6) % 12;
+  // 地空：亥上逆数时支
+  fierceStars['地空'] = (11 - hourIdx + 12) % 12;
+  // 地劫：亥上顺数时支
+  fierceStars['地劫'] = (11 + hourIdx) % 12;
+
+  // 天马（按年支）
+  const tianmaMap = { '寅':'申','申':'寅','巳':'亥','亥':'巳' };
+  const tianmaIdx = BRANCHES.indexOf(tianmaMap[BRANCHES[yearBranchIdx]] || '寅');
+
+  // 合并所有星曜到宫位
   const allStarsInPalaces = {};
   for (const [star, pos] of Object.entries(starPositions)) {
     if (!allStarsInPalaces[ZW_PALACES[pos]]) allStarsInPalaces[ZW_PALACES[pos]] = [];
     allStarsInPalaces[ZW_PALACES[pos]].push(star);
   }
+  for (const [star, pos] of Object.entries(luckyStars)) {
+    if (!allStarsInPalaces[ZW_PALACES[pos]]) allStarsInPalaces[ZW_PALACES[pos]] = [];
+    allStarsInPalaces[ZW_PALACES[pos]].push(star);
+  }
+  for (const [star, pos] of Object.entries(fierceStars)) {
+    if (!allStarsInPalaces[ZW_PALACES[pos]]) allStarsInPalaces[ZW_PALACES[pos]] = [];
+    allStarsInPalaces[ZW_PALACES[pos]].push(star);
+  }
+  if (!allStarsInPalaces[ZW_PALACES[lucunIdx]]) allStarsInPalaces[ZW_PALACES[lucunIdx]] = [];
+  allStarsInPalaces[ZW_PALACES[lucunIdx]].push('禄存');
+  if (!allStarsInPalaces[ZW_PALACES[tianmaIdx]]) allStarsInPalaces[ZW_PALACES[tianmaIdx]] = [];
+  allStarsInPalaces[ZW_PALACES[tianmaIdx]].push('天马');
 
-  // 重点宫位分析
-  const keyPalaces = ['命宫', '财帛', '官禄', '夫妻', '田宅'];
+  // 标记四化星所在的宫位
+  const siHuaByPalace = {};
+  for (const [star, info] of Object.entries(siHuaStars)) {
+    const palace = ZW_PALACES[info.pos];
+    if (!siHuaByPalace[palace]) siHuaByPalace[palace] = [];
+    siHuaByPalace[palace].push({ star, type: info.type });
+  }
+
+  // 给每个宫位标注星曜类型（主星/吉星/煞星）和亮度
+  const palaceDetails = {};
+  for (let i = 0; i < 12; i++) {
+    const name = ZW_PALACES[i];
+    const stars = allStarsInPalaces[name] || [];
+    const mainStars = stars.filter(s => ZW_STARS.includes(s));
+    const luckyStarList = stars.filter(s => ZW_LUCKY_STARS.includes(s) || s === '禄存' || s === '天马');
+    const fierceStarList = stars.filter(s => ZW_FIERCE_STARS.includes(s));
+    const siHuas = siHuaByPalace[name] || [];
+    
+    // 亮度判定（简化：基于宫位与星曜五行生克）
+    const starBrightness = {};
+    mainStars.forEach(s => {
+      const swx = ZW_STAR_WUXING[s];
+      const bw = BRANCH_WUXING[BRANCHES[ZW_BRANCH_MAP[name]]];
+      // 五行比和=庙，生我=旺，我生=得，我克=利，克我=平，生克皆不利=陷
+      if (swx === bw) starBrightness[s] = '庙';
+      else if ((swx === '木' && bw === '水') || (swx === '火' && bw === '木') || (swx === '土' && bw === '火') || (swx === '金' && bw === '土') || (swx === '水' && bw === '金')) starBrightness[s] = '旺';
+      else if ((swx === '水' && bw === '木') || (swx === '木' && bw === '火') || (swx === '火' && bw === '土') || (swx === '土' && bw === '金') || (swx === '金' && bw === '水')) starBrightness[s] = '得';
+      else if ((swx === '木' && bw === '土') || (swx === '土' && bw === '水') || (swx === '水' && bw === '火') || (swx === '火' && bw === '金') || (swx === '金' && bw === '木')) starBrightness[s] = '利';
+      else starBrightness[s] = '平';
+    });
+
+    palaceDetails[name] = {
+      branch: BRANCHES[ZW_BRANCH_MAP[name]],
+      mainStars,
+      mainStarBrightness: starBrightness,
+      luckyStars: luckyStarList,
+      fierceStars: fierceStarList,
+      siHuas
+    };
+  }
+
+  // 重点宫位详细解读
+  const keyPalaces = ['命宫', '财帛', '官禄', '夫妻', '田宅', '福德', '疾厄', '迁移'];
   const keyAnalysis = {};
   for (const p of keyPalaces) {
-    const idx = ZW_PALACES.indexOf(p);
-    const stars = allStarsInPalaces[p] || [];
-    if (stars.length > 0) {
-      keyAnalysis[p] = `${p}有${stars.join('、')}坐守`;
+    const detail = palaceDetails[p];
+    let text = '';
+    if (detail.mainStars.length > 0) {
+      text += `主星：${detail.mainStars.join('、')}`;
+      // 亮度
+      const bris = detail.mainStars.map(s => `${s}(${detail.mainStarBrightness[s]})`).join(' ');
+      text += ` [${bris}]`;
     } else {
-      keyAnalysis[p] = `${p}无主星，需借对宫参考`;
+      text += '无主星，借对宫参考';
     }
+    if (detail.luckyStars.length > 0) text += `；吉星：${detail.luckyStars.join('、')}`;
+    if (detail.fierceStars.length > 0) text += `；煞星：${detail.fierceStars.join('、')}`;
+    if (detail.siHuas.length > 0) {
+      const sh = detail.siHuas.map(sh => `${sh.star}化${sh.type === 'lu' ? '禄' : sh.type === 'quan' ? '权' : sh.type === 'ke' ? '科' : '忌'}`).join('、');
+      text += `；四化：${sh}`;
+    }
+    keyAnalysis[p] = text;
   }
 
   return {
@@ -422,9 +834,12 @@ function calcZiweiDouShu(yearStem, monthIdx, day, hourIdx, gender) {
     wuxingJu,
     ziweiPosition: ZW_PALACES[ziweiIdx],
     allStarsInPalaces,
+    palaceDetails,
     keyAnalysis,
     starPositions,
-    sanfangStars
+    sanfangStars,
+    siHuaTable: siHua,
+    siHuaByPalace
   };
 }
 
@@ -676,6 +1091,269 @@ function calcFengshui(yongShen, dayWuxing) {
   };
 }
 
+// ============================================================
+// 五运六气计算（黄帝内经）
+// ============================================================
+
+// 五运（天干化运）
+const YUN_TABLE = {
+  '甲': { yun: '土运', type: '太过' },
+  '己': { yun: '土运', type: '不及' },
+  '乙': { yun: '金运', type: '不及' },
+  '庚': { yun: '金运', type: '太过' },
+  '丙': { yun: '水运', type: '太过' },
+  '辛': { yun: '水运', type: '不及' },
+  '丁': { yun: '木运', type: '不及' },
+  '壬': { yun: '木运', type: '太过' },
+  '戊': { yun: '火运', type: '太过' },
+  '癸': { yun: '火运', type: '不及' }
+};
+
+// 六气司天/在泉（年支）
+const LIUQI_SIZAI = {
+  '子': { siTian: '少阴君火', zaiQuan: '阳明燥金' },
+  '午': { siTian: '少阴君火', zaiQuan: '阳明燥金' },
+  '丑': { siTian: '太阴湿土', zaiQuan: '太阳寒水' },
+  '未': { siTian: '太阴湿土', zaiQuan: '太阳寒水' },
+  '寅': { siTian: '少阳相火', zaiQuan: '厥阴风木' },
+  '申': { siTian: '少阳相火', zaiQuan: '厥阴风木' },
+  '卯': { siTian: '阳明燥金', zaiQuan: '少阴君火' },
+  '酉': { siTian: '阳明燥金', zaiQuan: '少阴君火' },
+  '辰': { siTian: '太阳寒水', zaiQuan: '太阴湿土' },
+  '戌': { siTian: '太阳寒水', zaiQuan: '太阴湿土' },
+  '巳': { siTian: '厥阴风木', zaiQuan: '少阳相火' },
+  '亥': { siTian: '厥阴风木', zaiQuan: '少阳相火' }
+};
+
+// 三阴三阳顺序（客气排列用）
+const SANYIN_SANYANG = ['厥阴风木', '少阴君火', '太阴湿土', '少阳相火', '阳明燥金', '太阳寒水'];
+// 六步对应月份和节气
+const LIUBU_SOLAR = [
+  { name: '初之气', solar: '大寒→春分', months: '1月下旬-3月中旬', nature: '升发' },
+  { name: '二之气', solar: '春分→小满', months: '3月下旬-5月中旬', nature: '生长' },
+  { name: '三之气', solar: '小满→大暑', months: '5月下旬-7月中旬', nature: '繁盛' },
+  { name: '四之气', solar: '大暑→秋分', months: '7月下旬-9月中旬', nature: '化湿' },
+  { name: '五之气', solar: '秋分→小雪', months: '9月下旬-11月中旬', nature: '肃降' },
+  { name: '终之气', solar: '小雪→大寒', months: '11月下旬-1月中旬', nature: '封藏' }
+];
+
+// 六气五行属性
+const LIUQI_WUXING = {
+  '厥阴风木': '木', '少阴君火': '火', '少阳相火': '火',
+  '太阴湿土': '土', '阳明燥金': '金', '太阳寒水': '水'
+};
+
+// 六气影响脏腑
+const LIUQI_ZANGFU = {
+  '厥阴风木': { zang: '肝', fu: '胆', desc: '风气通肝，易致肝气郁结、头目眩晕、筋脉拘挛' },
+  '少阴君火': { zang: '心', fu: '小肠', desc: '热气通心，易致心烦失眠、口舌生疮、心悸怔忡' },
+  '少阳相火': { zang: '心包', fu: '三焦', desc: '相火妄动，易致内热烦躁、疮疡肿毒、发热不退' },
+  '太阴湿土': { zang: '脾', fu: '胃', desc: '湿气通脾，易致腹胀泄泻、身体困重、痰饮水肿' },
+  '阳明燥金': { zang: '肺', fu: '大肠', desc: '燥气通肺，易致咳嗽咽干、皮肤干燥、大便干结' },
+  '太阳寒水': { zang: '肾', fu: '膀胱', desc: '寒气通肾，易致畏寒肢冷、腰膝冷痛、小便不利' }
+};
+
+// 五运太过不及的详细解读
+const YUN_DETAIL = {
+  '木运': {
+    taiGuo: { desc: '木运太过，风气盛行。木盛克土，脾胃易伤。', weather: '多风，春行夏令', health: '肝气偏旺，易头痛眩晕、胁痛易怒；脾胃受克，消化力弱' },
+    buJi: { desc: '木运不及，燥气来乘。金胜木衰，生机不展。', weather: '风少燥多，春有秋象', health: '肝气不足，易疲劳乏力、目涩筋软；肺金来克，易咳嗽胸闷' }
+  },
+  '火运': {
+    taiGuo: { desc: '火运太过，炎暑流行。火盛克金，肺金受邪。', weather: '炎热异常，夏有冬象不常', health: '心火亢盛，易心烦失眠、口舌生疮；肺金受克，易咳喘咽痛' },
+    buJi: { desc: '火运不及，寒来乘之。水胜火衰，阳气不振。', weather: '夏季不热，寒气偏胜', health: '心阳不足，易心悸气短、畏寒肢冷；肾水来克，易腰膝酸软' }
+  },
+  '土运': {
+    taiGuo: { desc: '土运太过，雨湿流行。土盛克水，肾水受邪。', weather: '雨水偏多，湿气弥漫', health: '脾胃湿困，易腹胀纳呆、身体沉重；肾水受克，易水肿小便不利' },
+    buJi: { desc: '土运不及，风来乘之。木胜土衰，运化无力。', weather: '雨水偏少，风气偏胜', health: '脾胃虚弱，易消化不良、四肢无力；肝木来克，易情绪抑郁' }
+  },
+  '金运': {
+    taiGuo: { desc: '金运太过，燥气流行。金盛克木，肝木受邪。', weather: '干燥少雨，秋行春令', health: '肺燥津亏，易干咳少痰、皮肤干燥；肝木受克，易两胁胀痛' },
+    buJi: { desc: '金运不及，热来乘之。火胜金衰，肃降无力。', weather: '燥气不足，温热偏胜', health: '肺气虚弱，易感冒咳嗽、气短汗出；心火来克，易口腔溃疡' }
+  },
+  '水运': {
+    taiGuo: { desc: '水运太过，寒气流行。水盛克火，心火受邪。', weather: '冬季严寒，寒气侵人', health: '肾寒阳衰，易畏寒肢冷、腰膝冷痛；心火受克，易胸闷心悸' },
+    buJi: { desc: '水运不及，湿来乘之。土胜水衰，封藏失职。', weather: '冬季不寒，湿气偏胜', health: '肾气不足，易耳鸣健忘、夜尿频繁；脾湿来克，易腹胀便溏' }
+  }
+};
+
+// 五运六气之间的生克关系解读
+function analyzeYunQiRelation(yearYun, yearYunType, siTian, zaiQuan) {
+  const yw = yearYun.replace('运', '');
+  const stw = LIUQI_WUXING[siTian];
+  const zqw = LIUQI_WUXING[zaiQuan];
+
+  let relation = '';
+
+  if (yw === stw) {
+    relation = '岁运与司天之气同气，谓之"天符"年。气候变化剧烈，同气相应，该类病邪易于流行。';
+  } else {
+    const overcomes = { '木':'土', '土':'水', '水':'火', '火':'金', '金':'木' };
+    const generates = { '木':'火', '火':'土', '土':'金', '金':'水', '水':'木' };
+
+    if (stw === overcomes[yw]) {
+      relation = `司天${stw}克岁运${yw}，谓之"天刑"年。司天之气克制中运，气候变化异常，上半年需防${siTian}相关的疾病。`;
+    } else if (yw === overcomes[stw]) {
+      relation = `岁运${yw}克司天${stw}，谓之"不和"年。中运克制司天，气候变化相对缓和但仍需关注。`;
+    } else if (generates[yw] === stw) {
+      relation = `岁运${yw}生司天${stw}，运生气，谓之"小逆"年。气候变化较好，但岁运之气有所损耗。`;
+    } else if (generates[stw] === yw) {
+      relation = `司天${stw}生岁运${yw}，气生运，谓之"顺化"年。气候变化平和，是为吉年。`;
+    } else {
+      relation = `岁运${yw}与司天${stw}不相克制，气候变化相对平稳。`;
+    }
+  }
+
+  return relation;
+}
+
+function calcWuYunLiuQi(yearStemChar, yearBranchChar, dayStem, dayZhi, daoyi) {
+  // 1. 本年五运
+  const yunInfo = YUN_TABLE[yearStemChar];
+  const yunName = yunInfo.yun;
+  const yunType = yunInfo.type;
+  const yunDetail = YUN_DETAIL[yunName][yunType === '太过' ? 'taiGuo' : 'buJi'];
+
+  // 2. 本年六气
+  const qiInfo = LIUQI_SIZAI[yearBranchChar];
+  const siTian = qiInfo.siTian;   // 司天（上半年）
+  const zaiQuan = qiInfo.zaiQuan; // 在泉（下半年）
+
+  // 3. 客气六步（从司天开始按三阴三阳顺序排列）
+  const siTianIdx = SANYIN_SANYANG.indexOf(siTian);
+  const keQiOrder = [];
+  for (let i = 0; i < 6; i++) {
+    keQiOrder.push(SANYIN_SANYANG[(siTianIdx + i) % 6]);
+  }
+  // 客气顺序：三之气=司天，初之气=从司天逆推两位，终之气=在泉
+  // 正确顺序：初之气=前一位的三阴三阳，以此类推
+  // 司天为三之气，在泉为终之气(六之气)
+
+  // 4. 主气六步（固定）
+  const zhuQiOrder = ['厥阴风木', '少阴君火', '少阳相火', '太阴湿土', '阳明燥金', '太阳寒水'];
+
+  // 5. 构建六步详情
+  const liuBu = [];
+  for (let i = 0; i < 6; i++) {
+    const zhu = zhuQiOrder[i];
+    const ke = keQiOrder[i];
+    liuBu.push({
+      ...LIUBU_SOLAR[i],
+      zhuQi: zhu,
+      zhuQiWuxing: LIUQI_WUXING[zhu],
+      keQi: ke,
+      keQiWuxing: LIUQI_WUXING[ke],
+      keQiZangFu: LIUQI_ZANGFU[ke]
+    });
+  }
+
+  // 6. 岁运与司天关系
+  const yunQiRelation = analyzeYunQiRelation(yunName, yunType, siTian, zaiQuan);
+
+  // 7. 个人体质与本年五运六气的匹配分析
+  const birthWuxing = STEM_WUXING[dayStem];
+  const dayWuxingName = birthWuxing;
+
+  // 检查个人体质是否受本年五运六气影响
+  const personalImpact = [];
+  const overcomes = { '木':'土', '土':'水', '水':'火', '火':'金', '金':'木' };
+  const generates = { '木':'火', '火':'土', '土':'金', '金':'水', '水':'木' };
+
+  const yunWuxing = yunName.replace('运', '');
+  const siTianWuxing = LIUQI_WUXING[siTian];
+  const zaiQuanWuxing = LIUQI_WUXING[zaiQuan];
+
+  // 岁运对个人影响
+  if (yunWuxing === generates[dayWuxingName]) {
+    personalImpact.push(`岁运${yunName}生您日主${dayWuxingName}，本年天地之气对您有生助之益，是运势上升之年。`);
+  } else if (dayWuxingName === generates[yunWuxing]) {
+    personalImpact.push(`您日主${dayWuxingName}生岁运${yunName}，本年需付出较多精力，宜守不宜攻，注意保养元气。`);
+  } else if (yunWuxing === dayWuxingName) {
+    personalImpact.push(`岁运${yunName}与您日主同属${dayWuxingName}，本年比肩相助，贵人运旺，适合发展合作。`);
+  } else if (yunWuxing === overcomes[dayWuxingName]) {
+    personalImpact.push(`⚠️ 岁运${yunName}克您日主${dayWuxingName}，本年需特别注意健康，防范意外，做事谨慎为要。`);
+  } else if (dayWuxingName === overcomes[yunWuxing]) {
+    personalImpact.push(`您日主${dayWuxingName}克岁运${yunName}，本年虽有挑战但能应对，适合主动出击。`);
+  }
+
+  // 司天对个人影响
+  if (siTianWuxing === generates[dayWuxingName]) {
+    personalImpact.push(`上半年司天${siTian}之气生您日主，上半年运势有利，身心健康。`);
+  } else if (siTianWuxing === overcomes[dayWuxingName]) {
+    personalImpact.push(`⚠️ 上半年司天${siTian}之气克您日主，上半年需注意${LIUQI_ZANGFU[siTian]?.desc || '相关健康问题'}。`);
+  }
+
+  // 在泉对个人影响
+  if (zaiQuanWuxing === generates[dayWuxingName]) {
+    personalImpact.push(`下半年在泉${zaiQuan}之气生您日主，下半年运势好转，收成有利。`);
+  } else if (zaiQuanWuxing === overcomes[dayWuxingName]) {
+    personalImpact.push(`⚠️ 下半年在泉${zaiQuan}之气克您日主，下半年需注意${LIUQI_ZANGFU[zaiQuan]?.desc || '相关健康问题'}。`);
+  }
+
+  // 8. 综合防病建议（结合道医体质）
+  const healthAdvice = [];
+  
+  // 基于司天的防病建议
+  if (siTianWuxing) {
+    const szf = LIUQI_ZANGFU[siTian];
+    if (szf) {
+      healthAdvice.push(`本年司天${siTian}，重点养护${szf.zang}${szf.fu}。${szf.desc}。`);
+    }
+  }
+
+  // 基于在泉的建议
+  if (zaiQuanWuxing) {
+    const zzf = LIUQI_ZANGFU[zaiQuan];
+    if (zzf) {
+      healthAdvice.push(`下半年在泉${zaiQuan}，需兼顾${zzf.zang}${zzf.fu}的调养。${zzf.desc}。`);
+    }
+  }
+
+  // 结合个人体质
+  if (daoyi && daoyi.primaryType) {
+    healthAdvice.push(`结合您的${daoyi.primaryType}，本年${yunType === '太过' ? '气运偏盛' : '气运偏衰'}的气候环境下，${yunDetail.health}。`);
+  }
+
+  // 9. 逐月调养提示
+  const monthlyYangSheng = [];
+  for (let m = 1; m <= 12; m++) {
+    let buIdx;
+    if (m <= 1 || m === 12) buIdx = 5; // 终之气
+    else if (m <= 3) buIdx = 0; // 初之气
+    else if (m <= 5) buIdx = 1; // 二之气
+    else if (m <= 7) buIdx = 2; // 三之气
+    else if (m <= 9) buIdx = 3; // 四之气
+    else buIdx = 4; // 五之气
+
+    const bu = liuBu[buIdx];
+    // 当前月份对应六步的月养提示
+    const zf = LIUQI_ZANGFU[bu.keQi];
+    monthlyYangSheng.push({
+      month: m,
+      liuBuName: bu.name,
+      keQi: bu.keQi,
+      zangFu: zf ? `${zf.zang}/${zf.fu}` : '',
+      tip: zf ? `当令之气为${bu.keQi}，宜调养${zf.zang}${zf.fu}` : ''
+    });
+  }
+
+  return {
+    yearYun: yunName,
+    yearYunType: yunType,
+    yearYunDetail: yunDetail,
+    siTian,
+    siTianWuxing,
+    zaiQuan,
+    zaiQuanWuxing,
+    yunQiRelation,
+    liuBu,
+    personalImpact,
+    healthAdvice,
+    monthlyYangSheng,
+    summary: `${yunName}${yunType}之年，司天${siTian}，在泉${zaiQuan}。${yunDetail.desc} ${yunQiRelation}`
+  };
+}
+
 // ========== API 处理 ==========
 export async function onRequestGet(context) {
   try {
@@ -736,13 +1414,17 @@ export async function onRequestGet(context) {
   }
 
   // 紫微斗数
-  const ziwei = calcZiweiDouShu(STEMS.indexOf(yearGan), month - 1, day, BRANCHES.indexOf(HOUR_BRANCH[hourName] || '子'), gender);
+  const ziwei = calcZiweiDouShu(yearGan, yearZhi, year, month - 1, day, BRANCHES.indexOf(HOUR_BRANCH[hourName] || '子'), gender);
   // 面相
   const mianxiang = calcMianXiang(dayGan, gender);
   // 手相
   const shouxiang = calcShouXiang(dayGan, gender);
   // 风水
   const fengshui = calcFengshui(yongShen, STEM_WUXING[dayGan]);
+  // 道医体质
+  const daoyi = calcDaoYiTiZhi(dayGan, dayZhi, monthZhi, wuxingCount, strength);
+  // 五运六气
+  const wuyunliuqi = calcWuYunLiuQi(yearGan, yearZhi, dayGan, dayZhi, daoyi);
 
   const result = {
     name,
@@ -756,6 +1438,7 @@ export async function onRequestGet(context) {
     },
     dayMaster: dayGan,
     dayWuxing: STEM_WUXING[dayGan],
+    dayZhiWuxing: BRANCH_WUXING[dayZhi],
     wuxingCount,
     strength,
     yongShen,
@@ -767,7 +1450,9 @@ export async function onRequestGet(context) {
     ziwei,
     mianxiang,
     shouxiang,
-    fengshui
+    fengshui,
+    daoyi,
+    wuyunliuqi
   };
 
   return new Response(JSON.stringify(result), {
