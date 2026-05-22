@@ -46,8 +46,8 @@
   <div class="report-sections" id="reportSections">
     <!-- 所有内容由 JS 动态生成 -->
     <div id="loadingIndicator" style="text-align:center;padding:3rem 0;">
-      <p style="color:var(--color-gold);font-size:1.2rem;">正在排盘推演中……</p>
-      <p style="color:var(--color-text-muted);">请稍候</p>
+      <p style="color:#C9A84C;font-size:1.2rem;">正在排盘推演中……</p>
+      <p style="color:#8B8577;">请稍候</p>
     </div>
   </div>
 </main>
@@ -121,8 +121,8 @@ function renderBaziDisplay() {
   document.getElementById('hourZhi').textContent = p.hour[1];
 
   // 日柱高亮
-  document.getElementById('dayGan').style.color = 'var(--color-gold)';
-  document.getElementById('dayZhi').style.color = 'var(--color-gold)';
+  document.getElementById('dayGan').style.color = '#C9A84C';
+  document.getElementById('dayZhi').style.color = '#C9A84C';
 
   // 五行指示器数量
   const wc = baziResult.wuxingCount;
@@ -142,7 +142,7 @@ function renderBaziDisplay() {
   // 强弱标记
   const badge = document.getElementById('strengthBadge');
   const s = baziResult.strength;
-  const sc = s.includes('强') ? 'var(--color-cinnabar)' : s.includes('弱') ? 'var(--color-jade)' : 'var(--color-gold)';
+  const sc = s.includes('强') ? 'var(--color-cinnabar)' : s.includes('弱') ? 'var(--color-jade)' : '#C9A84C';
   badge.innerHTML = `<span style="display:inline-block;padding:0.25rem 1rem;border-radius:100px;font-size:0.85rem;background:${sc}15;color:${sc};border:1px solid ${sc}30;">日主${baziResult.dayMaster}${baziResult.dayWuxing} · ${s}</span>`;
 }
 
@@ -218,7 +218,7 @@ function buildWuxingCard(d) {
       <div style="flex:1;height:20px;background:var(--color-ink);border-radius:4px;overflow:hidden;">
         <div style="width:${pct}%;height:100%;background:${colorVar};border-radius:4px;transition:width 0.6s;"></div>
       </div>
-      <span style="font-size:0.85rem;color:var(--color-text-muted);">${wc[v]}</span>
+      <span style="font-size:0.85rem;color:#8B8577;">${wc[v]}</span>
     </div>`;
   }
 
@@ -226,8 +226,8 @@ function buildWuxingCard(d) {
 
   return cardTemplate('flame', '五行分布分析', '天干地支与五行力量', bars + `
     <p style="margin-top:var(--space-md);">${analysis}</p>
-    <div style="margin-top:var(--space-md);padding:var(--space-md);background:rgba(201,168,76,0.05);border-radius:var(--radius-sm);border-left:3px solid var(--color-gold);">
-      <strong style="color:var(--color-gold);">${d.yongShen.principle}</strong>
+    <div style="margin-top:var(--space-md);padding:var(--space-md);background:rgba(201,168,76,0.05);border-radius:var(--radius-sm);border-left:3px solid #C9A84C;">
+      <strong style="color:#C9A84C;">${d.yongShen.principle}</strong>
       <p style="margin-top:var(--space-xs);">用神：${d.yongShen.yongShen}，忌：${d.yongShen.avoid}</p>
     </div>`, true);
 }
@@ -239,7 +239,7 @@ function buildPersonalityCard(d) {
   p.negative.forEach(t => { neg += `<li>⚠ ${t}</li>`; });
 
   return cardTemplate('user', '日主性格', `日主${d.dayMaster}${d.dayWuxing} · ${d.strength}`,
-    `<p>日主<span style="color:var(--color-gold);font-weight:600;">${d.dayMaster}${d.dayWuxing}</span>，${d.strength}。</p>
+    `<p>日主<span style="color:#C9A84C;font-weight:600;">${d.dayMaster}${d.dayWuxing}</span>，${d.strength}。</p>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);margin-top:var(--space-md);">
       <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
         <div style="font-size:0.85rem;color:var(--color-jade);margin-bottom:var(--space-xs);">优势特质</div>
@@ -258,9 +258,9 @@ function buildShiShenCard(d) {
   let rows = '';
   for (const [key, val] of Object.entries(ss)) {
     rows += `<div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);">
-      <span style="color:var(--color-text-muted);">${pillarNames[key] || key}</span>
-      <span style="font-weight:600;color:var(--color-gold);">${val[0]}</span>
-      <span style="font-size:0.85rem;color:var(--color-text-muted);">${val[1]}</span>
+      <span style="color:#8B8577;">${pillarNames[key] || key}</span>
+      <span style="font-weight:600;color:#C9A84C;">${val[0]}</span>
+      <span style="font-size:0.85rem;color:#8B8577;">${val[1]}</span>
     </div>`;
   }
   return cardTemplate('git-branch', '十神关系', '天干之间的生克关系', rows, true);
@@ -269,22 +269,22 @@ function buildShiShenCard(d) {
 function buildYongShenCard(d) {
   const g = d.luckyGuide;
   return cardTemplate('star', '喜用神与幸运指南', d.yongShen.principle,
-    `<p style="margin-bottom:var(--space-md);"><span style="color:var(--color-gold);font-weight:600;">用神：${d.yongShen.yongShen}</span></p>
+    `<p style="margin-bottom:var(--space-md);"><span style="color:#C9A84C;font-weight:600;">用神：${d.yongShen.yongShen}</span></p>
     <p style="margin-bottom:var(--space-md);"><span style="color:var(--color-cinnabar);">忌神：${d.yongShen.avoid}</span></p>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm);">
       <div style="text-align:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);">
         <div style="font-size:1.5rem;">🧭</div>
-        <div style="font-size:0.8rem;color:var(--color-text-muted);margin-top:0.25rem;">幸运方位</div>
+        <div style="font-size:0.8rem;color:#8B8577;margin-top:0.25rem;">幸运方位</div>
         <div style="font-weight:600;">${g.directions.join(' / ')}</div>
       </div>
       <div style="text-align:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);">
         <div style="font-size:1.5rem;">🎨</div>
-        <div style="font-size:0.8rem;color:var(--color-text-muted);margin-top:0.25rem;">幸运颜色</div>
+        <div style="font-size:0.8rem;color:#8B8577;margin-top:0.25rem;">幸运颜色</div>
         <div style="font-weight:600;">${g.colors.join(' / ')}</div>
       </div>
       <div style="text-align:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);">
         <div style="font-size:1.5rem;">🔢</div>
-        <div style="font-size:0.8rem;color:var(--color-text-muted);margin-top:0.25rem;">幸运数字</div>
+        <div style="font-size:0.8rem;color:#8B8577;margin-top:0.25rem;">幸运数字</div>
         <div style="font-weight:600;">${g.numbers.join(', ')}</div>
       </div>
     </div>
@@ -295,7 +295,7 @@ function buildYongShenCard(d) {
 }
 
 function buildDayunCard(d, isFree) {
-  const content = `<p>大运十年一转，顺逆交替。您的命局行运遵循<span style="color:var(--color-gold);">阳年男顺排/阴年女逆排</span>规则。</p>
+  const content = `<p>大运十年一转，顺逆交替。您的命局行运遵循<span style="color:#C9A84C;">阳年男顺排/阴年女逆排</span>规则。</p>
     <p style="margin-top:var(--space-sm);">精确大运起运年龄需结合出生日期与节气时间差计算，完整分析包含：</p>
     <ul style="margin-top:var(--space-sm);list-style:disc;padding-left:var(--space-md);">
       <li>起运年龄与换运节点</li>
@@ -306,7 +306,7 @@ function buildDayunCard(d, isFree) {
   if (isFree) {
     return cardTemplate('trending-up', '十年大运', '人生各阶段走势',
       content + `<div class="lock-overlay" style="margin-top:var(--space-md);">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold)" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         <p>升级完整报告 · 解锁十年大运详细解读</p>
         <a href="checkout.html" class="btn btn-primary" style="margin-top:0.75rem;">解锁完整报告</a>
       </div>`);
@@ -316,27 +316,27 @@ function buildDayunCard(d, isFree) {
 
 function buildLiunianCard(d, isFree) {
   const cl = d.currentYearLuck;
-  const colors = { '大吉': 'var(--color-jade)', '小吉': 'var(--color-jade)', '平稳': 'var(--color-gold)', '需注意': 'var(--color-cinnabar)', '挑战多': 'var(--color-cinnabar)' };
+  const colors = { '大吉': 'var(--color-jade)', '小吉': 'var(--color-jade)', '平稳': '#C9A84C', '需注意': 'var(--color-cinnabar)', '挑战多': 'var(--color-cinnabar)' };
 
-  const content = `<p style="margin-bottom:var(--space-md);">${cl.year}年<span style="color:var(--color-gold);font-weight:600;">${cl.yearPillar}</span>，总体运势：<span style="color:${colors[cl.overall]};font-weight:600;">${cl.overall}</span></p>
+  const content = `<p style="margin-bottom:var(--space-md);">${cl.year}年<span style="color:#C9A84C;font-weight:600;">${cl.yearPillar}</span>，总体运势：<span style="color:${colors[cl.overall]};font-weight:600;">${cl.overall}</span></p>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);">
       <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:0.85rem;color:var(--color-text-muted);">事业</div><div style="margin-top:0.25rem;">${cl.career}</div>
+        <div style="font-size:0.85rem;color:#8B8577;">事业</div><div style="margin-top:0.25rem;">${cl.career}</div>
       </div>
       <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:0.85rem;color:var(--color-text-muted);">财运</div><div style="margin-top:0.25rem;">${cl.wealth}</div>
+        <div style="font-size:0.85rem;color:#8B8577;">财运</div><div style="margin-top:0.25rem;">${cl.wealth}</div>
       </div>
       <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:0.85rem;color:var(--color-text-muted);">感情</div><div style="margin-top:0.25rem;">${cl.love}</div>
+        <div style="font-size:0.85rem;color:#8B8577;">感情</div><div style="margin-top:0.25rem;">${cl.love}</div>
       </div>
       <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:0.85rem;color:var(--color-text-muted);">健康</div><div style="margin-top:0.25rem;">${cl.health}</div>
+        <div style="font-size:0.85rem;color:#8B8577;">健康</div><div style="margin-top:0.25rem;">${cl.health}</div>
       </div>
     </div>`;
 
   if (isFree) {
     content += `<div class="lock-overlay" style="margin-top:var(--space-lg);">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold)" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       <p>付费版解锁逐年逐月详细解读</p>
       <a href="checkout.html" class="btn btn-primary" style="margin-top:0.75rem;">解锁完整报告</a>
     </div>`;
@@ -347,14 +347,14 @@ function buildLiunianCard(d, isFree) {
 
 function buildMonthlyCard(d) {
   const ml = d.monthlyLuck;
-  const colors = { '上升': 'var(--color-jade)', '平稳': 'var(--color-gold)', '波动': 'var(--color-cinnabar)' };
+  const colors = { '上升': 'var(--color-jade)', '平稳': '#C9A84C', '波动': 'var(--color-cinnabar)' };
   let months = '';
   for (const m of ml) {
     months += `<div style="padding:var(--space-xs);text-align:center;font-size:0.8rem;background:var(--color-ink);border-radius:var(--radius-sm);"><strong>${m.month}月</strong><br><span style="color:${colors[m.status]};font-size:0.75rem;">${m.status}</span></div>`;
   }
   return cardTemplate('calendar', '流月简析', `${d.currentYearLuck.year}年各月走势`,
     `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-xs);">${months}</div>
-    <p style="margin-top:var(--space-md);font-size:0.85rem;color:var(--color-text-muted);">绿色=顺遂月份 · 金色=平稳 · 红色=需要谨慎</p>`);
+    <p style="margin-top:var(--space-md);font-size:0.85rem;color:#8B8577;">绿色=顺遂月份 · 金色=平稳 · 红色=需要谨慎</p>`);
 }
 
 function buildJixiongCard(d) {
@@ -390,26 +390,26 @@ function buildZiweiCard(d, isFree) {
   let starsHtml = '';
   for (const [palace, stars] of Object.entries(zw.allStarsInPalaces)) {
     if (stars.length > 0) {
-      starsHtml += `<div style="padding:var(--space-xs);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:2px;"><span style="color:var(--color-text-muted);font-size:0.8rem;">${palace}</span> <span style="color:var(--color-gold);">${stars.join(' ')}</span></div>`;
+      starsHtml += `<div style="padding:var(--space-xs);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:2px;"><span style="color:#8B8577;font-size:0.8rem;">${palace}</span> <span style="color:#C9A84C;">${stars.join(' ')}</span></div>`;
     }
   }
 
   let keyHtml = '';
   for (const [palace, analysis] of Object.entries(zw.keyAnalysis)) {
-    keyHtml += `<div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:var(--color-gold);">${palace}</strong><br><span style="font-size:0.9rem;">${analysis}</span></div>`;
+    keyHtml += `<div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:#C9A84C;">${palace}</strong><br><span style="font-size:0.9rem;">${analysis}</span></div>`;
   }
 
-  const content = `<p><span style="color:var(--color-gold);font-weight:600;">命宫：${zw.mingPalace}</span> · ${zw.mingInterpret}</p>
+  const content = `<p><span style="color:#C9A84C;font-weight:600;">命宫：${zw.mingPalace}</span> · ${zw.mingInterpret}</p>
     <p style="margin-top:var(--space-sm);"><span style="color:var(--color-jade);font-weight:600;">身宫：${zw.shenPalace}</span> · ${zw.shenInterpret}</p>
-    <p style="margin-top:var(--space-sm);">五行局：<strong>${zw.wuxingJu}</strong>局 · 紫微在<span style="color:var(--color-gold);">${zw.ziweiPosition}</span></p>
-    <div style="margin-top:var(--space-md);"><strong style="color:var(--color-text-muted);">重点宫位分析</strong><div style="margin-top:var(--space-sm);">${keyHtml}</div></div>`;
+    <p style="margin-top:var(--space-sm);">五行局：<strong>${zw.wuxingJu}</strong>局 · 紫微在<span style="color:#C9A84C;">${zw.ziweiPosition}</span></p>
+    <div style="margin-top:var(--space-md);"><strong style="color:#8B8577;">重点宫位分析</strong><div style="margin-top:var(--space-sm);">${keyHtml}</div></div>`;
 
   if (isFree) {
     content += `<div class="lock-overlay" style="margin-top:var(--space-lg);">
       <p>付费版解锁全盘十四主星飞布、四化星、辅星详解</p>
       <a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整紫微命盘</a></div>`;
   } else {
-    content += `<div style="margin-top:var(--space-lg);"><strong style="color:var(--color-text-muted);">全盘主星分布</strong><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:var(--space-sm);">${starsHtml}</div></div>`;
+    content += `<div style="margin-top:var(--space-lg);"><strong style="color:#8B8577;">全盘主星分布</strong><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:var(--space-sm);">${starsHtml}</div></div>`;
   }
 
   return cardTemplate('globe', '紫微斗数', `命宫${zw.mingPalace} · ${zw.wuxingJu}局`, content);
@@ -419,119 +419,94 @@ function buildZiweiCard(d, isFree) {
 function buildMianXiangCard(d, isFree) {
   const mx = d.mianxiang;
 
-  // 出版级面相 SVG
-  const faceSVG = `<svg viewBox="0 0 400 500" width="400" height="500" style="max-width:100%;">
-    <defs>
-      <filter id="fglow"><feGaussianBlur stdDeviation="1.5"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      <radialGradient id="faceGrad" cx="50%" cy="50%"><stop offset="0%" stop-color="rgba(201,168,76,0.06)"/><stop offset="100%" stop-color="rgba(201,168,76,0.01)"/></radialGradient>
-    </defs>
+  // 出版级面相 SVG（全部使用固定颜色，兼容移动端）
+  const faceSVG = `<svg viewBox="0 0 400 500" width="100%" height="auto" style="max-width:400px;">
     <rect width="400" height="500" fill="#1a1f2e" rx="8"/>
-    <rect x="10" y="10" width="380" height="480" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="2" rx="4"/>
-    <text x="200" y="35" text-anchor="middle" fill="var(--color-gold)" font-size="14" font-weight="bold">面相全图</text>
+    <rect x="10" y="10" width="380" height="480" fill="none" stroke="#C9A84C" stroke-width="1.5" rx="4" opacity="0.3"/>
+    <text x="200" y="35" text-anchor="middle" fill="#C9A84C" font-size="15" font-weight="bold">面相全图</text>
 
     <!-- 面部轮廓 -->
-    <ellipse cx="200" cy="270" rx="95" ry="135" fill="url(#faceGrad)" stroke="var(--color-gold)" stroke-width="1.5" opacity="0.6"/>
+    <ellipse cx="200" cy="270" rx="95" ry="135" fill="#1e2235" stroke="#C9A84C" stroke-width="1.5" opacity="0.8"/>
     <!-- 发型 -->
-    <path d="M105,220 Q100,140 140,95 Q170,70 200,65 Q230,70 260,95 Q300,140 295,220" fill="none" stroke="var(--color-text-muted)" stroke-width="1.2" opacity="0.6"/>
-    <!-- 额头纹 -->
-    <path d="M145,155 Q200,148 255,155" fill="none" stroke="var(--color-text-muted)" stroke-width="0.4" opacity="0.3"/>
-    <path d="M150,165 Q200,158 250,165" fill="none" stroke="var(--color-text-muted)" stroke-width="0.4" opacity="0.3"/>
+    <path d="M105,220 Q100,140 140,95 Q170,70 200,65 Q230,70 260,95 Q300,140 295,220" fill="none" stroke="#8B8577" stroke-width="1.2"/>
 
-    <!-- === 三停分区 === -->
-    <!-- 上停（天庭-额头）-->
-    <rect x="105" y="115" width="190" height="75" rx="6" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.25)" stroke-dasharray="6,3"/>
+    <!-- 三停分区 -->
+    <rect x="105" y="115" width="190" height="75" rx="6" fill="rgba(201,168,76,0.08)" stroke="#C9A84C" stroke-width="1" stroke-dasharray="6,3" opacity="0.5"/>
     <text x="200" y="145" text-anchor="middle" fill="#C9A84C" font-size="14" font-weight="600">上停 · 天庭</text>
-    <text x="200" y="162" text-anchor="middle" fill="var(--color-text-muted)" font-size="10">少年运 · 15-30岁</text>
-    <!-- 上停→中停分割线 -->
-    <line x1="108" y1="195" x2="292" y2="195" stroke="var(--color-gold)" stroke-width="1" opacity="0.4" stroke-dasharray="8,4"/>
+    <text x="200" y="162" text-anchor="middle" fill="#8B8577" font-size="10">少年运 · 15-30岁</text>
 
-    <!-- 中停（眉眼鼻）-->
-    <rect x="105" y="198" width="190" height="95" rx="6" fill="rgba(74,158,139,0.05)" stroke="rgba(74,158,139,0.25)" stroke-dasharray="6,3"/>
-    <text x="200" y="225" text-anchor="middle" fill="#4A9E8B" font-size="14" font-weight="600">中停 · 眉眼鼻</text>
-    <text x="200" y="242" text-anchor="middle" fill="var(--color-text-muted)" font-size="10">中年运 · 31-50岁</text>
-    <!-- 中停→下停分割线 -->
-    <line x1="108" y1="296" x2="292" y2="296" stroke="var(--color-gold)" stroke-width="1" opacity="0.4" stroke-dasharray="8,4"/>
+    <rect x="105" y="198" width="190" height="95" rx="6" fill="rgba(74,158,139,0.06)" stroke="#4A9E8B" stroke-width="1" stroke-dasharray="6,3" opacity="0.5"/>
+    <text x="200" y="226" text-anchor="middle" fill="#4A9E8B" font-size="14" font-weight="600">中停 · 眉眼鼻</text>
+    <text x="200" y="243" text-anchor="middle" fill="#8B8577" font-size="10">中年运 · 31-50岁</text>
 
-    <!-- 下停（口颏）-->
-    <rect x="105" y="299" width="190" height="85" rx="6" fill="rgba(107,91,149,0.05)" stroke="rgba(107,91,149,0.25)" stroke-dasharray="6,3"/>
-    <text x="200" y="325" text-anchor="middle" fill="#6B5B95" font-size="14" font-weight="600">下停 · 口颏地阁</text>
-    <text x="200" y="342" text-anchor="middle" fill="var(--color-text-muted)" font-size="10">晚年运 · 51岁后</text>
+    <rect x="105" y="299" width="190" height="85" rx="6" fill="rgba(107,91,149,0.05)" stroke="#6B5B95" stroke-width="1" stroke-dasharray="6,3" opacity="0.5"/>
+    <text x="200" y="326" text-anchor="middle" fill="#6B5B95" font-size="14" font-weight="600">下停 · 口颏地阁</text>
+    <text x="200" y="343" text-anchor="middle" fill="#8B8577" font-size="10">晚年运 · 51岁后</text>
 
-    <!-- === 眉毛 === -->
-    <path d="M130,245 Q165,232 200,236" fill="none" stroke="var(--color-text)" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M200,236 Q235,232 270,245" fill="none" stroke="var(--color-text)" stroke-width="2.5" stroke-linecap="round"/>
-    <!-- 保寿宫（眉）标注 -->
-    <text x="120" y="240" fill="var(--color-text-muted)" font-size="7">保寿宫</text>
+    <!-- 眉毛 -->
+    <path d="M130,248 Q165,235 200,240" fill="none" stroke="#E8E0D4" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M200,240 Q235,235 270,248" fill="none" stroke="#E8E0D4" stroke-width="2.5" stroke-linecap="round"/>
 
-    <!-- === 眼睛 === -->
-    <ellipse cx="160" cy="272" rx="20" ry="10" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
-    <circle cx="160" cy="272" r="5" fill="var(--color-text)"/>
-    <circle cx="160" cy="272" r="2" fill="var(--color-void)"/>
-    <!-- 上眼睑 -->
-    <path d="M140,268 Q160,260 180,268" fill="none" stroke="var(--color-text)" stroke-width="1"/>
+    <!-- 眼睛 -->
+    <ellipse cx="160" cy="275" rx="18" ry="10" fill="none" stroke="#E8E0D4" stroke-width="1.5"/>
+    <circle cx="160" cy="275" r="5" fill="#E8E0D4"/>
+    <circle cx="160" cy="275" r="2" fill="#080B14"/>
+    <ellipse cx="240" cy="275" rx="18" ry="10" fill="none" stroke="#E8E0D4" stroke-width="1.5"/>
+    <circle cx="240" cy="275" r="5" fill="#E8E0D4"/>
+    <circle cx="240" cy="275" r="2" fill="#080B14"/>
 
-    <ellipse cx="240" cy="272" rx="20" ry="10" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
-    <circle cx="240" cy="272" r="5" fill="var(--color-text)"/>
-    <circle cx="240" cy="272" r="2" fill="var(--color-void)"/>
-    <path d="M220,268 Q240,260 260,268" fill="none" stroke="var(--color-text)" stroke-width="1"/>
-    <!-- 田宅宫（上眼睑）-->
-    <text x="250" y="258" fill="var(--color-text-muted)" font-size="7">田宅宫</text>
+    <!-- 鼻子 -->
+    <path d="M200,250 L192,320 Q200,328 208,320 Z" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="1.5"/>
+    <ellipse cx="200" cy="322" rx="13" ry="8" fill="rgba(201,168,76,0.08)" stroke="#C9A84C" stroke-width="1"/>
+    <ellipse cx="183" cy="324" rx="6" ry="4" fill="none" stroke="#C9A84C" stroke-width="0.8"/>
+    <ellipse cx="217" cy="324" rx="6" ry="4" fill="none" stroke="#C9A84C" stroke-width="0.8"/>
+    <text x="200" y="342" text-anchor="middle" fill="#C9A84C" font-size="10" font-weight="bold">财帛宫</text>
 
-    <!-- === 鼻子（财帛宫）=== -->
-    <path d="M200,245 L192,315 Q200,322 208,315 Z" fill="rgba(201,168,76,0.15)" stroke="var(--color-gold)" stroke-width="1.5"/>
-    <!-- 鼻头 -->
-    <ellipse cx="200" cy="318" rx="12" ry="8" fill="rgba(201,168,76,0.1)" stroke="var(--color-gold)" stroke-width="1"/>
-    <!-- 鼻翼 -->
-    <ellipse cx="185" cy="320" rx="5" ry="4" fill="none" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.7"/>
-    <ellipse cx="215" cy="320" rx="5" ry="4" fill="none" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.7"/>
-    <text x="200" y="340" text-anchor="middle" fill="#C9A84C" font-size="9" font-weight="600">财帛宫</text>
+    <!-- 嘴巴 -->
+    <path d="M165,368 Q200,378 235,368" fill="none" stroke="#E8E0D4" stroke-width="2" stroke-linecap="round"/>
+    <path d="M165,368 Q200,358 235,368" fill="none" stroke="#C75B5B" stroke-width="0.6" opacity="0.4"/>
 
-    <!-- === 嘴巴 === -->
-    <path d="M165,365 Q200,375 235,365" fill="none" stroke="var(--color-text)" stroke-width="2" stroke-linecap="round"/>
-    <path d="M165,365 Q200,355 235,365" fill="none" stroke="var(--color-cinnabar)" stroke-width="0.8" opacity="0.4"/>
+    <!-- 耳朵 -->
+    <path d="M105,245 Q88,235 92,265 Q88,298 105,305" fill="none" stroke="#E8E0D4" stroke-width="1.5"/>
+    <path d="M295,245 Q312,235 308,265 Q312,298 295,305" fill="none" stroke="#E8E0D4" stroke-width="1.5"/>
+    <text x="78" y="275" fill="#8B8577" font-size="8">福德宫</text>
+    <text x="310" y="275" fill="#8B8577" font-size="8">福德宫</text>
 
-    <!-- === 耳朵 === -->
-    <path d="M105,240 Q90,230 95,260 Q90,295 105,300" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
-    <path d="M105,255 Q100,260 105,265" fill="none" stroke="var(--color-text)" stroke-width="0.8"/>
-    <path d="M295,240 Q310,230 305,260 Q310,295 295,300" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
-    <path d="M295,255 Q300,260 295,265" fill="none" stroke="var(--color-text)" stroke-width="0.8"/>
-    <text x="82" y="270" fill="var(--color-text-muted)" font-size="7">福德宫</text>
+    <!-- 命宫（印堂）-->
+    <circle cx="200" cy="242" r="10" fill="rgba(201,168,76,0.25)" stroke="#C9A84C" stroke-width="2"/>
+    <text x="200" y="228" text-anchor="middle" fill="#C9A84C" font-size="10" font-weight="bold">命宫</text>
 
-    <!-- === 印堂（命宫）=== -->
-    <circle cx="200" cy="238" r="8" fill="rgba(201,168,76,0.2)" stroke="#C9A84C" stroke-width="1.5" filter="url(#fglow)"/>
-    <text x="200" y="222" text-anchor="middle" fill="#C9A84C" font-size="9" font-weight="600">命宫</text>
+    <!-- 官禄宫 -->
+    <circle cx="200" cy="148" r="8" fill="rgba(74,158,139,0.2)" stroke="#4A9E8B" stroke-width="1.5"/>
+    <text x="200" y="133" text-anchor="middle" fill="#4A9E8B" font-size="9" font-weight="bold">官禄宫</text>
 
-    <!-- === 官禄宫 === -->
-    <circle cx="200" cy="145" r="7" fill="rgba(74,158,139,0.15)" stroke="#4A9E8B" stroke-width="1" filter="url(#fglow)"/>
-    <text x="200" y="132" text-anchor="middle" fill="#4A9E8B" font-size="8" font-weight="600">官禄宫</text>
+    <!-- 夫妻宫 -->
+    <circle cx="128" cy="270" r="6" fill="rgba(201,168,76,0.2)" stroke="#C9A84C" stroke-width="1.2"/>
+    <circle cx="272" cy="270" r="6" fill="rgba(201,168,76,0.2)" stroke="#C9A84C" stroke-width="1.2"/>
+    <text x="112" y="292" fill="#C9A84C" font-size="8">夫妻宫</text>
+    <text x="272" y="292" fill="#C9A84C" font-size="8">夫妻宫</text>
 
-    <!-- === 夫妻宫（眼尾）=== -->
-    <circle cx="130" cy="268" r="5" fill="rgba(201,168,76,0.15)" stroke="#C9A84C" stroke-width="1" filter="url(#fglow)"/>
-    <circle cx="270" cy="268" r="5" fill="rgba(201,168,76,0.15)" stroke="#C9A84C" stroke-width="1" filter="url(#fglow)"/>
-    <text x="115" y="290" fill="#C9A84C" font-size="7">夫妻宫</text>
-    <text x="268" y="290" fill="#C9A84C" font-size="7">夫妻宫</text>
+    <!-- 颧骨/交友宫 -->
+    <circle cx="135" cy="298" r="5" fill="rgba(107,91,149,0.15)" stroke="#6B5B95" stroke-width="1"/>
+    <circle cx="265" cy="298" r="5" fill="rgba(107,91,149,0.15)" stroke="#6B5B95" stroke-width="1"/>
+    <text x="118" y="318" fill="#6B5B95" font-size="7">交友</text>
+    <text x="275" y="318" fill="#6B5B95" font-size="7">交友</text>
 
-    <!-- === 颧骨（交友宫）=== -->
-    <circle cx="135" cy="295" r="5" fill="rgba(107,91,149,0.1)" stroke="#6B5B95" stroke-width="0.8"/>
-    <circle cx="265" cy="295" r="5" fill="rgba(107,91,149,0.1)" stroke="#6B5B95" stroke-width="0.8"/>
-    <text x="120" y="315" fill="#6B5B95" font-size="6">交友</text>
-    <text x="272" y="315" fill="#6B5B95" font-size="6">交友</text>
+    <!-- 下巴 -->
+    <path d="M170,393 Q200,412 230,393" fill="none" stroke="#E8E0D4" stroke-width="1" opacity="0.5"/>
+    <text x="200" y="410" text-anchor="middle" fill="#8B8577" font-size="8">地阁（奴仆宫）</text>
 
-    <!-- === 下巴地阁 === -->
-    <path d="M170,390 Q200,410 230,390" fill="none" stroke="var(--color-text)" stroke-width="1" opacity="0.5"/>
-    <text x="200" y="408" text-anchor="middle" fill="var(--color-text-muted)" font-size="7">地阁（奴仆宫）</text>
-
-    <!-- === 人中 === -->
-    <line x1="200" y1="358" x2="200" y2="375" stroke="var(--color-text-muted)" stroke-width="1" opacity="0.5"/>
+    <!-- 人中 -->
+    <line x1="200" y1="362" x2="200" y2="380" stroke="#8B8577" stroke-width="1" opacity="0.4"/>
 
     <!-- 底部标签 -->
-    <text x="200" y="485" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">道器命理 · 面相全图 · 三停十二宫</text>
+    <text x="200" y="485" text-anchor="middle" fill="#8B8577" font-size="10">道器命理 · 面相全图 · 三停十二宫</text>
   </svg>`;
 
   let gongsHtml = '';
   const gongs = Object.entries(mx.keyGongs).slice(0, 4);
   for (const [name, analysis] of gongs) {
-    gongsHtml += `<div style="padding:var(--space-xs);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:2px;font-size:0.85rem;"><strong style="color:var(--color-gold);">${name}</strong> ${analysis}</div>`;
+    gongsHtml += `<div style="padding:var(--space-xs);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:2px;font-size:0.85rem;"><strong style="color:#C9A84C;">${name}</strong> ${analysis}</div>`;
   }
 
   const content = `<div style="text-align:center;margin-bottom:var(--space-sm);">${faceSVG}</div>
@@ -577,26 +552,26 @@ function buildShouXiangCard(d, isFree) {
       <line x1="300" y1="0" x2="300" y2="500" stroke="#fff"/>
     </g>
     <!-- 标题 -->
-    <text x="200" y="38" text-anchor="middle" fill="var(--color-gold)" font-size="14" font-weight="bold">手相全图</text>
+    <text x="200" y="38" text-anchor="middle" fill="#C9A84C" font-size="14" font-weight="bold">手相全图</text>
     <!-- 手腕 -->
-    <rect x="120" y="430" width="160" height="35" rx="8" fill="none" stroke="var(--color-text-muted)" stroke-width="1" opacity="0.4"/>
-    <line x1="150" y1="432" x2="150" y2="462" stroke="var(--color-text-muted)" stroke-width="0.5" opacity="0.3"/>
-    <line x1="200" y1="432" x2="200" y2="462" stroke="var(--color-text-muted)" stroke-width="0.5" opacity="0.3"/>
-    <line x1="250" y1="432" x2="250" y2="462" stroke="var(--color-text-muted)" stroke-width="0.5" opacity="0.3"/>
+    <rect x="120" y="430" width="160" height="35" rx="8" fill="none" stroke="#8B8577" stroke-width="1" opacity="0.4"/>
+    <line x1="150" y1="432" x2="150" y2="462" stroke="#8B8577" stroke-width="0.5" opacity="0.3"/>
+    <line x1="200" y1="432" x2="200" y2="462" stroke="#8B8577" stroke-width="0.5" opacity="0.3"/>
+    <line x1="250" y1="432" x2="250" y2="462" stroke="#8B8577" stroke-width="0.5" opacity="0.3"/>
     <!-- 手掌主体 -->
     <path d="M200,55 Q155,50 120,75 L90,140 L80,200 L82,270 Q85,330 110,370 L140,410 Q165,430 200,430 Q235,430 260,410 L290,370 Q315,330 318,270 L320,200 L310,140 L280,75 Q245,50 200,55Z"
-      fill="rgba(201,168,76,0.03)" stroke="var(--color-gold)" stroke-width="1.8"/>
+      fill="rgba(201,168,76,0.03)" stroke="#C9A84C" stroke-width="1.8"/>
     <!-- 手指 -->
-    <path d="M155,55 L155,18 Q155,10 162,10 L172,10 Q179,10 179,18 L179,52" fill="none" stroke="var(--color-text)" stroke-width="1.2"/>
-    <path d="M130,58 L130,22 Q130,14 137,14 L147,14 Q154,14 154,22 L154,54" fill="none" stroke="var(--color-text)" stroke-width="1.2"/>
-    <path d="M180,58 L180,22 Q180,14 187,14 L197,14 Q204,14 204,22 L204,56" fill="none" stroke="var(--color-text)" stroke-width="1.2"/>
-    <path d="M208,65 L208,32 Q208,24 215,24 L225,24 Q232,24 232,32 L232,68" fill="none" stroke="var(--color-text)" stroke-width="1.2"/>
-    <path d="M238,78 L238,50 Q238,42 245,42 L255,42 Q262,42 262,50 L262,82" fill="none" stroke="var(--color-text)" stroke-width="1.2"/>
+    <path d="M155,55 L155,18 Q155,10 162,10 L172,10 Q179,10 179,18 L179,52" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
+    <path d="M130,58 L130,22 Q130,14 137,14 L147,14 Q154,14 154,22 L154,54" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
+    <path d="M180,58 L180,22 Q180,14 187,14 L197,14 Q204,14 204,22 L204,56" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
+    <path d="M208,65 L208,32 Q208,24 215,24 L225,24 Q232,24 232,32 L232,68" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
+    <path d="M238,78 L238,50 Q238,42 245,42 L255,42 Q262,42 262,50 L262,82" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
     <!-- 指节线 -->
-    <line x1="155" y1="35" x2="179" y2="35" stroke="var(--color-text-muted)" stroke-width="0.5" opacity="0.5"/>
-    <line x1="130" y1="36" x2="154" y2="36" stroke="var(--color-text-muted)" stroke-width="0.5" opacity="0.5"/>
-    <line x1="180" y1="40" x2="204" y2="40" stroke="var(--color-text-muted)" stroke-width="0.5" opacity="0.5"/>
-    <line x1="208" y1="48" x2="232" y2="48" stroke="var(--color-text-muted)" stroke-width="0.5" opacity="0.5"/>
+    <line x1="155" y1="35" x2="179" y2="35" stroke="#8B8577" stroke-width="0.5" opacity="0.5"/>
+    <line x1="130" y1="36" x2="154" y2="36" stroke="#8B8577" stroke-width="0.5" opacity="0.5"/>
+    <line x1="180" y1="40" x2="204" y2="40" stroke="#8B8577" stroke-width="0.5" opacity="0.5"/>
+    <line x1="208" y1="48" x2="232" y2="48" stroke="#8B8577" stroke-width="0.5" opacity="0.5"/>
     <!-- 生命线（绿色弧形）-->
     <path d="M190,115 Q185,95 200,90 Q235,85 260,120 Q285,165 280,230 Q275,300 245,360 Q225,395 200,415"
       fill="none" stroke="#4A9E8B" stroke-width="2.5" filter="url(#glow)"/>
@@ -631,9 +606,9 @@ function buildShouXiangCard(d, isFree) {
     <ellipse cx="270" cy="135" rx="16" ry="14" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.3)" stroke-dasharray="4,3" stroke-width="1"/>
     <text x="270" y="139" text-anchor="middle" fill="#C9A84C" font-size="9">水星丘</text>
     <!-- 拇指标注 -->
-    <text x="260" y="410" text-anchor="middle" fill="var(--color-text-muted)" font-size="8">拇指</text>
+    <text x="260" y="410" text-anchor="middle" fill="#8B8577" font-size="8">拇指</text>
     <!-- 底部标签 -->
-    <text x="200" y="485" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">道器命理 · 手相全图</text>
+    <text x="200" y="485" text-anchor="middle" fill="#8B8577" font-size="9">道器命理 · 手相全图</text>
   </svg>`;
 
   const content = `<div style="display:flex;flex-wrap:wrap;gap:var(--space-md);align-items:flex-start;">
@@ -652,8 +627,8 @@ function buildShouXiangCard(d, isFree) {
   if (isFree) {
     content += `<div class="lock-overlay" style="margin-top:var(--space-lg);"><p>付费版解锁丘位分析、婚姻线与子女线、健康线、贵人线</p><a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整手相分析</a></div>`;
   } else {
-    content += `<div style="margin-top:var(--space-lg);"><strong style="color:var(--color-text-muted);">掌丘分析</strong><p style="margin-top:var(--space-sm);">${sx.mounts}</p></div>
-    <div style="margin-top:var(--space-md);padding:var(--space-md);background:rgba(201,168,76,0.05);border-radius:var(--radius-sm);border-left:3px solid var(--color-gold);"><strong>总结：</strong>${sx.summary}<br><span style="font-size:0.9rem;color:var(--color-text-muted);margin-top:var(--space-xs);display:block;">${sx.advice}</span></div>`;
+    content += `<div style="margin-top:var(--space-lg);"><strong style="color:#8B8577;">掌丘分析</strong><p style="margin-top:var(--space-sm);">${sx.mounts}</p></div>
+    <div style="margin-top:var(--space-md);padding:var(--space-md);background:rgba(201,168,76,0.05);border-radius:var(--radius-sm);border-left:3px solid #C9A84C;"><strong>总结：</strong>${sx.summary}<br><span style="font-size:0.9rem;color:#8B8577;margin-top:var(--space-xs);display:block;">${sx.advice}</span></div>`;
   }
 
   return cardTemplate('hand', '手相分析', '掌纹与掌丘解读', content);
@@ -678,11 +653,11 @@ function buildFengshuiCard(d, isFree) {
     content += `<div style="margin-top:var(--space-lg);">
       <div style="padding:var(--space-md);background:rgba(74,158,139,0.08);border-radius:var(--radius-sm);margin-bottom:var(--space-sm);"><strong style="color:var(--color-jade);">色彩方案</strong><br>${yf.colors}</div>
       <div style="padding:var(--space-md);background:rgba(74,158,139,0.08);border-radius:var(--radius-sm);margin-bottom:var(--space-sm);"><strong style="color:var(--color-jade);">🌱 绿植</strong><br>${yf.plants}</div>
-      <div style="padding:var(--space-md);background:rgba(201,168,76,0.08);border-radius:var(--radius-sm);"><strong style="color:var(--color-gold);">⚠ 规避</strong><br>${yf.avoid}</div>
+      <div style="padding:var(--space-md);background:rgba(201,168,76,0.08);border-radius:var(--radius-sm);"><strong style="color:#C9A84C;">⚠ 规避</strong><br>${yf.avoid}</div>
     </div>`;
     if (fs.secondaryFengshui) {
       const sf = fs.secondaryFengshui;
-      content += `<div style="margin-top:var(--space-lg);padding:var(--space-md);border:1px dashed rgba(201,168,76,0.2);border-radius:var(--radius-sm);"><strong style="color:var(--color-gold);">辅助布局建议</strong><p style="margin-top:var(--space-sm);font-size:0.9rem;">${sf.livingRoom}</p></div>`;
+      content += `<div style="margin-top:var(--space-lg);padding:var(--space-md);border:1px dashed rgba(201,168,76,0.2);border-radius:var(--radius-sm);"><strong style="color:#C9A84C;">辅助布局建议</strong><p style="margin-top:var(--space-sm);font-size:0.9rem;">${sf.livingRoom}</p></div>`;
     }
   }
 
@@ -692,19 +667,19 @@ function buildFengshuiCard(d, isFree) {
 function buildExpertCard() {
   return `<div class="card" style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(107,91,149,0.08));border:1px solid rgba(201,168,76,0.3);">
     <div style="text-align:center;padding:var(--space-lg) 0;">
-      <div style="font-size:0.875rem;color:var(--color-gold);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:var(--space-sm);">真人专家</div>
+      <div style="font-size:0.875rem;color:#C9A84C;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:var(--space-sm);">真人专家</div>
       <h3>山医堂主 · 医命双修</h3>
-      <p style="color:var(--color-text-muted);margin-bottom:var(--space-md);max-width:500px;margin:0 auto;">
+      <p style="color:#8B8577;margin-bottom:var(--space-md);max-width:500px;margin:0 auto;">
         不是纯算命，是身体+命理双重诊断。能开药方、调风水、做养生方案。
       </p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-md);text-align:left;margin:var(--space-lg) 0;padding:0 var(--space-lg);">
         <div style="padding:var(--space-md);background:rgba(26,31,46,0.6);border-radius:var(--radius-sm);">
-          <strong style="color:var(--color-gold);">¥99/次</strong>
-          <p style="font-size:0.875rem;color:var(--color-text-muted);margin-top:var(--space-xs);">1v1问诊30分钟</p>
+          <strong style="color:#C9A84C;">¥99/次</strong>
+          <p style="font-size:0.875rem;color:#8B8577;margin-top:var(--space-xs);">1v1问诊30分钟</p>
         </div>
         <div style="padding:var(--space-md);background:rgba(26,31,46,0.6);border-radius:var(--radius-sm);">
-          <strong style="color:var(--color-gold);">¥599/年</strong>
-          <p style="font-size:0.875rem;color:var(--color-text-muted);margin-top:var(--space-xs);">山医堂主私人顾问</p>
+          <strong style="color:#C9A84C;">¥599/年</strong>
+          <p style="font-size:0.875rem;color:#8B8577;margin-top:var(--space-xs);">山医堂主私人顾问</p>
         </div>
       </div>
       <a href="checkout.html" class="btn btn-primary">预约真人问诊</a>
@@ -715,7 +690,7 @@ function buildExpertCard() {
 function buildUpgradeCard() {
   return `<div class="card" style="text-align:center;padding:var(--space-xl);border:2px dashed var(--color-border);margin-top:var(--space-lg);">
     <h3>升级完整AI报告</h3>
-    <p style="color:var(--color-text-muted);margin-bottom:var(--space-lg);">¥10起，解锁十年大运、逐年逐月详细解读</p>
+    <p style="color:#8B8577;margin-bottom:var(--space-lg);">¥10起，解锁十年大运、逐年逐月详细解读</p>
     <a href="checkout.html" class="btn btn-primary">查看全部方案</a>
   </div>`;
 }
@@ -729,7 +704,7 @@ function generateWuxingText(d) {
   const dw = d.dayWuxing;
   const s = d.strength;
 
-  let text = `命局中<span style="color:var(--color-gold);">${maxK}</span>最旺，<span style="color:var(--color-cinnabar);">${minK}</span>最弱。日主${dw}`;
+  let text = `命局中<span style="color:#C9A84C;">${maxK}</span>最旺，<span style="color:var(--color-cinnabar);">${minK}</span>最弱。日主${dw}`;
 
   if (s.includes('强')) {
     text += '偏强，需用克泄之法平衡。';
