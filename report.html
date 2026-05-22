@@ -5,347 +5,456 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.svg"><title>命理报告 · 道器</title>
   <meta name="description" content="您的专属命理分析报告。">
-  
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  
-  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="index.html" class="nav-logo">道器</a>
-      <a href="checkout.html" class="btn btn-primary">解锁完整报告</a>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">道器</a>
+    <a href="checkout.html" class="btn btn-primary">解锁完整报告</a>
+  </div>
+</nav>
+
+<main class="report-page">
+  <header class="report-header" id="reportHeader">
+    <h1 id="reportTitle">命理报告</h1>
+    <p>基于道器排盘引擎 + 经典典籍双重支持</p>
+
+    <div class="bazi-display" id="baziDisplay">
+      <div class="bazi-pillar"><div class="bazi-pillar-label">年柱</div><div class="bazi-gan" id="yearGan">-</div><div class="bazi-zhi" id="yearZhi">-</div></div>
+      <div class="bazi-pillar"><div class="bazi-pillar-label">月柱</div><div class="bazi-gan" id="monthGan">-</div><div class="bazi-zhi" id="monthZhi">-</div></div>
+      <div class="bazi-pillar"><div class="bazi-pillar-label">日柱</div><div class="bazi-gan" id="dayGan">-</div><div class="bazi-zhi" id="dayZhi">-</div></div>
+      <div class="bazi-pillar"><div class="bazi-pillar-label">时柱</div><div class="bazi-gan" id="hourGan">-</div><div class="bazi-zhi" id="hourZhi">-</div></div>
     </div>
-  </nav>
 
-  <!-- Report Page -->
-  <main class="report-page">
-    <!-- Header -->
-    <header class="report-header">
-      <h1 id="reportTitle">命理报告</h1>
-      <p>基于道器排盘引擎 + 经典典籍双重支持</p>
-      
-      <!-- BaZi Display -->
-      <div class="bazi-display" id="baziDisplay">
-        <div class="bazi-pillar">
-          <div class="bazi-pillar-label">年柱</div>
-          <div class="bazi-gan" id="yearGan">-</div>
-          <div class="bazi-zhi" id="yearZhi">-</div>
-        </div>
-        <div class="bazi-pillar">
-          <div class="bazi-pillar-label">月柱</div>
-          <div class="bazi-gan" id="monthGan">-</div>
-          <div class="bazi-zhi" id="monthZhi">-</div>
-        </div>
-        <div class="bazi-pillar">
-          <div class="bazi-pillar-label">日柱</div>
-          <div class="bazi-gan" id="dayGan">-</div>
-          <div class="bazi-zhi" id="dayZhi">-</div>
-        </div>
-        <div class="bazi-pillar">
-          <div class="bazi-pillar-label">时柱</div>
-          <div class="bazi-gan" id="hourGan">-</div>
-          <div class="bazi-zhi" id="hourZhi">-</div>
-        </div>
-      </div>
-
-      <!-- WuXing indicator -->
-      <div class="wuxing-indicator" id="wuxingIndicator">
-        <span class="wuxing-dot wood" title="木"></span>
-        <span class="wuxing-dot fire" title="火"></span>
-        <span class="wuxing-dot earth" title="土"></span>
-        <span class="wuxing-dot metal" title="金"></span>
-        <span class="wuxing-dot water" title="水"></span>
-      </div>
-    </header>
-
-    <!-- Report Sections -->
-    <div class="report-sections">
-      <!-- 五行分析 -->
-      <div class="card report-card expanded" onclick="toggleCard(this)">
-        <div class="report-card-header">
-          <div class="report-card-icon">
-            <i data-lucide="flame"></i>
-          </div>
-          <div class="report-card-title">
-            <h3>五行偏性分析</h3>
-            <p>揭示命局五行分布与相互关系</p>
-          </div>
-          <div class="report-card-toggle">
-            <i data-lucide="chevron-down"></i>
-          </div>
-        </div>
-        <div class="report-card-content">
-          <div class="wuxing-chart">
-            <div class="wuxing-bar wood">
-              <div class="wuxing-bar-value" id="wuxingWood">2</div>
-              <div class="wuxing-bar-label">木</div>
-            </div>
-            <div class="wuxing-bar fire">
-              <div class="wuxing-bar-value" id="wuxingFire">1</div>
-              <div class="wuxing-bar-label">火</div>
-            </div>
-            <div class="wuxing-bar earth">
-              <div class="wuxing-bar-value" id="wuxingEarth">2</div>
-              <div class="wuxing-bar-label">土</div>
-            </div>
-            <div class="wuxing-bar metal">
-              <div class="wuxing-bar-value" id="wuxingMetal">1</div>
-              <div class="wuxing-bar-label">金</div>
-            </div>
-            <div class="wuxing-bar water">
-              <div class="wuxing-bar-value" id="wuxingWater">2</div>
-              <div class="wuxing-bar-label">水</div>
-            </div>
-          </div>
-          <p style="margin-top: var(--space-md);">
-            您的命局木旺土盛，日主偏强。通常表现为执行力强、有韧性，但需注意脾胃调养与情绪管理。建议多接触金属性事物（如白色、金属饰品）以平衡气场。
-          </p>
-          <div style="margin-top: var(--space-md); padding: var(--space-md); background: rgba(201, 168, 76, 0.05); border-radius: var(--radius-sm); border-left: 3px solid var(--color-gold);">
-            <strong style="color: var(--color-gold);">喜用建议</strong>
-            <p style="margin-top: var(--space-xs);">金、水为用神，宜多从事金属相关行业或与水相关的事业。</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- 大运分析 -->
-      <div class="card report-card" onclick="toggleCard(this)">
-        <div class="report-card-header">
-          <div class="report-card-icon">
-            <i data-lucide="trending-up"></i>
-          </div>
-          <div class="report-card-title">
-            <h3>十年大运</h3>
-            <p>2024-2033 大运走势</p>
-          </div>
-          <div class="report-card-toggle">
-            <i data-lucide="chevron-down"></i>
-          </div>
-        </div>
-        <div class="report-card-content">
-          <p style="margin-bottom: var(--space-md);">
-            您当前正处于<span style="color: var(--color-gold); font-weight: 600;">庚戌大运</span>，此运多有机会与挑战并存。
-          </p>
-          <div style="display: grid; gap: var(--space-sm);">
-            <div style="padding: var(--space-sm); background: var(--color-ink); border-radius: var(--radius-sm);">
-              <strong>2024 甲辰年</strong> — 事业上升期，有新机遇
-            </div>
-            <div style="padding: var(--space-sm); background: var(--color-ink); border-radius: var(--radius-sm);">
-              <strong>2025 乙巳年</strong> — 财运平稳，需守成
-            </div>
-            <div style="padding: var(--space-sm); background: var(--color-ink); border-radius: var(--radius-sm);">
-              <strong>2026 丙午年</strong> — 挑战与转变，需谨慎
-            </div>
-            <div style="padding: var(--space-sm); background: var(--color-ink); border-radius: var(--radius-sm);">
-              <strong>2027 丁未年</strong> — 财运回升，人际活跃
-            </div>
-          </div>
-          <div style="margin-top: var(--space-md); padding: var(--space-md); background: rgba(74, 158, 139, 0.1); border-radius: var(--radius-sm); border-left: 3px solid var(--color-jade);">
-            <strong style="color: var(--color-jade);">大运提示</strong>
-            <p style="margin-top: var(--space-xs);">此运宜守不宜攻，重要决定建议在上半年完成。下半年财运更佳。</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- 流年分析 -->
-      <div class="card report-card" onclick="toggleCard(this)">
-        <div class="report-card-header">
-          <div class="report-card-icon">
-            <i data-lucide="calendar-days"></i>
-          </div>
-          <div class="report-card-title">
-            <h3>流年走势</h3>
-            <p>2024年详细分析</p>
-          </div>
-          <div class="report-card-toggle">
-            <i data-lucide="chevron-down"></i>
-          </div>
-        </div>
-        <div class="report-card-content">
-          <p style="margin-bottom: var(--space-md);">
-            2024年为<span style="color: var(--color-gold); font-weight: 600;">甲辰年</span>，天干甲木，地支辰土。
-          </p>
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md);">
-            <div style="padding: var(--space-md); background: var(--color-ink); border-radius: var(--radius-sm);">
-              <div style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: var(--space-xs);">事业</div>
-              <div style="font-size: 1.125rem; color: var(--color-jade);">★★★★☆</div>
-              <div style="font-size: 0.875rem; margin-top: var(--space-xs);">有新机会出现</div>
-            </div>
-            <div style="padding: var(--space-md); background: var(--color-ink); border-radius: var(--radius-sm);">
-              <div style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: var(--space-xs);">财运</div>
-              <div style="font-size: 1.125rem; color: var(--color-gold);">★★★☆☆</div>
-              <div style="font-size: 0.875rem; margin-top: var(--space-xs);">正财稳定</div>
-            </div>
-            <div style="padding: var(--space-md); background: var(--color-ink); border-radius: var(--radius-sm);">
-              <div style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: var(--space-xs);">感情</div>
-              <div style="font-size: 1.125rem; color: var(--color-cinnabar);">★★☆☆☆</div>
-              <div style="font-size: 0.875rem; margin-top: var(--space-xs);">需多沟通</div>
-            </div>
-            <div style="padding: var(--space-md); background: var(--color-ink); border-radius: var(--radius-sm);">
-              <div style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: var(--space-xs);">健康</div>
-              <div style="font-size: 1.125rem; color: var(--color-text);">★★★☆☆</div>
-              <div style="font-size: 0.875rem; margin-top: var(--space-xs);">注意脾胃</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 趋吉避凶 -->
-      <div class="card report-card" onclick="toggleCard(this)">
-        <div class="report-card-header">
-          <div class="report-card-icon">
-            <i data-lucide="compass"></i>
-          </div>
-          <div class="report-card-title">
-            <h3>趋吉避凶建议</h3>
-            <p>可操作的行动指南</p>
-          </div>
-          <div class="report-card-toggle">
-            <i data-lucide="chevron-down"></i>
-          </div>
-        </div>
-        <div class="report-card-content">
-          <div style="margin-bottom: var(--space-md);">
-            <h4 style="color: var(--color-jade); margin-bottom: var(--space-sm);">宜</h4>
-            <ul style="list-style: none; display: grid; gap: var(--space-xs);">
-              <li style="padding-left: var(--space-md); position: relative;">
-                <span style="position: absolute; left: 0; color: var(--color-jade);">✓</span>
-                穿戴金属饰品（手表、项链）
-              </li>
-              <li style="padding-left: var(--space-md); position: relative;">
-                <span style="position: absolute; left: 0; color: var(--color-jade);">✓</span>
-                多接近水（游泳、靠近水源）
-              </li>
-              <li style="padding-left: var(--space-md); position: relative;">
-                <span style="position: absolute; left: 0; color: var(--color-jade);">✓</span>
-                农历每月十五行善积德
-              </li>
-              <li style="padding-left: var(--space-md); position: relative;">
-                <span style="position: absolute; left: 0; color: var(--color-jade);">✓</span>
-                上午（7-11点）做重大决定
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 style="color: var(--color-cinnabar); margin-bottom: var(--space-sm);">忌</h4>
-            <ul style="list-style: none; display: grid; gap: var(--space-xs);">
-              <li style="padding-left: var(--space-md); position: relative;">
-                <span style="position: absolute; left: 0; color: var(--color-cinnabar);">✗</span>
-                下午（13-17点）做重要决策
-              </li>
-              <li style="padding-left: var(--space-md); position: relative;">
-                <span style="position: absolute; left: 0; color: var(--color-cinnabar);">✗</span>
-                过度冲动或争执
-              </li>
-              <li style="padding-left: var(--space-md); position: relative;">
-                <span style="position: absolute; left: 0; color: var(--color-cinnabar);">✗</span>
-                长期熬夜（伤木）</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- 山医堂主专区 -->
-      <div class="card" style="background: linear-gradient(135deg, rgba(201, 168, 76, 0.08), rgba(107, 91, 149, 0.08)); border: 1px solid rgba(201, 168, 76, 0.3);">
-        <div style="text-align: center; padding: var(--space-lg) 0;">
-          <div style="font-size: 0.875rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: var(--space-sm);">真人专家</div>
-          <h3 style="margin-bottom: var(--space-sm);">山医堂主 · 医命双修</h3>
-          <p style="color: var(--color-text-muted); margin-bottom: var(--space-md); max-width: 500px; margin-left: auto; margin-right: auto;">
-            不是纯算命，是身体+命理双重诊断。能开药方、调风水、做养生方案——这是任何AI都无法替代的。
-          </p>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-md); text-align: left; margin-bottom: var(--space-lg);">
-            <div style="padding: var(--space-md); background: rgba(26, 31, 46, 0.6); border-radius: var(--radius-sm);">
-              <strong style="color: var(--color-gold);">¥99/次</strong>
-              <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: var(--space-xs);">1v1问诊30分钟</p>
-            </div>
-            <div style="padding: var(--space-md); background: rgba(26, 31, 46, 0.6); border-radius: var(--radius-sm);">
-              <strong style="color: var(--color-gold);">¥599/年</strong>
-              <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: var(--space-xs);">山医堂主私人顾问</p>
-            </div>
-          </div>
-          <a href="checkout.html" class="btn btn-primary">预约真人问诊</a>
-        </div>
-      </div>
-
-      <!-- Upgrade CTA -->
-      <div class="card" style="text-align: center; padding: var(--space-xl); border: 2px dashed var(--color-border); margin-top: var(--space-lg);">
-        <h3 style="margin-bottom: var(--space-sm);">升级完整AI报告</h3>
-        <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
-          ¥10起，涵盖学生党到专业版，解锁十年大运、事业感情健康专项解读
-        </p>
-        <a href="checkout.html" class="btn btn-primary">查看全部方案</a>
-      </div>
+    <div class="wuxing-indicator" id="wuxingIndicator">
+      <span class="wuxing-dot wood" title="木">木</span>
+      <span class="wuxing-dot fire" title="火">火</span>
+      <span class="wuxing-dot earth" title="土">土</span>
+      <span class="wuxing-dot metal" title="金">金</span>
+      <span class="wuxing-dot water" title="水">水</span>
     </div>
-  </main>
 
-  <!-- Footer -->
-  <footer class="footer" style="margin-top: var(--space-xl);">
-    <div class="container">
-      <p class="footer-copy">© 2026 道器命理 · 仅供参考</p>
+    <div id="strengthBadge" style="margin-top:var(--space-md);"></div>
+  </header>
+
+  <div class="report-sections" id="reportSections">
+    <!-- 所有内容由 JS 动态生成 -->
+    <div id="loadingIndicator" style="text-align:center;padding:3rem 0;">
+      <p style="color:var(--color-gold);font-size:1.2rem;">正在排盘推演中……</p>
+      <p style="color:var(--color-text-muted);">请稍候</p>
     </div>
-  </footer>
+  </div>
+</main>
 
-  <!-- JavaScript -->
-  <script>
-    // Initialize Lucide icons
+<footer class="footer" style="margin-top:var(--space-xl);">
+  <div class="container"><p class="footer-copy">© 2026 道器命理 · 仅供参考</p></div>
+</footer>
+
+<script>
+// ===== 核心：从 sessionStorage 读取数据并调用 API =====
+const birthData = JSON.parse(sessionStorage.getItem('birthData') || '{}');
+const urlParams = new URLSearchParams(window.location.search);
+const plan = urlParams.get('plan') || 'free';
+
+let baziResult = null;
+
+async function loadReport() {
+  const loading = document.getElementById('loadingIndicator');
+
+  try {
+    // 构建 API 请求参数
+    const params = new URLSearchParams();
+    if (birthData.name) {
+      params.set('name', birthData.name);
+      params.set('gender', birthData.gender || 'male');
+      params.set('year', birthData.year);
+      params.set('month', birthData.month);
+      params.set('day', birthData.day);
+      params.set('hour', birthData.hour || '子时');
+      params.set('calendar', birthData.calendar || 'solar');
+    } else {
+      // 没有用户数据，用当前日期生成 demo
+      const now = new Date();
+      params.set('name', '访客');
+      params.set('year', now.getFullYear());
+      params.set('month', now.getMonth() + 1);
+      params.set('day', now.getDate());
+      params.set('hour', '子时');
+    }
+
+    const resp = await fetch('/api/bazi?' + params.toString());
+    baziResult = await resp.json();
+
+    if (loading) loading.remove();
+
+    // 渲染所有内容
+    renderBaziDisplay();
+    renderAllSections();
+
+    // 初始化图标
     lucide.createIcons();
 
-    // Load data from sessionStorage (demo)
-    function loadReportData() {
-      const data = JSON.parse(sessionStorage.getItem('birthData') || '{}');
-      
-      // Demo data if no form data
-      if (!data.name) {
-        document.getElementById('reportTitle').textContent = '陈先生命理报告';
-        // Demo BaZi
-        document.getElementById('yearGan').textContent = '壬';
-        document.getElementById('yearZhi').textContent = '子';
-        document.getElementById('monthGan').textContent = '甲';
-        document.getElementById('monthZhi').textContent = '辰';
-        document.getElementById('dayGan').textContent = '丙';
-        document.getElementById('dayZhi').textContent = '午';
-        document.getElementById('hourGan').textContent = '戊';
-        document.getElementById('hourZhi').textContent = '申';
-        return;
-      }
-
-      document.getElementById('reportTitle').textContent = data.name + '命理报告';
-
-      // In real app, this would call bazi-skill to get actual BaZi
-      // For demo, use placeholder based on date
-      const date = new Date(data.year, data.month - 1, data.day);
-      const stemIndex = (date.getFullYear() % 10 + 6) % 10;
-      const branchIndex = (date.getMonth() + date.getDay()) % 12;
-      
-      const stems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
-      const branches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-      
-      document.getElementById('yearGan').textContent = stems[(stemIndex) % 10];
-      document.getElementById('yearZhi').textContent = branches[(branchIndex) % 12];
-      document.getElementById('monthGan').textContent = stems[(stemIndex + 2) % 10];
-      document.getElementById('monthZhi').textContent = branches[(branchIndex + 2) % 12];
-      document.getElementById('dayGan').textContent = stems[(stemIndex + 4) % 10];
-      document.getElementById('dayZhi').textContent = branches[(branchIndex + 4) % 12];
-      document.getElementById('hourGan').textContent = stems[(stemIndex + 6) % 10];
-      document.getElementById('hourZhi').textContent = branches[(branchIndex + 6) % 12];
+  } catch (err) {
+    if (loading) {
+      loading.innerHTML = '<p style="color:var(--color-cinnabar);">数据加载失败，请返回重新填写</p><a href="form.html" class="btn btn-primary" style="margin-top:1rem;">返回填写</a>';
     }
+  }
+}
 
-    function toggleCard(card) {
-      card.classList.toggle('expanded');
-    }
+// ===== 渲染八字展示 =====
+function renderBaziDisplay() {
+  const p = baziResult.pillars;
+  document.getElementById('reportTitle').textContent = baziResult.name + ' · 命理报告';
+  document.getElementById('yearGan').textContent = p.year[0];
+  document.getElementById('yearZhi').textContent = p.year[1];
+  document.getElementById('monthGan').textContent = p.month[0];
+  document.getElementById('monthZhi').textContent = p.month[1];
+  document.getElementById('dayGan').textContent = p.day[0];
+  document.getElementById('dayZhi').textContent = p.day[1];
+  document.getElementById('hourGan').textContent = p.hour[0];
+  document.getElementById('hourZhi').textContent = p.hour[1];
 
-    // Initialize
-    loadReportData();
-  </script>
-  <script src="js/app.js"></script>
+  // 日柱高亮
+  document.getElementById('dayGan').style.color = 'var(--color-gold)';
+  document.getElementById('dayZhi').style.color = 'var(--color-gold)';
+
+  // 五行指示器数量
+  const wc = baziResult.wuxingCount;
+  const maxCount = Math.max(wc.金, wc.木, wc.水, wc.火, wc.土, 1);
+  const indicator = document.getElementById('wuxingIndicator');
+  const dots = indicator.querySelectorAll('.wuxing-dot');
+  const wuxingKeys = ['wood', 'fire', 'earth', 'metal', 'water'];
+  const wuxingNames = ['木', '火', '土', '金', '水'];
+
+  dots.forEach((dot, i) => {
+    const count = wc[wuxingNames[i]] || 0;
+    const opacity = 0.3 + (count / maxCount) * 0.7;
+    dot.style.opacity = opacity;
+    dot.title = wuxingNames[i] + ': ' + count;
+  });
+
+  // 强弱标记
+  const badge = document.getElementById('strengthBadge');
+  const s = baziResult.strength;
+  const sc = s.includes('强') ? 'var(--color-cinnabar)' : s.includes('弱') ? 'var(--color-jade)' : 'var(--color-gold)';
+  badge.innerHTML = `<span style="display:inline-block;padding:0.25rem 1rem;border-radius:100px;font-size:0.85rem;background:${sc}15;color:${sc};border:1px solid ${sc}30;">日主${baziResult.dayMaster}${baziResult.dayWuxing} · ${s}</span>`;
+}
+
+// ===== 渲染所有卡片 =====
+function renderAllSections() {
+  const container = document.getElementById('reportSections');
+  const d = baziResult;
+  const isFree = (plan === 'free' || plan === '尝鲜版');
+
+  const cards = [];
+
+  // 1. 五行分析
+  cards.push(buildWuxingCard(d));
+
+  // 2. 日主性格（免费可见全貌）
+  cards.push(buildPersonalityCard(d));
+
+  // 3. 十神关系（免费可见）
+  cards.push(buildShiShenCard(d));
+
+  // 4. 喜用神
+  cards.push(buildYongShenCard(d));
+
+  // 5. 大运（付费内容）
+  cards.push(buildDayunCard(d, isFree));
+
+  // 6. 流年分析（付费内容部分展示）
+  cards.push(buildLiunianCard(d, isFree));
+
+  // 7. 流月简析
+  cards.push(buildMonthlyCard(d));
+
+  // 8. 趋吉避凶
+  cards.push(buildJixiongCard(d));
+
+  // 9. 山医堂主
+  cards.push(buildExpertCard());
+
+  // 10. 升级 CTA
+  if (isFree) {
+    cards.push(buildUpgradeCard());
+  }
+
+  container.innerHTML = cards.join('');
+}
+
+// ===== 各卡片构建函数 =====
+
+function buildWuxingCard(d) {
+  const wc = d.wuxingCount;
+  const maxVal = Math.max(wc.金, wc.木, wc.水, wc.火, wc.土, 1);
+  const wm = { '金':'metal','木':'wood','水':'water','火':'fire','土':'earth' };
+  const wn = { '金':'金','木':'木','水':'水','火':'火','土':'土' };
+
+  let bars = '';
+  for (const [k, v] of Object.entries(wn)) {
+    const pct = Math.round((wc[v] / maxVal) * 100);
+    const colorVar = `var(--color-${wm[k]})`;
+    bars += `<div style="display:flex;align-items:center;gap:var(--space-xs);margin-bottom:var(--space-sm);">
+      <span style="width:24px;font-size:0.85rem;font-weight:600;color:${colorVar};">${k}</span>
+      <div style="flex:1;height:20px;background:var(--color-ink);border-radius:4px;overflow:hidden;">
+        <div style="width:${pct}%;height:100%;background:${colorVar};border-radius:4px;transition:width 0.6s;"></div>
+      </div>
+      <span style="font-size:0.85rem;color:var(--color-text-muted);">${wc[v]}</span>
+    </div>`;
+  }
+
+  const analysis = generateWuxingText(d);
+
+  return cardTemplate('flame', '五行分布分析', '天干地支与五行力量', bars + `
+    <p style="margin-top:var(--space-md);">${analysis}</p>
+    <div style="margin-top:var(--space-md);padding:var(--space-md);background:rgba(201,168,76,0.05);border-radius:var(--radius-sm);border-left:3px solid var(--color-gold);">
+      <strong style="color:var(--color-gold);">${d.yongShen.principle}</strong>
+      <p style="margin-top:var(--space-xs);">用神：${d.yongShen.yongShen}，忌：${d.yongShen.avoid}</p>
+    </div>`, true);
+}
+
+function buildPersonalityCard(d) {
+  const p = d.personality;
+  let pos = '', neg = '';
+  p.positive.forEach(t => { pos += `<li>✓ ${t}</li>`; });
+  p.negative.forEach(t => { neg += `<li>⚠ ${t}</li>`; });
+
+  return cardTemplate('user', '日主性格', `日主${d.dayMaster}${d.dayWuxing} · ${d.strength}`,
+    `<p>日主<span style="color:var(--color-gold);font-weight:600;">${d.dayMaster}${d.dayWuxing}</span>，${d.strength}。</p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);margin-top:var(--space-md);">
+      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
+        <div style="font-size:0.85rem;color:var(--color-jade);margin-bottom:var(--space-xs);">优势特质</div>
+        <ul style="list-style:none;">${pos}</ul>
+      </div>
+      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
+        <div style="font-size:0.85rem;color:var(--color-cinnabar);margin-bottom:var(--space-xs);">需注意</div>
+        <ul style="list-style:none;">${neg}</ul>
+      </div>
+    </div>`, true);
+}
+
+function buildShiShenCard(d) {
+  const ss = d.shiShen;
+  const pillarNames = { year: '年柱', month: '月柱', day: '日柱', hour: '时柱' };
+  let rows = '';
+  for (const [key, val] of Object.entries(ss)) {
+    rows += `<div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);">
+      <span style="color:var(--color-text-muted);">${pillarNames[key] || key}</span>
+      <span style="font-weight:600;color:var(--color-gold);">${val[0]}</span>
+      <span style="font-size:0.85rem;color:var(--color-text-muted);">${val[1]}</span>
+    </div>`;
+  }
+  return cardTemplate('git-branch', '十神关系', '天干之间的生克关系', rows, true);
+}
+
+function buildYongShenCard(d) {
+  const g = d.luckyGuide;
+  return cardTemplate('star', '喜用神与幸运指南', d.yongShen.principle,
+    `<p style="margin-bottom:var(--space-md);"><span style="color:var(--color-gold);font-weight:600;">用神：${d.yongShen.yongShen}</span></p>
+    <p style="margin-bottom:var(--space-md);"><span style="color:var(--color-cinnabar);">忌神：${d.yongShen.avoid}</span></p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm);">
+      <div style="text-align:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);">
+        <div style="font-size:1.5rem;">🧭</div>
+        <div style="font-size:0.8rem;color:var(--color-text-muted);margin-top:0.25rem;">幸运方位</div>
+        <div style="font-weight:600;">${g.directions.join(' / ')}</div>
+      </div>
+      <div style="text-align:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);">
+        <div style="font-size:1.5rem;">🎨</div>
+        <div style="font-size:0.8rem;color:var(--color-text-muted);margin-top:0.25rem;">幸运颜色</div>
+        <div style="font-weight:600;">${g.colors.join(' / ')}</div>
+      </div>
+      <div style="text-align:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);">
+        <div style="font-size:1.5rem;">🔢</div>
+        <div style="font-size:0.8rem;color:var(--color-text-muted);margin-top:0.25rem;">幸运数字</div>
+        <div style="font-weight:600;">${g.numbers.join(', ')}</div>
+      </div>
+    </div>
+    <div style="margin-top:var(--space-md);padding:var(--space-md);background:rgba(74,158,139,0.08);border-radius:var(--radius-sm);">
+      <strong style="color:var(--color-jade);">适合行业</strong>
+      <p style="margin-top:var(--space-xs);">${g.industries.join('、')}</p>
+    </div>`, true);
+}
+
+function buildDayunCard(d, isFree) {
+  const content = `<p>大运十年一转，顺逆交替。您的命局行运遵循<span style="color:var(--color-gold);">阳年男顺排/阴年女逆排</span>规则。</p>
+    <p style="margin-top:var(--space-sm);">精确大运起运年龄需结合出生日期与节气时间差计算，完整分析包含：</p>
+    <ul style="margin-top:var(--space-sm);list-style:disc;padding-left:var(--space-md);">
+      <li>起运年龄与换运节点</li>
+      <li>每步大运十年吉凶</li>
+      <li>大运与命局互动</li>
+    </ul>`;
+
+  if (isFree) {
+    return cardTemplate('trending-up', '十年大运', '人生各阶段走势',
+      content + `<div class="lock-overlay" style="margin-top:var(--space-md);">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold)" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <p>升级完整报告 · 解锁十年大运详细解读</p>
+        <a href="checkout.html" class="btn btn-primary" style="margin-top:0.75rem;">解锁完整报告</a>
+      </div>`);
+  }
+  return cardTemplate('trending-up', '十年大运', '人生各阶段走势', content);
+}
+
+function buildLiunianCard(d, isFree) {
+  const cl = d.currentYearLuck;
+  const colors = { '大吉': 'var(--color-jade)', '小吉': 'var(--color-jade)', '平稳': 'var(--color-gold)', '需注意': 'var(--color-cinnabar)', '挑战多': 'var(--color-cinnabar)' };
+
+  const content = `<p style="margin-bottom:var(--space-md);">${cl.year}年<span style="color:var(--color-gold);font-weight:600;">${cl.yearPillar}</span>，总体运势：<span style="color:${colors[cl.overall]};font-weight:600;">${cl.overall}</span></p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);">
+      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
+        <div style="font-size:0.85rem;color:var(--color-text-muted);">事业</div><div style="margin-top:0.25rem;">${cl.career}</div>
+      </div>
+      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
+        <div style="font-size:0.85rem;color:var(--color-text-muted);">财运</div><div style="margin-top:0.25rem;">${cl.wealth}</div>
+      </div>
+      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
+        <div style="font-size:0.85rem;color:var(--color-text-muted);">感情</div><div style="margin-top:0.25rem;">${cl.love}</div>
+      </div>
+      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
+        <div style="font-size:0.85rem;color:var(--color-text-muted);">健康</div><div style="margin-top:0.25rem;">${cl.health}</div>
+      </div>
+    </div>`;
+
+  if (isFree) {
+    content += `<div class="lock-overlay" style="margin-top:var(--space-lg);">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold)" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <p>付费版解锁逐年逐月详细解读</p>
+      <a href="checkout.html" class="btn btn-primary" style="margin-top:0.75rem;">解锁完整报告</a>
+    </div>`;
+  }
+
+  return cardTemplate('calendar-days', `${cl.year}年流年分析`, `岁君${cl.yearPillar}对流年影响`, content);
+}
+
+function buildMonthlyCard(d) {
+  const ml = d.monthlyLuck;
+  const colors = { '上升': 'var(--color-jade)', '平稳': 'var(--color-gold)', '波动': 'var(--color-cinnabar)' };
+  let months = '';
+  for (const m of ml) {
+    months += `<div style="padding:var(--space-xs);text-align:center;font-size:0.8rem;background:var(--color-ink);border-radius:var(--radius-sm);"><strong>${m.month}月</strong><br><span style="color:${colors[m.status]};font-size:0.75rem;">${m.status}</span></div>`;
+  }
+  return cardTemplate('calendar', '流月简析', `${d.currentYearLuck.year}年各月走势`,
+    `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-xs);">${months}</div>
+    <p style="margin-top:var(--space-md);font-size:0.85rem;color:var(--color-text-muted);">绿色=顺遂月份 · 金色=平稳 · 红色=需要谨慎</p>`);
+}
+
+function buildJixiongCard(d) {
+  const yw = d.yongShen.yongWuxing;
+  const aw = d.yongShen.avoid;
+  const g = d.luckyGuide;
+
+  const yiItems = [
+    `穿戴${g.colors[0]}色系衣物饰品`,
+    `多接近${g.directions[0]}方位`,
+    `从事${g.industries.slice(0,2).join('、')}相关行业`,
+    `上午（7-11点）做重要决定`,
+  ];
+  const jiItems = [
+    `避免穿戴${g.colors.includes('红色') ? '过于鲜艳的颜色' : '红色系'}衣物`,
+    `下午（13-17点）不宜做重大决策`,
+    `忌冲动行事、与人争执`,
+    `忌长期熬夜`,
+  ];
+
+  let yi = '', ji = '';
+  yiItems.forEach(t => { yi += `<li style="padding-left:var(--space-md);position:relative;"><span style="position:absolute;left:0;color:var(--color-jade);">✓</span>${t}</li>`; });
+  jiItems.forEach(t => { ji += `<li style="padding-left:var(--space-md);position:relative;"><span style="position:absolute;left:0;color:var(--color-cinnabar);">✗</span>${t}</li>`; });
+
+  return cardTemplate('compass', '趋吉避凶建议', '基于命局的行动指南',
+    `<div style="margin-bottom:var(--space-md);"><h4 style="color:var(--color-jade);margin-bottom:var(--space-sm);">宜</h4><ul style="list-style:none;display:grid;gap:var(--space-xs);">${yi}</ul></div>
+    <div><h4 style="color:var(--color-cinnabar);margin-bottom:var(--space-sm);">忌</h4><ul style="list-style:none;display:grid;gap:var(--space-xs);">${ji}</ul></div>`);
+}
+
+function buildExpertCard() {
+  return `<div class="card" style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(107,91,149,0.08));border:1px solid rgba(201,168,76,0.3);">
+    <div style="text-align:center;padding:var(--space-lg) 0;">
+      <div style="font-size:0.875rem;color:var(--color-gold);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:var(--space-sm);">真人专家</div>
+      <h3>山医堂主 · 医命双修</h3>
+      <p style="color:var(--color-text-muted);margin-bottom:var(--space-md);max-width:500px;margin:0 auto;">
+        不是纯算命，是身体+命理双重诊断。能开药方、调风水、做养生方案。
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-md);text-align:left;margin:var(--space-lg) 0;padding:0 var(--space-lg);">
+        <div style="padding:var(--space-md);background:rgba(26,31,46,0.6);border-radius:var(--radius-sm);">
+          <strong style="color:var(--color-gold);">¥99/次</strong>
+          <p style="font-size:0.875rem;color:var(--color-text-muted);margin-top:var(--space-xs);">1v1问诊30分钟</p>
+        </div>
+        <div style="padding:var(--space-md);background:rgba(26,31,46,0.6);border-radius:var(--radius-sm);">
+          <strong style="color:var(--color-gold);">¥599/年</strong>
+          <p style="font-size:0.875rem;color:var(--color-text-muted);margin-top:var(--space-xs);">山医堂主私人顾问</p>
+        </div>
+      </div>
+      <a href="checkout.html" class="btn btn-primary">预约真人问诊</a>
+    </div>
+  </div>`;
+}
+
+function buildUpgradeCard() {
+  return `<div class="card" style="text-align:center;padding:var(--space-xl);border:2px dashed var(--color-border);margin-top:var(--space-lg);">
+    <h3>升级完整AI报告</h3>
+    <p style="color:var(--color-text-muted);margin-bottom:var(--space-lg);">¥10起，解锁十年大运、逐年逐月详细解读</p>
+    <a href="checkout.html" class="btn btn-primary">查看全部方案</a>
+  </div>`;
+}
+
+// ===== 五行分析文本生成 =====
+function generateWuxingText(d) {
+  const wc = d.wuxingCount;
+  const maxK = Object.keys(wc).reduce((a, b) => wc[a] > wc[b] ? a : b);
+  const minK = Object.keys(wc).reduce((a, b) => wc[a] < wc[b] ? a : b);
+
+  const dw = d.dayWuxing;
+  const s = d.strength;
+
+  let text = `命局中<span style="color:var(--color-gold);">${maxK}</span>最旺，<span style="color:var(--color-cinnabar);">${minK}</span>最弱。日主${dw}`;
+
+  if (s.includes('强')) {
+    text += '偏强，需用克泄之法平衡。';
+    if (d.yongShen.yongWuxing.includes('金')) text += '金可克木泄火，';
+    if (d.yongShen.yongWuxing.includes('水')) text += '水可克火润局，';
+    if (d.yongShen.yongWuxing.includes('土')) text += '土可泄火生金，';
+  } else {
+    text += '偏弱，需用生扶之法补益。';
+    if (d.yongShen.yongWuxing.includes('木')) text += '木可生火助身，';
+    if (d.yongShen.yongWuxing.includes('火')) text += '火可扶助日主，';
+    if (d.yongShen.yongWuxing.includes('水')) text += '水可生木养局，';
+  }
+
+  text += `忌${d.yongShen.avoid}过旺。`;
+
+  return text;
+}
+
+// ===== 卡片模板 =====
+function cardTemplate(icon, title, subtitle, content, expanded) {
+  const exp = expanded ? ' expanded' : '';
+  return `<div class="card report-card${exp}">
+    <div class="report-card-header" onclick="toggleCard(this.parentElement)">
+      <div class="report-card-icon"><i data-lucide="${icon}"></i></div>
+      <div class="report-card-title"><h3>${title}</h3><p>${subtitle}</p></div>
+      <div class="report-card-toggle"><i data-lucide="chevron-down"></i></div>
+    </div>
+    <div class="report-card-content">${content}</div>
+  </div>`;
+}
+
+// ===== 卡片折叠切换 =====
+window.toggleCard = function(card) {
+  card.classList.toggle('expanded');
+  // 重新渲染图标
+  setTimeout(() => lucide.createIcons(), 50);
+};
+
+// ===== 页面初始化 =====
+document.addEventListener('DOMContentLoaded', loadReport);
+</script>
+
+<script src="js/app.js"></script>
 </body>
 </html>
