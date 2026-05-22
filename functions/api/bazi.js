@@ -275,6 +275,7 @@ function calcMonthlyLuck(dayStem, yongShen, currentYear) {
 
 // ========== API 处理 ==========
 export async function onRequestGet(context) {
+  try {
   const { request } = context;
   const url = new URL(request.url);
   const params = url.searchParams;
@@ -360,6 +361,13 @@ export async function onRequestGet(context) {
       'Cache-Control': 'no-cache'
     }
   });
+
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message, stack: err.stack }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 }
 
 export async function onRequestOptions() {
