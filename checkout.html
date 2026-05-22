@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>选择方案 · 道器命理</title>
+  <meta name="description" content="选择适合您的命理服务方案。">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">道器</a>
+    </div>
+  </nav>
+
+  <!-- Checkout Page -->
+  <main class="checkout-page">
+    <div class="checkout-container">
+      <div class="checkout-header">
+        <h1>选择服务方案</h1>
+        <p>按需选择，总有一款适合您</p>
+      </div>
+
+      <!-- Payment Methods -->
+      <div class="payment-methods">
+        <h3>选择支付方式</h3>
+        <div class="payment-options">
+          <div class="payment-option selected" onclick="selectPayment(this, 'wechat')">
+            <span class="payment-icon">🟢</span>
+            <span>微信支付</span>
+          </div>
+          <div class="payment-option" onclick="selectPayment(this, 'alipay')">
+            <span class="payment-icon">🔵</span>
+            <span>支付宝</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Free Tier -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h3 style="text-align: center; margin-bottom: var(--space-lg); color: var(--color-text-muted); font-size: 1rem; letter-spacing: 0.15em;">免费体验</h3>
+        <div class="card pricing-card" style="max-width: 400px; margin: 0 auto; border: 2px solid var(--color-gold);">
+          <span class="pricing-tier" style="color: var(--color-gold);">尝鲜版</span>
+          <h3 class="pricing-name">免费体验</h3>
+          <div class="pricing-price">¥0<span>/次</span></div>
+          <ul class="pricing-features">
+            <li>八字智能排盘</li>
+            <li>五行分布图</li>
+            <li>当年简运（200字）</li>
+          </ul>
+          <button class="btn btn-ghost" onclick="selectPlan(0, '尝鲜版')">选择此方案</button>
+        </div>
+      </div>
+
+      <!-- AI Tiers -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h3 style="text-align: center; margin-bottom: var(--space-lg); color: var(--color-text-muted); font-size: 1rem; letter-spacing: 0.15em;">AI 智能分析</h3>
+        <div class="pricing-grid">
+          <div class="card pricing-card">
+            <span class="pricing-tier">学生党</span>
+            <h3 class="pricing-name">学生版</h3>
+            <div class="pricing-price">¥10<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>八字排盘</li>
+              <li>基础五行分析</li>
+              <li>流年简报</li>
+            </ul>
+            <button class="btn btn-primary" onclick="selectPlan(10, '学生版')">选择此方案</button>
+          </div>
+          <div class="card pricing-card featured">
+            <span class="pricing-tier">上班族</span>
+            <h3 class="pricing-name">职场版</h3>
+            <div class="pricing-price">¥29<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>八字排盘</li>
+              <li>五行详细分析</li>
+              <li>当年详细解读</li>
+              <li>趋避建议</li>
+            </ul>
+            <button class="btn btn-primary" onclick="selectPlan(29, '职场版')">选择此方案</button>
+          </div>
+          <div class="card pricing-card">
+            <span class="pricing-tier">进阶版</span>
+            <h3 class="pricing-name">深度分析</h3>
+            <div class="pricing-price">¥49<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>完整命理报告</li>
+              <li>十年大运解读</li>
+              <li>流年走势预测</li>
+              <li>趋避详细指导</li>
+            </ul>
+            <button class="btn btn-primary" onclick="selectPlan(49, '进阶版')">选择此方案</button>
+          </div>
+          <div class="card pricing-card">
+            <span class="pricing-tier">专业版</span>
+            <h3 class="pricing-name">全面解读</h3>
+            <div class="pricing-price">¥89<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>全部AI分析内容</li>
+              <li>事业专项解读</li>
+              <li>感情专项解读</li>
+              <li>健康专项解读</li>
+            </ul>
+            <button class="btn btn-primary" onclick="selectPlan(89, '专业版')">选择此方案</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expert Tiers -->
+      <div>
+        <h3 style="text-align: center; margin-bottom: var(--space-lg); color: var(--color-gold); font-size: 1rem; letter-spacing: 0.15em;">真人专家服务</h3>
+        <div class="pricing-grid">
+          <div class="card pricing-card" style="border-color: rgba(201, 168, 76, 0.3);">
+            <span class="pricing-tier" style="color: var(--color-gold);">山医问诊</span>
+            <h3 class="pricing-name">山医堂主</h3>
+            <div class="pricing-price">¥99<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>1v1深度问诊（30分钟）</li>
+              <li>身体+命理双重诊断</li>
+              <li>调理方案（药方/风水/养生）</li>
+              <li>山医堂主亲拟</li>
+            </ul>
+            <button class="btn btn-primary" onclick="selectPlan(99, '山医问诊')">选择此方案</button>
+          </div>
+          <div class="card pricing-card" style="border-color: rgba(201, 168, 76, 0.3);">
+            <span class="pricing-tier" style="color: var(--color-gold);">八字合盘</span>
+            <h3 class="pricing-name">合盘分析</h3>
+            <div class="pricing-price">¥199<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>双人八字合盘</li>
+              <li>婚恋/合作适配分析</li>
+              <li>详细建议报告</li>
+              <li>真人专家解读</li>
+            </ul>
+            <button class="btn btn-primary" onclick="selectPlan(199, '八字合盘')">选择此方案</button>
+          </div>
+          <div class="card pricing-card" style="border-color: rgba(201, 168, 76, 0.3);">
+            <span class="pricing-tier" style="color: var(--color-gold);">易名定制</span>
+            <h3 class="pricing-name">起名/改运</h3>
+            <div class="pricing-price">¥299<span>/人</span></div>
+            <ul class="pricing-features">
+              <li>根据八字五行定制</li>
+              <li>名字寓意深度解读</li>
+              <li>易明者亲拟</li>
+              <li>终身使用</li>
+            </ul>
+            <button class="btn btn-primary" onclick="selectPlan(299, '易名定制')">选择此方案</button>
+          </div>
+          <div class="card pricing-card" style="border-color: rgba(201, 168, 76, 0.4); background: rgba(201, 168, 76, 0.05);">
+            <span class="pricing-tier" style="color: var(--color-gold);">年度顾问</span>
+            <h3 class="pricing-name">私人顾问</h3>
+            <div class="pricing-price">¥599<span>/年</span></div>
+            <ul class="pricing-features">
+              <li>全年无限次问诊</li>
+              <li>山医堂主私人顾问</li>
+              <li>关键节点优先预约</li>
+              <li>12次正式问诊</li>
+            </ul>
+            <button class="btn btn-primary" onclick="selectPlan(599, '年度顾问')">选择此方案</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Button -->
+      <div style="text-align: center; padding: var(--space-xl) 0;">
+        <p style="color: var(--color-text-muted); margin-bottom: var(--space-md);">
+          当前选择：<span id="selectedPlanName" style="color: var(--color-gold);">-</span>
+        </p>
+        <button class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.125rem;" onclick="processPayment()" id="payButton" disabled>
+          请先选择方案
+        </button>
+      </div>
+
+      <!-- Security Note -->
+      <div style="text-align: center; padding: var(--space-lg); color: var(--color-text-muted); font-size: 0.875rem;">
+        <p>🔒 支付安全由微信/支付宝保障</p>
+        <p style="margin-top: var(--space-xs);">山医堂主真人服务需预约排期，支付成功后客服将与您联系</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-copy">© 2024 道器命理 · 仅供娱乐参考</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    let selectedPlan = null;
+    let selectedPlanName = '';
+    let selectedPayment = 'wechat';
+
+    function selectPayment(element, method) {
+      document.querySelectorAll('.payment-option').forEach(el => {
+        el.classList.remove('selected');
+      });
+      element.classList.add('selected');
+      selectedPayment = method;
+      
+      if (selectedPlan !== null) {
+        updatePayButton();
+      }
+    }
+
+    function selectPlan(price, name) {
+      selectedPlan = price;
+      selectedPlanName = name;
+      
+      // Visual feedback
+      document.querySelectorAll('.pricing-card').forEach(card => {
+        card.style.borderColor = '';
+        card.style.background = '';
+      });
+      event.target.closest('.pricing-card').style.borderColor = 'var(--color-gold)';
+      
+      document.getElementById('selectedPlanName').textContent = name;
+      updatePayButton();
+    }
+
+    function updatePayButton() {
+      const btn = document.getElementById('payButton');
+      const paymentName = selectedPayment === 'wechat' ? '微信' : '支付宝';
+      
+      if (selectedPlan === 0) {
+        btn.textContent = '免费体验';
+        btn.disabled = false;
+      } else {
+        btn.textContent = `使用${paymentName}支付 ¥${selectedPlan}`;
+        btn.disabled = false;
+      }
+    }
+
+    function processPayment() {
+      const paymentName = selectedPayment === 'wechat' ? '微信' : '支付宝';
+      
+      if (selectedPlan === 0) {
+        // Free tier - go directly to report
+        window.location.href = 'report.html?plan=free';
+      } else if (selectedPlan === null) {
+        alert('请先选择服务方案');
+        return;
+      } else {
+        // Simulate payment (demo mode)
+        alert(`演示模式：模拟${paymentName}支付¥${selectedPlan}\n\n支付成功后将跳转至报告页。`);
+        window.location.href = 'report.html?plan=' + encodeURIComponent(selectedPlanName);
+      }
+    }
+  </script>
+</body>
+</html>

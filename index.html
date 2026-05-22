@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>道器合一 · 数智命理</title>
+  <meta name="description" content="以科学态度诠释传统智慧，结合经典典籍五行推演与人生周期分析。">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">道器</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#features">能力</a></li>
+        <li><a href="#services">服务</a></li>
+        <li><a href="#process">流程</a></li>
+        <li><a href="#testimonials">评价</a></li>
+      </ul>
+      <a href="form.html" class="btn btn-primary nav-cta">立即测算</a>
+      <button class="nav-toggle" id="navToggle" aria-label="菜单">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <canvas id="particle-canvas"></canvas>
+    </div>
+    <div class="hero-content">
+      <span class="hero-badge animate-fade-in-up">道器合一 · 数智命理</span>
+      <h1 class="animate-fade-in-up">洞悉命格<br>顺势而为</h1>
+      <p class="hero-subtitle animate-fade-in-up">
+        以科学态度诠释传统智慧，基于经典典籍《渊海子平》《滴天髓》，
+        透过五行推演揭示人生周期与趋避之道。
+      </p>
+      <div class="hero-actions animate-fade-in-up">
+        <a href="form.html" class="btn btn-primary">立即测算</a>
+        <a href="#services" class="btn btn-ghost">了解更多</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>为什么选择道器</h2>
+        <p>不是通用AI，是专精命理的智能排盘系统</p>
+      </div>
+      <div class="features-grid stagger-children">
+        <div class="card feature-card">
+          <div class="feature-icon">
+            <i data-lucide="book-open"></i>
+          </div>
+          <h3>经典体系</h3>
+          <p>以《渊海子平》《滴天髓》《三命通会》等经典为理论基础，而非网络偏门说法。</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon">
+            <i data-lucide="bar-chart-3"></i>
+          </div>
+          <h3>道器排盘引擎</h3>
+          <p>基于万年历数据库与经典算法的智能排盘系统，精准输出四柱八字，而非通用AI的模糊推测。</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon">
+            <i data-lucide="compass"></i>
+          </div>
+          <h3>真人专家护航</h3>
+          <p>AI分析之外，山医堂主可做身体+命理双重诊断，开具调理方案——这是任何AI都无法替代的。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services / Pricing Section -->
+  <section class="services section" id="services">
+    <div class="container">
+      <div class="section-header">
+        <h2>服务方案</h2>
+        <p>按需选择，总有一款适合您</p>
+      </div>
+
+      <!-- Free Tier -->
+      <div style="text-align: center; margin-bottom: var(--space-xl);">
+        <div class="card pricing-card" style="max-width: 400px; margin: 0 auto; border: 2px solid var(--color-gold);">
+          <span class="pricing-tier" style="color: var(--color-gold);">免费体验</span>
+          <h3 class="pricing-name">尝鲜版</h3>
+          <div class="pricing-price">¥0<span>/次</span></div>
+          <ul class="pricing-features">
+            <li>八字智能排盘</li>
+            <li>五行分布图</li>
+            <li>当年简运（200字）</li>
+          </ul>
+          <a href="form.html" class="btn btn-primary">立即体验</a>
+        </div>
+      </div>
+
+      <!-- AI Analysis Tiers -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h3 style="text-align: center; margin-bottom: var(--space-lg); color: var(--color-text-muted); font-size: 1rem; letter-spacing: 0.15em;">AI 智能分析</h3>
+        <div class="pricing-grid stagger-children">
+          <!-- Student -->
+          <div class="card pricing-card">
+            <span class="pricing-tier">学生党</span>
+            <h3 class="pricing-name">学生版</h3>
+            <div class="pricing-price">¥10<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>八字排盘</li>
+              <li>基础五行分析</li>
+              <li>流年简报</li>
+            </ul>
+            <a href="form.html" class="btn btn-primary">开始测算</a>
+          </div>
+          <!-- Office Worker -->
+          <div class="card pricing-card featured">
+            <span class="pricing-tier">上班族</span>
+            <h3 class="pricing-name">职场版</h3>
+            <div class="pricing-price">¥29<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>八字排盘</li>
+              <li>五行详细分析</li>
+              <li>当年详细解读</li>
+              <li>趋避建议</li>
+            </ul>
+            <a href="form.html" class="btn btn-primary">开始测算</a>
+          </div>
+          <!-- Advanced -->
+          <div class="card pricing-card">
+            <span class="pricing-tier">进阶版</span>
+            <h3 class="pricing-name">深度分析</h3>
+            <div class="pricing-price">¥49<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>完整命理报告</li>
+              <li>十年大运解读</li>
+              <li>流年走势预测</li>
+              <li>趋避详细指导</li>
+            </ul>
+            <a href="form.html" class="btn btn-primary">开始测算</a>
+          </div>
+          <!-- Professional -->
+          <div class="card pricing-card">
+            <span class="pricing-tier">专业版</span>
+            <h3 class="pricing-name">全面解读</h3>
+            <div class="pricing-price">¥89<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>全部AI分析内容</li>
+              <li>事业专项解读</li>
+              <li>感情专项解读</li>
+              <li>健康专项解读</li>
+            </ul>
+            <a href="form.html" class="btn btn-primary">开始测算</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expert Tiers -->
+      <div>
+        <h3 style="text-align: center; margin-bottom: var(--space-lg); color: var(--color-gold); font-size: 1rem; letter-spacing: 0.15em;">真人专家服务</h3>
+        <div class="pricing-grid stagger-children">
+          <!-- Mountain Doctor -->
+          <div class="card pricing-card" style="border-color: rgba(201, 168, 76, 0.3);">
+            <span class="pricing-tier" style="color: var(--color-gold);">山医问诊</span>
+            <h3 class="pricing-name">山医堂主</h3>
+            <div class="pricing-price">¥99<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>1v1深度问诊（30分钟）</li>
+              <li>身体+命理双重诊断</li>
+              <li>调理方案（药方/风水/养生）</li>
+              <li>山医堂主亲拟</li>
+            </ul>
+            <a href="form.html" class="btn btn-primary">预约问诊</a>
+          </div>
+          <!-- Bazi Match -->
+          <div class="card pricing-card" style="border-color: rgba(201, 168, 76, 0.3);">
+            <span class="pricing-tier" style="color: var(--color-gold);">八字合盘</span>
+            <h3 class="pricing-name">合盘分析</h3>
+            <div class="pricing-price">¥199<span>/次</span></div>
+            <ul class="pricing-features">
+              <li>双人八字合盘</li>
+              <li>婚恋/合作适配分析</li>
+              <li>详细建议报告</li>
+              <li>真人专家解读</li>
+            </ul>
+            <a href="form.html" class="btn btn-primary">预约合盘</a>
+          </div>
+          <!-- Name Custom -->
+          <div class="card pricing-card" style="border-color: rgba(201, 168, 76, 0.3);">
+            <span class="pricing-tier" style="color: var(--color-gold);">易名定制</span>
+            <h3 class="pricing-name">起名/改运</h3>
+            <div class="pricing-price">¥299<span>/人</span></div>
+            <ul class="pricing-features">
+              <li>根据八字五行定制</li>
+              <li>名字寓意深度解读</li>
+              <li>易明者亲拟</li>
+              <li>终身使用</li>
+            </ul>
+            <a href="form.html" class="btn btn-primary">预约起名</a>
+          </div>
+          <!-- Year Advisor -->
+          <div class="card pricing-card" style="border-color: rgba(201, 168, 76, 0.4); background: rgba(201, 168, 76, 0.05);">
+            <span class="pricing-tier" style="color: var(--color-gold);">年度顾问</span>
+            <h3 class="pricing-name">私人顾问</h3>
+            <div class="pricing-price">¥599<span>/年</span></div>
+            <ul class="pricing-features">
+              <li>全年无限次问诊</li>
+              <li>山医堂主私人顾问</li>
+              <li>关键节点优先预约</li>
+              <li>12次正式问诊</li>
+            </ul>
+            <a href="form.html" class="btn btn-primary">成为会员</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Section -->
+  <section class="process section" id="process">
+    <div class="container">
+      <div class="section-header">
+        <h2>测算流程</h2>
+        <p>简单三步，洞悉命格</p>
+      </div>
+      <div class="timeline stagger-children">
+        <div class="timeline-item">
+          <div class="timeline-marker">1</div>
+          <div class="timeline-content">
+            <h3>填写信息</h3>
+            <p>输入姓名、出生日期与时辰，选择公历或农历，精确到分钟级别。</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker">2</div>
+          <div class="timeline-content">
+            <h3>智能排盘</h3>
+            <p>基于万年历数据库，精准排出四柱八字与大运序列。</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker">3</div>
+          <div class="timeline-content">
+            <h3>获取报告</h3>
+            <p>AI分析五行流转，生成可视化报告与趋避建议。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials section" id="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <h2>用户评价</h2>
+        <p>真实反馈，仅供参考</p>
+      </div>
+    </div>
+    <div class="testimonial-carousel">
+      <div class="card testimonial-card">
+        <p class="testimonial-quote">"分析很准，尤其是说我2024年会有事业转折点，那年确实升职了。"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">陈</div>
+          <div class="testimonial-info">
+            <h4>陈先生</h4>
+            <span>上海 · 企业管理</span>
+          </div>
+        </div>
+      </div>
+      <div class="card testimonial-card">
+        <p class="testimonial-quote">"大运分析对我帮助很大，知道接下来十年适合稳扎稳打，心态平和了很多。"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">林</div>
+          <div class="testimonial-info">
+            <h4>林女士</h4>
+            <span>北京 · 设计师</span>
+          </div>
+        </div>
+      </div>
+      <div class="card testimonial-card">
+        <p class="testimonial-quote">"报告很详细，不是那种泛泛而谈的内容，能看出是认真分析过的。"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">张</div>
+          <div class="testimonial-info">
+            <h4>张先生</h4>
+            <span>深圳 · 创业者</span>
+          </div>
+        </div>
+      </div>
+      <div class="card testimonial-card">
+        <p class="testimonial-quote">"第一次接触这种服务，报告比我想象的专业多了，有理有据。"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">王</div>
+          <div class="testimonial-info">
+            <h4>王女士</h4>
+            <span>广州 · 财务</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section" style="background: var(--color-obsidian); text-align: center;">
+    <div class="container">
+      <h2 style="margin-bottom: var(--space-md);">开启命理探索之旅</h2>
+      <p style="color: var(--color-text-muted); margin-bottom: var(--space-xl); max-width: 500px; margin-left: auto; margin-right: auto;">
+        填入您的出生信息，获取专属命理报告
+      </p>
+      <a href="form.html" class="btn btn-primary">立即开始</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-logo">道器</span>
+        <ul class="footer-links">
+          <li><a href="#">关于我们</a></li>
+          <li><a href="#">服务条款</a></li>
+          <li><a href="#">隐私政策</a></li>
+          <li><a href="#">联系方式</a></li>
+        </ul>
+      </div>
+      <p class="footer-copy">© 2024 道器命理 · 仅供娱乐参考</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Particle animation
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function createParticle() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 1,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        opacity: Math.random() * 0.5 + 0.2,
+        pulse: Math.random() * Math.PI * 2
+      };
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = window.innerWidth < 768 ? 30 : 80;
+      for (let i = 0; i < count; i++) {
+        particles.push(createParticle());
+      }
+    }
+
+    function drawParticle(p) {
+      const pulse = Math.sin(p.pulse) * 0.3 + 0.7;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(201, 168, 76, ${p.opacity * pulse})`;
+      ctx.fill();
+
+      // Glow effect
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+      const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
+      gradient.addColorStop(0, `rgba(201, 168, 76, ${p.opacity * pulse * 0.3})`);
+      gradient.addColorStop(1, 'rgba(201, 168, 76, 0)');
+      ctx.fillStyle = gradient;
+      ctx.fill();
+    }
+
+    function updateParticle(p) {
+      p.x += p.speedX;
+      p.y += p.speedY;
+      p.pulse += 0.02;
+
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(p => {
+        updateParticle(p);
+        drawParticle(p);
+      });
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    // Reduced motion check
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReducedMotion) {
+      resizeCanvas();
+      initParticles();
+      animate();
+
+      window.addEventListener('resize', () => {
+        resizeCanvas();
+        initParticles();
+      });
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+          // Close mobile nav if open
+          navLinks.classList.remove('open');
+        }
+      });
+    });
+
+    // Intersection Observer for reveal animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-fade-in-up');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.card').forEach(card => {
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>
