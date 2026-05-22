@@ -308,16 +308,21 @@ async function loadReport() {
     // Try relative path first (same origin), then absolute URL
     const paths = ['/api/bazi?', window.location.origin + '/api/bazi?'];
     let resp, lastErr;
-    for (const base of paths) {
+    for (let i = 0; i < paths.length; i++) {
+      const base = paths[i];
       try {
+        console.log('[DEBUG] Fetch attempt', i + 1, base + params.toString().substring(0, 50) + '...');
         resp = await Promise.race([
           fetch(base + params.toString(), { signal: controller.signal }),
           new Promise((_, reject) => setTimeout(() => reject(new Error('网络超时（20秒）')), 20000))
         ]);
-        if (resp.ok) break;
+        console.log('[DEBUG] Response status:', resp.status, 'ok:', resp.ok);
+        if (resp.ok) { console.log('[DEBUG] Success with base:', base); break; }
         lastErr = 'HTTP ' + resp.status;
+        console.log('[DEBUG] Not ok, trying next URL...');
       } catch (e) {
         lastErr = e.name === 'AbortError' ? '请求超时' : e.message;
+        console.log('[DEBUG] Fetch error:', lastErr);
       }
     }
     clearTimeout(timeoutId);
@@ -333,6 +338,7 @@ async function loadReport() {
   } catch (err) {
     console.error('loadReport error:', err);
     const msg = err.message || String(err);
+    console.error('[DEBUG] Final error message:', msg);
     if (loading) loading.innerHTML = '<div style="max-width:480px;margin:0 auto;text-align:center;padding:2rem 1rem;">' +
       '<div style="font-size:3rem;margin-bottom:1rem;">⚠️</div>' +
       '<h3 style="color:#C9A84C;margin-bottom:0.8rem;">加载失败</h3>' +
