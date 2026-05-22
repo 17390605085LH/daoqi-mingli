@@ -3,74 +3,405 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="favicon.svg"><title>命理报告 · 道器</title>
+  <link rel="icon" href="favicon.svg">
+  <title>命理报告 · 道器</title>
   <meta name="description" content="您的专属命理分析报告。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ===== 科技道家风 ===== */
+    :root {
+      --glow-gold: 0 0 20px rgba(201,168,76,0.3), 0 0 40px rgba(201,168,76,0.1);
+      --glow-cyan: 0 0 20px rgba(74,158,139,0.3), 0 0 40px rgba(74,158,139,0.1);
+      --border-tech: 1px solid rgba(201,168,76,0.25);
+      --scan-speed: 6s;
+    }
+
+    /* 全局扫描线覆盖 */
+    .tech-overlay {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px, rgba(201,168,76,0.015) 2px, rgba(201,168,76,0.015) 4px
+      );
+    }
+
+    /* ---- Tab 导航栏 ---- */
+    .tab-nav {
+      position: sticky; top: 60px; z-index: 100;
+      background: rgba(13,17,23,0.92);
+      backdrop-filter: blur(20px) saturate(1.5);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      margin-bottom: var(--space-lg);
+    }
+    .tab-nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; gap: 0; overflow-x: auto;
+      padding: 0 var(--space-md); scrollbar-width: none;
+    }
+    .tab-nav-inner::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      position: relative;
+      flex-shrink: 0; padding: var(--space-sm) var(--space-md);
+      background: none; border: none; color: #8B8577;
+      font-family: var(--font-body); font-size: 0.9rem; font-weight: 500;
+      cursor: pointer; transition: all 0.3s;
+      white-space: nowrap;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .tab-btn:hover { color: #C9A84C; }
+    .tab-btn.active {
+      color: #C9A84C;
+      text-shadow: 0 0 12px rgba(201,168,76,0.4);
+    }
+    .tab-btn.active::after {
+      content: ''; position: absolute; bottom: 0; left: 20%; right: 20%;
+      height: 2px; background: linear-gradient(90deg,transparent,#C9A84C,#C9A84C,transparent);
+      box-shadow: 0 0 10px rgba(201,168,76,0.5);
+    }
+    .tab-btn .tab-icon { font-size: 1.1em; }
+    @media (max-width: 768px) {
+      .tab-btn { padding: 0.6rem 0.9rem; font-size: 0.8rem; }
+      .tab-nav { top: 52px; }
+    }
+
+    /* ---- 内容面板 ---- */
+    .tab-panel {
+      display: none;
+      animation: panelFadeIn 0.4s ease;
+    }
+    .tab-panel.active { display: block; }
+    @keyframes panelFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- 科技感卡片 ---- */
+    .tech-card {
+      background: linear-gradient(135deg, rgba(26,31,46,0.85), rgba(13,17,23,0.9));
+      border: var(--border-tech); border-radius: var(--radius-md);
+      padding: var(--space-lg); margin-bottom: var(--space-md);
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .tech-card:hover {
+      border-color: rgba(201,168,76,0.4);
+      box-shadow: var(--glow-gold);
+    }
+    .tech-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+    }
+    /* 六边形装饰角 */
+    .hex-corner {
+      position: absolute; width: 24px; height: 24px;
+      opacity: 0.15; pointer-events: none;
+      border: 1px solid #C9A84C;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+    .hex-corner.tl { top: 8px; left: 8px; }
+    .hex-corner.br { bottom: 8px; right: 8px; }
+
+    .tech-card-header {
+      display: flex; align-items: center; gap: var(--space-md);
+      margin-bottom: var(--space-md); padding-bottom: var(--space-sm);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .tech-card-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      border: 1px solid rgba(201,168,76,0.3);
+      background: rgba(201,168,76,0.06);
+    }
+    .tech-card-title { font-family: var(--font-heading); font-size: 1.15rem; color: #C9A84C; }
+    .tech-card-sub { font-size: 0.8rem; color: #8B8577; }
+
+    /* ---- 八字柱阵 ---- */
+    .pillar-grid {
+      display: flex; justify-content: center; gap: var(--space-lg);
+      flex-wrap: wrap; margin-top: var(--space-md);
+    }
+    .pillar-cell {
+      text-align: center; position: relative;
+    }
+    .pillar-cell::before {
+      content: ''; position: absolute; inset: -8px;
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 12px;
+      background: radial-gradient(circle at center, rgba(201,168,76,0.03) 0%, transparent 70%);
+      z-index: -1;
+    }
+    .pillar-label { font-size: 0.75rem; color: #8B8577; margin-bottom: 4px; letter-spacing: 0.1em; text-transform: uppercase; }
+    .pillar-gan, .pillar-zhi {
+      font-family: var(--font-heading); font-size: 2rem; font-weight: 700;
+      line-height: 1.2; transition: text-shadow 0.3s;
+    }
+    .pillar-gan { color: #E8E0D4; }
+    .pillar-zhi { color: #8B8577; }
+    .pillar-cell.highlight .pillar-gan {
+      color: #C9A84C;
+      text-shadow: 0 0 20px rgba(201,168,76,0.5);
+    }
+    .pillar-cell.highlight .pillar-zhi { color: #C9A84C; }
+
+    /* ---- 五行能量环 ---- */
+    .wuxing-ring {
+      display: flex; justify-content: center; gap: var(--space-md);
+      margin-top: var(--space-md); flex-wrap: wrap;
+    }
+    .wuxing-node {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 600;
+      border: 2px solid transparent;
+      transition: all 0.4s;
+      position: relative;
+    }
+    .wuxing-node::after {
+      content: attr(data-count);
+      position: absolute; bottom: -18px; font-size: 0.7rem; color: #8B8577;
+    }
+    .wuxing-node.wood { background: rgba(107,142,35,0.15); border-color: #6B8E23; color: #6B8E23; }
+    .wuxing-node.fire { background: rgba(220,53,69,0.15); border-color: #DC3545; color: #DC3545; }
+    .wuxing-node.earth { background: rgba(205,133,63,0.15); border-color: #CD853F; color: #CD853F; }
+    .wuxing-node.metal { background: rgba(168,169,173,0.15); border-color: #A8A9AD; color: #A8A9AD; }
+    .wuxing-node.water { background: rgba(70,130,180,0.15); border-color: #4682B4; color: #4682B4; }
+
+    /* ---- 紫微星盘 ---- */
+    .ziwei-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 4px; margin-top: var(--space-md);
+    }
+    @media (max-width: 600px) { .ziwei-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .ziwei-palace {
+      background: rgba(26,31,46,0.7); border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 8px; padding: var(--space-sm); text-align: center;
+      min-height: 80px; display: flex; flex-direction: column; justify-content: center;
+      transition: all 0.3s;
+    }
+    .ziwei-palace.ming { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.08); }
+    .ziwei-palace.shen { border-color: rgba(74,158,139,0.5); background: rgba(74,158,139,0.08); }
+    .ziwei-palace-name { font-size: 0.75rem; color: #8B8577; margin-bottom: 4px; }
+    .ziwei-palace-stars { font-size: 0.85rem; color: #C9A84C; font-weight: 500; }
+    .ziwei-palace:empty::after { content: '—'; color: rgba(139,133,119,0.3); }
+
+    /* ---- 卦象装饰 ---- */
+    .gua-decoration {
+      display: flex; gap: 6px; justify-content: center; margin: var(--space-md) 0;
+    }
+    .gua-line {
+      width: 40px; height: 3px; border-radius: 2px; opacity: 0.2;
+    }
+    .gua-line.yang { background: #C9A84C; width: 40px; }
+    .gua-line.yin { display: flex; gap: 3px; }
+    .gua-line.yin span { flex: 1; height: 3px; background: #C9A84C; border-radius: 2px; }
+
+    /* ---- 太极旋转 ---- */
+    @keyframes taijiSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .taiji-spin {
+      animation: taijiSpin 20s linear infinite;
+    }
+
+    /* ---- 逐字显现文本 ---- */
+    @keyframes textReveal {
+      from { opacity: 0; transform: translateY(2px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reveal-text span {
+      display: inline-block; animation: textReveal 0.3s ease both;
+    }
+
+    /* ---- 数据涟漪 ---- */
+    .ripple-bar {
+      height: 6px; border-radius: 3px; margin-bottom: var(--space-sm);
+      background: rgba(201,168,76,0.1);
+      position: relative; overflow: hidden;
+    }
+    .ripple-bar::after {
+      content: ''; position: absolute; top: 0; left: 0; height: 100%;
+      border-radius: 3px;
+      animation: rippleFlow 2s ease infinite;
+    }
+    .ripple-bar.gold::after { background: linear-gradient(90deg, transparent, #C9A84C, transparent); }
+    .ripple-bar.jade::after { background: linear-gradient(90deg, transparent, #4A9E8B, transparent); animation-delay: 0.5s; }
+    .ripple-bar.red::after  { background: linear-gradient(90deg, transparent, #C75B5B, transparent); animation-delay: 1s; }
+    @keyframes rippleFlow {
+      0% { left: -50%; width: 30%; }
+      60% { left: 100%; width: 30%; }
+      100% { left: 100%; width: 0; }
+    }
+
+    /* ---- 网格背景（紫微盘） ---- */
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* ---- 流年时间轴 ---- */
+    .timeline-bar {
+      display: flex; align-items: center; gap: 8px; margin: var(--space-md) 0;
+    }
+    .timeline-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 2px solid #C9A84C;
+      position: relative;
+    }
+    .timeline-dot.current {
+      width: 16px; height: 16px; background: #C9A84C;
+      box-shadow: 0 0 12px rgba(201,168,76,0.5);
+    }
+    .timeline-line {
+      flex: 1; height: 1px; background: linear-gradient(90deg, rgba(201,168,76,0.5), rgba(201,168,76,0.1));
+    }
+
+    /* ---- Lock overlay 重写 ---- */
+    .lock-overlay {
+      text-align: center; padding: var(--space-lg);
+      background: linear-gradient(180deg, transparent, rgba(13,17,23,0.8));
+      border-radius: var(--radius-md);
+    }
+
+    /* ---- 综合运势卡片 ---- */
+    .fortune-summary {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-md);
+    }
+    .fortune-stat {
+      text-align: center; padding: var(--space-lg);
+      background: rgba(26,31,46,0.6); border-radius: var(--radius-md);
+      border: 1px solid rgba(201,168,76,0.1);
+    }
+    .fortune-stat-value {
+      font-family: var(--font-heading); font-size: 2.5rem;
+      background: linear-gradient(135deg, #C9A84C 30%, #E8C97A 60%, #C9A84C 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .fortune-stat-label { color: #8B8577; font-size: 0.85rem; margin-top: var(--space-xs); }
+  </style>
 </head>
 <body>
+<div class="tech-overlay"></div>
 
 <nav class="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">道器</a>
-    <a href="checkout.html" class="btn btn-primary">预约真人专家</a>
+    <a href="checkout.html" class="btn btn-primary">预约专家</a>
   </div>
 </nav>
 
 <main class="report-page">
-  <header class="report-header" id="reportHeader">
-    <h1 id="reportTitle">命理报告</h1>
-    <p>基于道器排盘引擎 + 经典典籍双重支持</p>
+  <!-- ===== 顶部 · 八字柱阵 ===== -->
+  <header class="report-header" id="reportHeader" style="text-align:center;">
+    <h1 id="reportTitle" style="font-family:var(--font-heading);font-size:2rem;color:#E8E0D4;">道器 · 命理推演</h1>
+    <p style="color:#8B8577;margin-bottom:var(--space-md);">紫微斗数 · 四柱八字 · 面相手相 · 风水布局</p>
 
-    <div class="bazi-display" id="baziDisplay">
-      <div class="bazi-pillar"><div class="bazi-pillar-label">年柱</div><div class="bazi-gan" id="yearGan">-</div><div class="bazi-zhi" id="yearZhi">-</div></div>
-      <div class="bazi-pillar"><div class="bazi-pillar-label">月柱</div><div class="bazi-gan" id="monthGan">-</div><div class="bazi-zhi" id="monthZhi">-</div></div>
-      <div class="bazi-pillar"><div class="bazi-pillar-label">日柱</div><div class="bazi-gan" id="dayGan">-</div><div class="bazi-zhi" id="dayZhi">-</div></div>
-      <div class="bazi-pillar"><div class="bazi-pillar-label">时柱</div><div class="bazi-gan" id="hourGan">-</div><div class="bazi-zhi" id="hourZhi">-</div></div>
+    <!-- 卦象装饰线 -->
+    <div class="gua-decoration" id="guaDeco"></div>
+
+    <!-- 四柱显示 -->
+    <div class="pillar-grid" id="baziDisplay">
+      <div class="pillar-cell"><div class="pillar-label">年柱</div><div class="pillar-gan" id="yearGan">—</div><div class="pillar-zhi" id="yearZhi">—</div></div>
+      <div class="pillar-cell"><div class="pillar-label">月柱</div><div class="pillar-gan" id="monthGan">—</div><div class="pillar-zhi" id="monthZhi">—</div></div>
+      <div class="pillar-cell highlight"><div class="pillar-label">日柱</div><div class="pillar-gan" id="dayGan">—</div><div class="pillar-zhi" id="dayZhi">—</div></div>
+      <div class="pillar-cell"><div class="pillar-label">时柱</div><div class="pillar-gan" id="hourGan">—</div><div class="pillar-zhi" id="hourZhi">—</div></div>
     </div>
 
-    <div class="wuxing-indicator" id="wuxingIndicator">
-      <span class="wuxing-dot wood" title="木">木</span>
-      <span class="wuxing-dot fire" title="火">火</span>
-      <span class="wuxing-dot earth" title="土">土</span>
-      <span class="wuxing-dot metal" title="金">金</span>
-      <span class="wuxing-dot water" title="水">水</span>
+    <!-- 五行能量环 -->
+    <div class="wuxing-ring" id="wuxingRing"></div>
+
+    <!-- 日主强弱的脉冲波纹 -->
+    <div id="strengthZone" style="margin-top:var(--space-md);">
+      <div class="ripple-bar gold" style="width:60%;margin:0 auto;"></div>
+      <div class="ripple-bar jade" style="width:40%;margin:var(--space-xs) auto;"></div>
+      <div class="ripple-bar red" style="width:30%;margin:var(--space-xs) auto;"></div>
     </div>
 
-    <div id="strengthBadge" style="margin-top:var(--space-md);"></div>
+    <div id="strengthBadge" style="margin-top:var(--space-sm);"></div>
   </header>
 
-  <div class="report-sections" id="reportSections">
-    <!-- 所有内容由 JS 动态生成 -->
-    <div id="loadingIndicator" style="text-align:center;padding:3rem 0;">
-      <p style="color:#C9A84C;font-size:1.2rem;">正在排盘推演中……</p>
+  <!-- ===== Tab 导航 ===== -->
+  <nav class="tab-nav" id="tabNav">
+    <div class="tab-nav-inner">
+      <button class="tab-btn active" data-panel="bazi">
+        <span class="tab-icon">☯</span> 命盘总览
+      </button>
+      <button class="tab-btn" data-panel="ziwei">
+        <span class="tab-icon">⭐</span> 紫微斗数
+      </button>
+      <button class="tab-btn" data-panel="mianxiang">
+        <span class="tab-icon">👁</span> 面相分析
+      </button>
+      <button class="tab-btn" data-panel="shouxiang">
+        <span class="tab-icon">✋</span> 手相分析
+      </button>
+      <button class="tab-btn" data-panel="fengshui">
+        <span class="tab-icon">🏠</span> 风水布局
+      </button>
+      <button class="tab-btn" data-panel="liunian">
+        <span class="tab-icon">📅</span> 流年运势
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== 内容面板 ===== -->
+  <div class="report-sections" id="reportSections" style="max-width:1100px;margin:0 auto;padding:0 var(--space-md);">
+    <!-- 加载动画 -->
+    <div id="loadingIndicator" style="text-align:center;padding:4rem 0;">
+      <div style="width:60px;height:60px;margin:0 auto;border:2px solid rgba(201,168,76,0.2);border-top-color:#C9A84C;border-radius:50%;animation:taijiSpin 2s linear infinite;"></div>
+      <p style="color:#C9A84C;font-size:1.2rem;margin-top:var(--space-md);">推演中，接通天地之气……</p>
       <p style="color:#8B8577;">请稍候</p>
     </div>
+
+    <!-- Tab 1: 命盘总览 -->
+    <div class="tab-panel active" id="panel-bazi"></div>
+
+    <!-- Tab 2: 紫微斗数 -->
+    <div class="tab-panel" id="panel-ziwei"></div>
+
+    <!-- Tab 3: 面相 -->
+    <div class="tab-panel" id="panel-mianxiang"></div>
+
+    <!-- Tab 4: 手相 -->
+    <div class="tab-panel" id="panel-shouxiang"></div>
+
+    <!-- Tab 5: 风水 -->
+    <div class="tab-panel" id="panel-fengshui"></div>
+
+    <!-- Tab 6: 流年 -->
+    <div class="tab-panel" id="panel-liunian"></div>
+
+    <!-- 真人专家 CTA（始终可见） -->
+    <div id="expertCTA" style="margin-top:var(--space-xl);"></div>
   </div>
 </main>
 
 <footer class="footer" style="margin-top:var(--space-xl);">
-  <div class="container"><p class="footer-copy">© 2026 道器命理 · 仅供参考</p></div>
+  <div class="container"><p class="footer-copy">© 2026 道器命理 · 紫微斗数 · 四柱八字 · 仅供参考</p></div>
 </footer>
 
 <script>
-// ===== 核心：从 sessionStorage 读取数据并调用 API =====
+// ===== 核心数据 =====
 const birthData = JSON.parse(sessionStorage.getItem('birthData') || '{}');
 const urlParams = new URLSearchParams(window.location.search);
-// 测试阶段：全部内容免费开放
-const plan = urlParams.get('plan') || 'full';
-const IS_TESTING = true; // 测试完成后改为 false 恢复付费
-
+const IS_TESTING = true;  // 测试阶段全部开放
 let baziResult = null;
 
+// ===== 加载报告 =====
 async function loadReport() {
   const loading = document.getElementById('loadingIndicator');
-
   try {
-    // 构建 API 请求参数
     const params = new URLSearchParams();
     if (birthData.name) {
       params.set('name', birthData.name);
@@ -81,7 +412,6 @@ async function loadReport() {
       params.set('hour', birthData.hour || '子时');
       params.set('calendar', birthData.calendar || 'solar');
     } else {
-      // 没有用户数据，用当前日期生成 demo
       const now = new Date();
       params.set('name', '访客');
       params.set('year', now.getFullYear());
@@ -89,30 +419,28 @@ async function loadReport() {
       params.set('day', now.getDate());
       params.set('hour', '子时');
     }
-
     const resp = await fetch('/api/bazi?' + params.toString());
     baziResult = await resp.json();
-
     if (loading) loading.remove();
 
-    // 渲染所有内容
-    renderBaziDisplay();
-    renderAllSections();
-
-    // 初始化图标
+    renderHeader();
+    renderAllTabs();
+    initTabs();
     lucide.createIcons();
 
   } catch (err) {
-    if (loading) {
-      loading.innerHTML = '<p style="color:var(--color-cinnabar);">数据加载失败，请返回重新填写</p><a href="form.html" class="btn btn-primary" style="margin-top:1rem;">返回填写</a>';
-    }
+    if (loading) loading.innerHTML = '<p style="color:#C75B5B;">数据加载失败</p><a href="form.html" class="btn btn-primary" style="margin-top:1rem;">返回填写</a>';
   }
 }
 
-// ===== 渲染八字展示 =====
-function renderBaziDisplay() {
-  const p = baziResult.pillars;
-  document.getElementById('reportTitle').textContent = baziResult.name + ' · 命理报告';
+// ===== 渲染顶部 =====
+function renderHeader() {
+  const d = baziResult;
+  const p = d.pillars;
+
+  document.getElementById('reportTitle').textContent = d.name + ' · 命理报告';
+
+  // 四柱
   document.getElementById('yearGan').textContent = p.year[0];
   document.getElementById('yearZhi').textContent = p.year[1];
   document.getElementById('monthGan').textContent = p.month[0];
@@ -122,249 +450,482 @@ function renderBaziDisplay() {
   document.getElementById('hourGan').textContent = p.hour[0];
   document.getElementById('hourZhi').textContent = p.hour[1];
 
-  // 日柱高亮
-  document.getElementById('dayGan').style.color = '#C9A84C';
-  document.getElementById('dayZhi').style.color = '#C9A84C';
-
-  // 五行指示器数量
-  const wc = baziResult.wuxingCount;
-  const maxCount = Math.max(wc.金, wc.木, wc.水, wc.火, wc.土, 1);
-  const indicator = document.getElementById('wuxingIndicator');
-  const dots = indicator.querySelectorAll('.wuxing-dot');
-  const wuxingKeys = ['wood', 'fire', 'earth', 'metal', 'water'];
-  const wuxingNames = ['木', '火', '土', '金', '水'];
-
-  dots.forEach((dot, i) => {
-    const count = wc[wuxingNames[i]] || 0;
-    const opacity = 0.3 + (count / maxCount) * 0.7;
-    dot.style.opacity = opacity;
-    dot.title = wuxingNames[i] + ': ' + count;
-  });
+  // 五行能量环
+  const wc = d.wuxingCount;
+  const wnn = { '金':'metal','木':'wood','水':'water','火':'fire','土':'earth' };
+  const ring = document.getElementById('wuxingRing');
+  ring.innerHTML = '';
+  for (const [k, v] of Object.entries(wnn)) {
+    const cnt = wc[k] || 0;
+    const opacity = 0.3 + (cnt / 8) * 0.7;
+    ring.innerHTML += `<div class="wuxing-node ${v}" data-count="${cnt}" style="opacity:${opacity}">${k}</div>`;
+  }
 
   // 强弱标记
-  const badge = document.getElementById('strengthBadge');
-  const s = baziResult.strength;
-  const sc = s.includes('强') ? 'var(--color-cinnabar)' : s.includes('弱') ? 'var(--color-jade)' : '#C9A84C';
-  badge.innerHTML = `<span style="display:inline-block;padding:0.25rem 1rem;border-radius:100px;font-size:0.85rem;background:${sc}15;color:${sc};border:1px solid ${sc}30;">日主${baziResult.dayMaster}${baziResult.dayWuxing} · ${s}</span>`;
+  const s = d.strength;
+  const sc = s.includes('强') ? '#C75B5B' : s.includes('弱') ? '#4A9E8B' : '#C9A84C';
+  document.getElementById('strengthBadge').innerHTML = `<span style="display:inline-block;padding:0.3rem 1.2rem;border-radius:100px;font-size:0.9rem;background:${sc}15;color:${sc};border:1px solid ${sc}30;">日主 ${d.dayMaster}${d.dayWuxing} · ${s}</span>`;
+
+  // 随机卦象装饰
+  const guaDeco = document.getElementById('guaDeco');
+  const guas = [
+    '111111', '000000', '111010', '010111', '101010', '110011', '001100', '100010'
+  ];
+  const gArr = (guas[Math.floor(Math.random() * guas.length)]).split('');
+  let gHtml = '';
+  for (const l of gArr) {
+    if (l === '1') gHtml += '<div class="gua-line yang"></div>';
+    else gHtml += '<div class="gua-line yin"><span></span><span></span></div>';
+  }
+  guaDeco.innerHTML = gHtml;
 }
 
-// ===== 渲染所有卡片 =====
-function renderAllSections() {
-  const container = document.getElementById('reportSections');
+// ===== 渲染所有 Tab =====
+function renderAllTabs() {
   const d = baziResult;
-  // 测试阶段全部开放
-  const isFree = IS_TESTING ? false : (plan === 'free' || plan === '尝鲜版');
+  const isFree = IS_TESTING ? false : true;
 
-  const cards = [];
-
-  // 1. 五行分析
-  cards.push(buildWuxingCard(d));
-
-  // 2. 日主性格（免费可见全貌）
-  cards.push(buildPersonalityCard(d));
-
-  // 3. 十神关系（免费可见）
-  cards.push(buildShiShenCard(d));
-
-  // 4. 喜用神
-  cards.push(buildYongShenCard(d));
-
-  // 5. 大运（付费内容）
-  cards.push(buildDayunCard(d, isFree));
-
-  // 6. 流年分析（付费内容部分展示）
-  cards.push(buildLiunianCard(d, isFree));
-
-  // 7. 流月简析
-  cards.push(buildMonthlyCard(d));
-
-  // 8. 趋吉避凶
-  cards.push(buildJixiongCard(d));
-
-  // 9. 紫微斗数
-  cards.push(buildZiweiCard(d, isFree));
-
-  // 10. 面相分析
-  cards.push(buildMianXiangCard(d, isFree));
-
-  // 11. 手相分析
-  cards.push(buildShouXiangCard(d, isFree));
-
-  // 12. 风水布局
-  cards.push(buildFengshuiCard(d, isFree));
-
-  // 13. 山医堂主
-  cards.push(buildExpertCard());
-
-  // 14. 升级 CTA
-  if (isFree) {
-    cards.push(buildUpgradeCard());
-  }
-
-  container.innerHTML = cards.join('');
+  document.getElementById('panel-bazi').innerHTML = buildBaziPanel(d);
+  document.getElementById('panel-ziwei').innerHTML = buildZiweiPanel(d, isFree);
+  document.getElementById('panel-mianxiang').innerHTML = buildMianXiangPanel(d, isFree);
+  document.getElementById('panel-shouxiang').innerHTML = buildShouXiangPanel(d, isFree);
+  document.getElementById('panel-fengshui').innerHTML = buildFengshuiPanel(d, isFree);
+  document.getElementById('panel-liunian').innerHTML = buildLiunianPanel(d, isFree);
+  document.getElementById('expertCTA').innerHTML = buildExpertCTA();
 }
 
-// ===== 各卡片构建函数 =====
-
-function buildWuxingCard(d) {
-  const wc = d.wuxingCount;
-  const maxVal = Math.max(wc.金, wc.木, wc.水, wc.火, wc.土, 1);
-  const wm = { '金':'metal','木':'wood','水':'water','火':'fire','土':'earth' };
-  const wn = { '金':'金','木':'木','水':'水','火':'火','土':'土' };
-
-  let bars = '';
-  for (const [k, v] of Object.entries(wn)) {
-    const pct = Math.round((wc[v] / maxVal) * 100);
-    const colorVar = `var(--color-${wm[k]})`;
-    bars += `<div style="display:flex;align-items:center;gap:var(--space-xs);margin-bottom:var(--space-sm);">
-      <span style="width:24px;font-size:0.85rem;font-weight:600;color:${colorVar};">${k}</span>
-      <div style="flex:1;height:20px;background:var(--color-ink);border-radius:4px;overflow:hidden;">
-        <div style="width:${pct}%;height:100%;background:${colorVar};border-radius:4px;transition:width 0.6s;"></div>
-      </div>
-      <span style="font-size:0.85rem;color:#8B8577;">${wc[v]}</span>
-    </div>`;
-  }
-
-  const analysis = generateWuxingText(d);
-
-  return cardTemplate('flame', '五行分布分析', '天干地支与五行力量', bars + `
-    <p style="margin-top:var(--space-md);">${analysis}</p>
-    <div style="margin-top:var(--space-md);padding:var(--space-md);background:rgba(201,168,76,0.05);border-radius:var(--radius-sm);border-left:3px solid #C9A84C;">
-      <strong style="color:#C9A84C;">${d.yongShen.principle}</strong>
-      <p style="margin-top:var(--space-xs);">用神：${d.yongShen.yongShen}，忌：${d.yongShen.avoid}</p>
-    </div>`, true);
+// ===== Tab 切换 =====
+function initTabs() {
+  const btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
+      // 延迟重新初始化图标
+      setTimeout(() => lucide.createIcons(), 100);
+    });
+  });
 }
 
-function buildPersonalityCard(d) {
+// ===== 科技卡片模板 =====
+function techCard(icon, title, subtitle, content, extraClass) {
+  return `<div class="tech-card ${extraClass||''}">
+    <div class="hex-corner tl"></div><div class="hex-corner br"></div>
+    <div class="tech-card-header">
+      <div class="tech-card-icon"><i data-lucide="${icon}"></i></div>
+      <div><div class="tech-card-title">${title}</div><div class="tech-card-sub">${subtitle}</div></div>
+    </div>
+    <div>${content}</div>
+  </div>`;
+}
+
+// ============ TAB 面板构建函数 ============
+
+// ---- 命盘总览 ----
+function buildBaziPanel(d) {
   const p = d.personality;
   let pos = '', neg = '';
-  p.positive.forEach(t => { pos += `<li>✓ ${t}</li>`; });
-  p.negative.forEach(t => { neg += `<li>⚠ ${t}</li>`; });
+  p.positive.forEach(t => pos += `<li>✦ ${t}</li>`);
+  p.negative.forEach(t => neg += `<li>◇ ${t}</li>`);
 
-  return cardTemplate('user', '日主性格', `日主${d.dayMaster}${d.dayWuxing} · ${d.strength}`,
-    `<p>日主<span style="color:#C9A84C;font-weight:600;">${d.dayMaster}${d.dayWuxing}</span>，${d.strength}。</p>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);margin-top:var(--space-md);">
-      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:0.85rem;color:var(--color-jade);margin-bottom:var(--space-xs);">优势特质</div>
-        <ul style="list-style:none;">${pos}</ul>
+  const wc = d.wuxingCount;
+  const wn = ['金','木','水','火','土'];
+  const wm = { '金':'#A8A9AD','木':'#6B8E23','水':'#4682B4','火':'#DC3545','土':'#CD853F' };
+  const maxV = Math.max(...wn.map(k => wc[k] || 0), 1);
+  let bars = '';
+  wn.forEach(k => {
+    const v = wc[k]||0; const pct = Math.round(v/maxV*100);
+    bars += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="width:20px;color:${wm[k]};font-weight:600;">${k}</span>
+      <div style="flex:1;height:18px;background:rgba(13,17,23,0.6);border-radius:4px;overflow:hidden;">
+        <div style="width:${pct}%;height:100%;background:${wm[k]};border-radius:4px;transition:width 1s ease;"></div>
       </div>
-      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:0.85rem;color:var(--color-cinnabar);margin-bottom:var(--space-xs);">需注意</div>
-        <ul style="list-style:none;">${neg}</ul>
-      </div>
-    </div>`, true);
-}
+      <span style="font-size:0.8rem;color:#8B8577;width:18px;">${v}</span>
+    </div>`;
+  });
 
-function buildShiShenCard(d) {
+  const g = d.luckyGuide;
   const ss = d.shiShen;
-  const pillarNames = { year: '年柱', month: '月柱', day: '日柱', hour: '时柱' };
-  let rows = '';
-  for (const [key, val] of Object.entries(ss)) {
-    rows += `<div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);">
-      <span style="color:#8B8577;">${pillarNames[key] || key}</span>
-      <span style="font-weight:600;color:#C9A84C;">${val[0]}</span>
-      <span style="font-size:0.85rem;color:#8B8577;">${val[1]}</span>
+  const pn = { year:'年柱', month:'月柱', day:'日柱', hour:'时柱' };
+  let shenRows = '';
+  for (const [k, v] of Object.entries(ss)) {
+    shenRows += `<div style="display:flex;justify-content:space-between;padding:6px 8px;background:rgba(26,31,46,0.5);border-radius:6px;margin-bottom:4px;">
+      <span style="color:#8B8577;">${pn[k]||k}</span>
+      <span style="color:#C9A84C;font-weight:600;">${v[0]}</span>
+      <span style="color:#8B8577;font-size:0.8rem;">${v[1]}</span>
     </div>`;
   }
-  return cardTemplate('git-branch', '十神关系', '天干之间的生克关系', rows, true);
+
+  return `
+    ${techCard('user', '日主性格', `日主${d.dayMaster}${d.dayWuxing} · ${d.strength}`,
+      `<p style="margin-bottom:var(--space-md);">日主 <span style="color:#C9A84C;font-weight:600;">${d.dayMaster}${d.dayWuxing}</span>，命局${d.strength}。${d.yongShen.principle}。</p>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);">
+        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.6);border-radius:8px;border-left:3px solid #4A9E8B;">
+          <div style="font-size:0.8rem;color:#4A9E8B;margin-bottom:6px;">✦ 优势特质</div>
+          <ul style="list-style:none;font-size:0.9rem;">${pos}</ul>
+        </div>
+        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.6);border-radius:8px;border-left:3px solid #C75B5B;">
+          <div style="font-size:0.8rem;color:#C75B5B;margin-bottom:6px;">◇ 需注意</div>
+          <ul style="list-style:none;font-size:0.9rem;">${neg}</ul>
+        </div>
+      </div>`)}
+
+    ${techCard('bar-chart-3', '五行分布', d.yongShen.principle,
+      bars + `<div style="margin-top:var(--space-md);padding:var(--space-sm);background:rgba(201,168,76,0.05);border-radius:8px;border-left:3px solid #C9A84C;">
+        <strong style="color:#C9A84C;">用神：${d.yongShen.yongShen}</strong>
+        <span style="color:#C75B5B;margin-left:var(--space-md);">忌：${d.yongShen.avoid}</span>
+      </div>`)}
+
+    ${techCard('git-branch', '十神关系', '天干生克互动',
+      shenRows)}
+
+    ${techCard('star', '喜用神 · 吉祥指南', '趋吉避凶之钥',
+      `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm);margin-bottom:var(--space-md);">
+        <div style="text-align:center;padding:var(--space-sm);background:rgba(26,31,46,0.6);border-radius:8px;">
+          <div style="font-size:1.5rem;">🧭</div>
+          <div style="font-size:0.75rem;color:#8B8577;">幸运方位</div>
+          <div style="font-weight:600;font-size:0.9rem;">${g.directions.join(' / ')}</div>
+        </div>
+        <div style="text-align:center;padding:var(--space-sm);background:rgba(26,31,46,0.6);border-radius:8px;">
+          <div style="font-size:1.5rem;">🎨</div>
+          <div style="font-size:0.75rem;color:#8B8577;">幸运颜色</div>
+          <div style="font-weight:600;font-size:0.9rem;">${g.colors.join(' / ')}</div>
+        </div>
+        <div style="text-align:center;padding:var(--space-sm);background:rgba(26,31,46,0.6);border-radius:8px;">
+          <div style="font-size:1.5rem;">🔢</div>
+          <div style="font-size:0.75rem;color:#8B8577;">幸运数字</div>
+          <div style="font-weight:600;font-size:0.9rem;">${g.numbers.join(', ')}</div>
+        </div>
+      </div>
+      <div style="padding:var(--space-sm);background:rgba(74,158,139,0.06);border-radius:8px;">
+        <strong style="color:#4A9E8B;">适合行业</strong>
+        <p style="margin-top:4px;">${g.industries.join('、')}</p>
+      </div>`)}
+
+    ${buildJixiongCard(d)}
+  `;
 }
 
-function buildYongShenCard(d) {
-  const g = d.luckyGuide;
-  return cardTemplate('star', '喜用神与幸运指南', d.yongShen.principle,
-    `<p style="margin-bottom:var(--space-md);"><span style="color:#C9A84C;font-weight:600;">用神：${d.yongShen.yongShen}</span></p>
-    <p style="margin-bottom:var(--space-md);"><span style="color:var(--color-cinnabar);">忌神：${d.yongShen.avoid}</span></p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm);">
-      <div style="text-align:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:1.5rem;">🧭</div>
-        <div style="font-size:0.8rem;color:#8B8577;margin-top:0.25rem;">幸运方位</div>
-        <div style="font-weight:600;">${g.directions.join(' / ')}</div>
-      </div>
-      <div style="text-align:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:1.5rem;">🎨</div>
-        <div style="font-size:0.8rem;color:#8B8577;margin-top:0.25rem;">幸运颜色</div>
-        <div style="font-weight:600;">${g.colors.join(' / ')}</div>
-      </div>
-      <div style="text-align:center;padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:1.5rem;">🔢</div>
-        <div style="font-size:0.8rem;color:#8B8577;margin-top:0.25rem;">幸运数字</div>
-        <div style="font-weight:600;">${g.numbers.join(', ')}</div>
-      </div>
-    </div>
-    <div style="margin-top:var(--space-md);padding:var(--space-md);background:rgba(74,158,139,0.08);border-radius:var(--radius-sm);">
-      <strong style="color:var(--color-jade);">适合行业</strong>
-      <p style="margin-top:var(--space-xs);">${g.industries.join('、')}</p>
-    </div>`, true);
-}
+// ---- 紫微斗数 ----
+function buildZiweiPanel(d, isFree) {
+  const zw = d.ziwei;
 
-function buildDayunCard(d, isFree) {
-  const content = `<p>大运十年一转，顺逆交替。您的命局行运遵循<span style="color:#C9A84C;">阳年男顺排/阴年女逆排</span>规则。</p>
-    <p style="margin-top:var(--space-sm);">精确大运起运年龄需结合出生日期与节气时间差计算，完整分析包含：</p>
-    <ul style="margin-top:var(--space-sm);list-style:disc;padding-left:var(--space-md);">
-      <li>起运年龄与换运节点</li>
-      <li>每步大运十年吉凶</li>
-      <li>大运与命局互动</li>
-    </ul>`;
+  // 星盘网格
+  let palaceHtml = '';
+  const allPalaces = ZW_PALACES.slice();
+  for (let i = 0; i < 12; i++) {
+    const pname = allPalaces[i];
+    const stars = zw.allStarsInPalaces[pname] || [];
+    let cls = '';
+    if (pname === zw.mingPalace) cls = ' ming';
+    if (pname === zw.shenPalace) cls += ' shen';
+    palaceHtml += `<div class="ziwei-palace${cls}">
+      <div class="ziwei-palace-name">${pname}</div>
+      <div class="ziwei-palace-stars">${stars.length ? stars.join(' ') : ''}</div>
+    </div>`;
+  }
+
+  // 重点宫位分析
+  let keyHtml = '';
+  for (const [palace, analysis] of Object.entries(zw.keyAnalysis)) {
+    keyHtml += `<div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;margin-bottom:4px;font-size:0.9rem;">
+      <strong style="color:#C9A84C;">${palace}</strong> ${analysis}
+    </div>`;
+  }
+
+  const mingStars = zw.mingStars.length ? zw.mingStars.join('、') : '无主星';
+  const shenStars = zw.shenStars.length ? zw.shenStars.join('、') : '无主星';
+
+  let content = `
+    ${techCard('compass', '命身宫', '紫微斗数核心',
+      `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
+        <div style="padding:var(--space-md);background:rgba(201,168,76,0.05);border-radius:8px;border:1px solid rgba(201,168,76,0.2);text-align:center;">
+          <div style="font-size:0.8rem;color:#8B8577;">命宫</div>
+          <div style="font-size:1.5rem;color:#C9A84C;font-family:var(--font-heading);">${zw.mingPalace}</div>
+          <div style="color:#C9A84C;font-weight:500;">主星：${mingStars}</div>
+          <div style="margin-top:8px;font-size:0.9rem;">${zw.mingInterpret}</div>
+        </div>
+        <div style="padding:var(--space-md);background:rgba(74,158,139,0.05);border-radius:8px;border:1px solid rgba(74,158,139,0.2);text-align:center;">
+          <div style="font-size:0.8rem;color:#8B8577;">身宫</div>
+          <div style="font-size:1.5rem;color:#4A9E8B;font-family:var(--font-heading);">${zw.shenPalace}</div>
+          <div style="color:#4A9E8B;font-weight:500;">主星：${shenStars}</div>
+          <div style="margin-top:8px;font-size:0.9rem;">${zw.shenInterpret}</div>
+        </div>
+      </div>
+      <div style="margin-top:var(--space-md);text-align:center;">
+        <span style="display:inline-block;padding:var(--space-xs) var(--space-md);background:rgba(201,168,76,0.06);border-radius:100px;">
+          五行局：<strong style="color:#C9A84C;">${zw.wuxingJu}</strong> · 紫微在 <strong style="color:#C9A84C;">${zw.ziweiPosition}</strong>
+        </span>
+      </div>`)}
+
+    ${techCard('globe', '紫微命盘 · 全宫星曜', '十四主星飞布',
+      `<div class="ziwei-grid grid-bg">${palaceHtml}</div>
+      <p style="margin-top:var(--space-sm);font-size:0.8rem;color:#8B8577;text-align:center;">金色边框 = 命宫 · 绿色边框 = 身宫</p>`)}
+
+    ${techCard('target', '重点宫位解读', '关键人生领域',
+      keyHtml)}
+  `;
 
   if (isFree) {
-    return cardTemplate('trending-up', '十年大运', '人生各阶段走势',
-      content + `<div class="lock-overlay" style="margin-top:var(--space-md);">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <p>升级完整报告 · 解锁十年大运详细解读</p>
-        <a href="checkout.html" class="btn btn-primary" style="margin-top:0.75rem;">解锁完整报告</a>
-      </div>`);
+    content += `<div class="tech-card" style="text-align:center;">
+      <div class="lock-overlay">
+        <p style="margin-bottom:var(--space-sm);">付费版解锁四化星、辅星详解及三方四正深度联动</p>
+        <a href="checkout.html" class="btn btn-primary">解锁完整紫微命盘</a>
+      </div></div>`;
   }
-  return cardTemplate('trending-up', '十年大运', '人生各阶段走势', content);
+
+  return content;
 }
 
-function buildLiunianCard(d, isFree) {
+// ---- 面相分析 ----
+function buildMianXiangPanel(d, isFree) {
+  const mx = d.mianxiang;
+
+  let gongsHtml = '';
+  for (const [name, analysis] of Object.entries(mx.keyGongs)) {
+    gongsHtml += `<div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;margin-bottom:4px;font-size:0.9rem;">
+      <strong style="color:#C9A84C;">${name}</strong> — ${analysis}
+    </div>`;
+  }
+
+  let content = `
+    ${techCard('eye', '面相全图', `${mx.faceShape}`,
+      `<div style="text-align:center;margin-bottom:var(--space-md);">
+        <img src="assets/mianxiang-chart.png" alt="面相全图" style="width:100%;max-width:420px;border-radius:8px;display:block;margin:0 auto;" onerror="this.onerror=null;this.style.display='none';">
+        <p style="font-size:0.75rem;color:#8B8577;margin-top:4px;">道器 · 面相全图</p>
+      </div>
+      <p style="margin-bottom:var(--space-sm);"><strong style="color:#C9A84C;">面型：</strong>${mx.faceShape}</p>
+      <p><strong style="color:#C9A84C;">三停：</strong>${mx.santing}</p>`)}
+
+    ${techCard('layout-grid', '十二宫简析', '面相核心部位',
+      gongsHtml)}
+  `;
+
+  if (!isFree) {
+    const f = mx.features;
+    content += `
+      ${techCard('scan-face', '五官详析', '各部位深度解读',
+        `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-sm);">
+          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">额头</strong><br><span style="font-size:0.9rem;">${f.forehead}</span></div>
+          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">眉眼</strong><br><span style="font-size:0.9rem;">${f.eyes}</span></div>
+          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">鼻子</strong><br><span style="font-size:0.9rem;">${f.nose}</span></div>
+          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">嘴唇</strong><br><span style="font-size:0.9rem;">${f.mouth}</span></div>
+          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">耳朵</strong><br><span style="font-size:0.9rem;">${f.ears}</span></div>
+          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">事业</strong><br><span style="font-size:0.9rem;">${mx.career}</span></div>
+        </div>`)}
+    `;
+  } else {
+    content += `<div class="tech-card" style="text-align:center;"><div class="lock-overlay"><p>付费版解锁十二宫全面相详解、痣相及气色分析</p><a href="checkout.html" class="btn btn-primary">解锁完整面相</a></div></div>`;
+  }
+
+  return content;
+}
+
+// ---- 手相分析 ----
+function buildShouXiangPanel(d, isFree) {
+  const sx = d.shouxiang;
+  const l = sx.lines;
+
+  const handSVG = `<svg viewBox="0 0 400 500" width="100%" style="max-width:320px;">
+    <rect width="400" height="500" fill="#1a1f2e" rx="8"/>
+    <rect x="15" y="15" width="370" height="470" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="2" rx="4"/>
+    <text x="200" y="38" text-anchor="middle" fill="#C9A84C" font-size="14" font-weight="bold">手相全图</text>
+    <rect x="120" y="430" width="160" height="35" rx="8" fill="none" stroke="#8B8577" stroke-width="1" opacity="0.4"/>
+    <path d="M200,55 Q155,50 120,75 L90,140 L80,200 L82,270 Q85,330 110,370 L140,410 Q165,430 200,430 Q235,430 260,410 L290,370 Q315,330 318,270 L320,200 L310,140 L280,75 Q245,50 200,55Z" fill="rgba(201,168,76,0.03)" stroke="#C9A84C" stroke-width="1.8"/>
+    <!-- 五指 -->
+    <path d="M155,55 L155,18 Q155,10 162,10 L172,10 Q179,10 179,18 L179,52" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
+    <path d="M130,58 L130,22 Q130,14 137,14 L147,14 Q154,14 154,22 L154,54" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
+    <path d="M180,58 L180,22 Q180,14 187,14 L197,14 Q204,14 204,22 L204,56" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
+    <path d="M208,65 L208,32 Q208,24 215,24 L225,24 Q232,24 232,32 L232,68" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
+    <path d="M238,78 L238,50 Q238,42 245,42 L255,42 Q262,42 262,50 L262,82" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
+    <!-- 生命线 -->
+    <path d="M190,115 Q185,95 200,90 Q235,85 260,120 Q285,165 280,230 Q275,300 245,360 Q225,395 200,415" fill="none" stroke="#4A9E8B" stroke-width="2.5"/>
+    <text x="268" y="125" fill="#4A9E8B" font-size="11" font-weight="bold">生命线</text>
+    <!-- 智慧线 -->
+    <path d="M190,110 Q220,100 260,108 Q300,118 310,140 Q320,160 315,185" fill="none" stroke="#C9A84C" stroke-width="2.5"/>
+    <text x="318" y="150" fill="#C9A84C" font-size="11" font-weight="bold">智慧线</text>
+    <!-- 感情线 -->
+    <path d="M95,195 Q140,175 200,185 Q260,195 315,185" fill="none" stroke="#C75B5B" stroke-width="2.5"/>
+    <text x="70" y="200" fill="#C75B5B" font-size="11" font-weight="bold">感情线</text>
+    <!-- 命运线 -->
+    <path d="M202,400 Q200,360 200,310 Q200,250 202,180 Q205,130 210,95" fill="none" stroke="#6B5B95" stroke-width="2"/>
+    <text x="214" y="200" fill="#6B5B95" font-size="11" font-weight="bold">命运线</text>
+    <!-- 掌丘 -->
+    <ellipse cx="245" cy="370" rx="28" ry="20" fill="none" stroke="rgba(74,158,139,0.3)" stroke-dasharray="4,3"/>
+    <text x="245" y="375" text-anchor="middle" fill="#4A9E8B" font-size="9">金星丘</text>
+    <ellipse cx="305" cy="265" rx="18" ry="26" fill="none" stroke="rgba(201,168,76,0.3)" stroke-dasharray="4,3"/>
+    <text x="305" y="270" text-anchor="middle" fill="#C9A84C" font-size="9">太阴丘</text>
+    <text x="200" y="485" text-anchor="middle" fill="#8B8577" font-size="9">道器 · 手相全图</text>
+  </svg>`;
+
+  let content = `
+    ${techCard('hand', '手相全图', `掌型：${sx.palmType}`,
+      `<div style="display:flex;flex-wrap:wrap;gap:var(--space-md);align-items:flex-start;">
+        <div style="flex:0 0 240px;text-align:center;">${handSVG}</div>
+        <div style="flex:1;min-width:220px;">
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#4A9E8B;margin-right:6px;"></span><strong>生命线</strong> — ${l.lifeLine}</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#C9A84C;margin-right:6px;"></span><strong>智慧线</strong> — ${l.headLine}</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#C75B5B;margin-right:6px;"></span><strong>感情线</strong> — ${l.heartLine}</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6B5B95;margin-right:6px;"></span><strong>命运线</strong> — ${l.fateLine}</div>
+        </div>
+      </div>`)}
+  `;
+
+  if (!isFree) {
+    content += `
+      ${techCard('layers', '掌丘与总结', '综合手相解读',
+        `<p style="margin-bottom:var(--space-sm);"><strong style="color:#C9A84C;">掌丘分析：</strong>${sx.mounts}</p>
+        <div style="padding:var(--space-sm);background:rgba(201,168,76,0.05);border-radius:8px;border-left:3px solid #C9A84C;">
+          <strong>总结：</strong>${sx.summary}
+          <p style="margin-top:4px;color:#8B8577;font-size:0.85rem;">${sx.advice}</p>
+        </div>`)}
+    `;
+  } else {
+    content += `<div class="tech-card" style="text-align:center;"><div class="lock-overlay"><p>付费版解锁掌丘详解、婚姻线、子女线、健康线</p><a href="checkout.html" class="btn btn-primary">解锁完整手相</a></div></div>`;
+  }
+
+  return content;
+}
+
+// ---- 风水布局 ----
+function buildFengshuiPanel(d, isFree) {
+  const fs = d.fengshui;
+  const yf = fs.yongShenFengshui;
+
+  let content = `
+    ${techCard('home', '居家风水布局', fs.generalAdvice,
+      `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-sm);margin-bottom:var(--space-md);">
+        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;">
+          <div style="font-size:1.2rem;">🚪</div>
+          <strong>大门</strong>
+          <p style="font-size:0.85rem;color:#8B8577;margin-top:4px;">${yf.door}</p>
+        </div>
+        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;">
+          <div style="font-size:1.2rem;">🛋</div>
+          <strong>客厅</strong>
+          <p style="font-size:0.85rem;color:#8B8577;margin-top:4px;">${yf.livingRoom}</p>
+        </div>
+        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;">
+          <div style="font-size:1.2rem;">🛏</div>
+          <strong>卧室</strong>
+          <p style="font-size:0.85rem;color:#8B8577;margin-top:4px;">${yf.bedroom}</p>
+        </div>
+        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;">
+          <div style="font-size:1.2rem;">🍳</div>
+          <strong>厨房</strong>
+          <p style="font-size:0.85rem;color:#8B8577;margin-top:4px;">${yf.kitchen}</p>
+        </div>
+      </div>`)}
+  `;
+
+  if (!isFree) {
+    content += `
+      ${techCard('palette', '色彩 · 绿植 · 规避', '细节调和建议',
+        `<div style="padding:var(--space-sm);background:rgba(74,158,139,0.06);border-radius:6px;margin-bottom:8px;">
+          <strong style="color:#4A9E8B;">色彩方案</strong><br>${yf.colors}
+        </div>
+        <div style="padding:var(--space-sm);background:rgba(74,158,139,0.06);border-radius:6px;margin-bottom:8px;">
+          <strong style="color:#4A9E8B;">🌱 绿植</strong><br>${yf.plants}
+        </div>
+        <div style="padding:var(--space-sm);background:rgba(201,168,76,0.06);border-radius:6px;">
+          <strong style="color:#C9A84C;">⚠ 规避</strong><br>${yf.avoid}
+        </div>`)}
+    `;
+    if (fs.secondaryFengshui) {
+      content += `
+        ${techCard('layout', '辅助布局', '次要用神调和',
+          `<p>${fs.secondaryFengshui.livingRoom}</p>`)}
+      `;
+    }
+  } else {
+    content += `<div class="tech-card" style="text-align:center;"><div class="lock-overlay"><p>付费版解锁完整风水方案</p><a href="checkout.html" class="btn btn-primary">解锁完整风水</a></div></div>`;
+  }
+
+  // 快速贴士
+  if (fs.quickTips) {
+    let tipsHtml = '';
+    fs.quickTips.forEach((t, i) => {
+      tipsHtml += `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(201,168,76,0.05);">
+        <span style="width:20px;height:20px;border-radius:50%;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#C9A84C;">${i+1}</span>
+        <span style="font-size:0.9rem;">${t}</span>
+      </div>`;
+    });
+    content += techCard('zap', '快速贴士', '即刻可用', tipsHtml);
+  }
+
+  return content;
+}
+
+// ---- 流年运势 ----
+function buildLiunianPanel(d, isFree) {
   const cl = d.currentYearLuck;
-  const colors = { '大吉': 'var(--color-jade)', '小吉': 'var(--color-jade)', '平稳': '#C9A84C', '需注意': 'var(--color-cinnabar)', '挑战多': 'var(--color-cinnabar)' };
+  const colors = { '大吉': '#4A9E8B', '小吉': '#4A9E8B', '平稳': '#C9A84C', '需注意': '#C75B5B', '挑战多': '#C75B5B' };
 
-  const content = `<p style="margin-bottom:var(--space-md);">${cl.year}年<span style="color:#C9A84C;font-weight:600;">${cl.yearPillar}</span>，总体运势：<span style="color:${colors[cl.overall]};font-weight:600;">${cl.overall}</span></p>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);">
-      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:0.85rem;color:#8B8577;">事业</div><div style="margin-top:0.25rem;">${cl.career}</div>
-      </div>
-      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:0.85rem;color:#8B8577;">财运</div><div style="margin-top:0.25rem;">${cl.wealth}</div>
-      </div>
-      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:0.85rem;color:#8B8577;">感情</div><div style="margin-top:0.25rem;">${cl.love}</div>
-      </div>
-      <div style="padding:var(--space-md);background:var(--color-ink);border-radius:var(--radius-sm);">
-        <div style="font-size:0.85rem;color:#8B8577;">健康</div><div style="margin-top:0.25rem;">${cl.health}</div>
-      </div>
+  // 流月 grid
+  const ml = d.monthlyLuck;
+  const mColors = { '上升': '#4A9E8B', '平稳': '#C9A84C', '波动': '#C75B5B' };
+  let monthsHtml = '';
+  ml.forEach(m => {
+    monthsHtml += `<div style="text-align:center;padding:6px;background:rgba(26,31,46,0.5);border-radius:6px;font-size:0.8rem;">
+      <strong>${m.month}月</strong><br>
+      <span style="color:${mColors[m.status]};font-size:0.75rem;">${m.status}</span>
     </div>`;
+  });
+
+  let content = `
+    ${techCard('calendar-days', `${cl.year}年 · 流年运势`, `岁君 ${cl.yearPillar}`,
+      `<div style="text-align:center;margin-bottom:var(--space-md);">
+        <div style="font-size:3rem;font-weight:700;font-family:var(--font-heading);background:linear-gradient(135deg,#C9A84C,#E8C97A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${cl.overall}</div>
+        <div style="color:${colors[cl.overall]};font-size:1.1rem;font-weight:500;">总体运势评级</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);">
+        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
+          <div style="font-size:0.8rem;color:#8B8577;">💼 事业</div>
+          <div style="font-weight:500;">${cl.career}</div>
+        </div>
+        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
+          <div style="font-size:0.8rem;color:#8B8577;">💰 财运</div>
+          <div style="font-weight:500;">${cl.wealth}</div>
+        </div>
+        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
+          <div style="font-size:0.8rem;color:#8B8577;">💕 感情</div>
+          <div style="font-weight:500;">${cl.love}</div>
+        </div>
+        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
+          <div style="font-size:0.8rem;color:#8B8577;">🏥 健康</div>
+          <div style="font-weight:500;">${cl.health}</div>
+        </div>
+      </div>`)}
+
+    ${techCard('calendar', '流月趋势', `${cl.year}年 逐月走势`,
+      `<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;">${monthsHtml}</div>
+      <p style="margin-top:var(--space-sm);font-size:0.8rem;color:#8B8577;text-align:center;">
+        <span style="color:#4A9E8B;">● 上升</span> &nbsp;
+        <span style="color:#C9A84C;">● 平稳</span> &nbsp;
+        <span style="color:#C75B5B;">● 波动</span>
+      </p>`)}
+  `;
+
+  // 大运（简化版）
+  content += `
+    ${techCard('trending-up', '十年大运', '人生阶段运势',
+      `<p>大运十年一转，顺逆交替。命局行运遵循<span style="color:#C9A84C;">阳年男顺排/阴年女逆排</span>规则。</p>
+      <p style="margin-top:var(--space-sm);">完整分析含起运年龄、每步大运十年吉凶、大运与命局互动关系。</p>
+      ${isFree ? `<div class="lock-overlay" style="margin-top:var(--space-md);"><p>付费版解锁完整大运解读</p><a href="checkout.html" class="btn btn-primary">解锁完整报告</a></div>` : ''}`)}
+  `;
 
   if (isFree) {
-    content += `<div class="lock-overlay" style="margin-top:var(--space-lg);">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      <p>付费版解锁逐年逐月详细解读</p>
-      <a href="checkout.html" class="btn btn-primary" style="margin-top:0.75rem;">解锁完整报告</a>
-    </div>`;
+    content += `<div class="tech-card" style="text-align:center;"><div class="lock-overlay"><p>升级完整报告 · 解锁逐年逐月详细解读</p><a href="checkout.html" class="btn btn-primary">查看全部方案</a></div></div>`;
   }
 
-  return cardTemplate('calendar-days', `${cl.year}年流年分析`, `岁君${cl.yearPillar}对流年影响`, content);
+  return content;
 }
 
-function buildMonthlyCard(d) {
-  const ml = d.monthlyLuck;
-  const colors = { '上升': 'var(--color-jade)', '平稳': '#C9A84C', '波动': 'var(--color-cinnabar)' };
-  let months = '';
-  for (const m of ml) {
-    months += `<div style="padding:var(--space-xs);text-align:center;font-size:0.8rem;background:var(--color-ink);border-radius:var(--radius-sm);"><strong>${m.month}月</strong><br><span style="color:${colors[m.status]};font-size:0.75rem;">${m.status}</span></div>`;
-  }
-  return cardTemplate('calendar', '流月简析', `${d.currentYearLuck.year}年各月走势`,
-    `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-xs);">${months}</div>
-    <p style="margin-top:var(--space-md);font-size:0.85rem;color:#8B8577;">绿色=顺遂月份 · 金色=平稳 · 红色=需要谨慎</p>`);
-}
-
+// ---- 趋吉避凶（命盘总览内用）----
 function buildJixiongCard(d) {
-  const yw = d.yongShen.yongWuxing;
-  const aw = d.yongShen.avoid;
   const g = d.luckyGuide;
-
   const yiItems = [
     `穿戴${g.colors[0]}色系衣物饰品`,
     `多接近${g.directions[0]}方位`,
@@ -372,303 +933,39 @@ function buildJixiongCard(d) {
     `上午（7-11点）做重要决定`,
   ];
   const jiItems = [
-    `避免穿戴${g.colors.includes('红色') ? '过于鲜艳的颜色' : '红色系'}衣物`,
-    `下午（13-17点）不宜做重大决策`,
-    `忌冲动行事、与人争执`,
-    `忌长期熬夜`,
+    '避免过于鲜艳的衣物',
+    '下午（13-17点）不宜做重大决策',
+    '忌冲动行事、与人争执',
+    '忌长期熬夜',
   ];
-
   let yi = '', ji = '';
-  yiItems.forEach(t => { yi += `<li style="padding-left:var(--space-md);position:relative;"><span style="position:absolute;left:0;color:var(--color-jade);">✓</span>${t}</li>`; });
-  jiItems.forEach(t => { ji += `<li style="padding-left:var(--space-md);position:relative;"><span style="position:absolute;left:0;color:var(--color-cinnabar);">✗</span>${t}</li>`; });
+  yiItems.forEach(t => yi += `<li style="padding-left:var(--space-md);position:relative;"><span style="position:absolute;left:0;color:#4A9E8B;">✦</span>${t}</li>`);
+  jiItems.forEach(t => ji += `<li style="padding-left:var(--space-md);position:relative;"><span style="position:absolute;left:0;color:#C75B5B;">✗</span>${t}</li>`);
 
-  return cardTemplate('compass', '趋吉避凶建议', '基于命局的行动指南',
-    `<div style="margin-bottom:var(--space-md);"><h4 style="color:var(--color-jade);margin-bottom:var(--space-sm);">宜</h4><ul style="list-style:none;display:grid;gap:var(--space-xs);">${yi}</ul></div>
-    <div><h4 style="color:var(--color-cinnabar);margin-bottom:var(--space-sm);">忌</h4><ul style="list-style:none;display:grid;gap:var(--space-xs);">${ji}</ul></div>`);
+  return techCard('shield', '趋吉避凶 · 行动指南', '基于命局的实用建议',
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
+      <div><h4 style="color:#4A9E8B;margin-bottom:var(--space-sm);">✦ 宜</h4><ul style="list-style:none;">${yi}</ul></div>
+      <div><h4 style="color:#C75B5B;margin-bottom:var(--space-sm);">✗ 忌</h4><ul style="list-style:none;">${ji}</ul></div>
+    </div>`);
 }
 
-// ===== 紫微斗数 =====
-function buildZiweiCard(d, isFree) {
-  const zw = d.ziwei;
-  let starsHtml = '';
-  for (const [palace, stars] of Object.entries(zw.allStarsInPalaces)) {
-    if (stars.length > 0) {
-      starsHtml += `<div style="padding:var(--space-xs);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:2px;"><span style="color:#8B8577;font-size:0.8rem;">${palace}</span> <span style="color:#C9A84C;">${stars.join(' ')}</span></div>`;
-    }
-  }
-
-  let keyHtml = '';
-  for (const [palace, analysis] of Object.entries(zw.keyAnalysis)) {
-    keyHtml += `<div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:var(--space-xs);"><strong style="color:#C9A84C;">${palace}</strong><br><span style="font-size:0.9rem;">${analysis}</span></div>`;
-  }
-
-  const content = `<p><span style="color:#C9A84C;font-weight:600;">命宫：${zw.mingPalace}</span> · ${zw.mingInterpret}</p>
-    <p style="margin-top:var(--space-sm);"><span style="color:var(--color-jade);font-weight:600;">身宫：${zw.shenPalace}</span> · ${zw.shenInterpret}</p>
-    <p style="margin-top:var(--space-sm);">五行局：<strong>${zw.wuxingJu}</strong>局 · 紫微在<span style="color:#C9A84C;">${zw.ziweiPosition}</span></p>
-    <div style="margin-top:var(--space-md);"><strong style="color:#8B8577;">重点宫位分析</strong><div style="margin-top:var(--space-sm);">${keyHtml}</div></div>`;
-
-  if (isFree) {
-    content += `<div class="lock-overlay" style="margin-top:var(--space-lg);">
-      <p>付费版解锁全盘十四主星飞布、四化星、辅星详解</p>
-      <a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整紫微命盘</a></div>`;
-  } else {
-    content += `<div style="margin-top:var(--space-lg);"><strong style="color:#8B8577;">全盘主星分布</strong><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:var(--space-sm);">${starsHtml}</div></div>`;
-  }
-
-  return cardTemplate('globe', '紫微斗数', `命宫${zw.mingPalace} · ${zw.wuxingJu}局`, content);
-}
-
-// ===== 面相分析（出版级图示）=====
-function buildMianXiangCard(d, isFree) {
-  const mx = d.mianxiang;
-
-  // 面相图示 - Python 生成的 PNG 图片
-  const faceHTML = `<div style="text-align:center;max-width:400px;margin:0 auto;">
-    <img src="assets/mianxiang-chart.png" alt="面相全图" style="width:100%;height:auto;display:block;border-radius:8px;" onerror="this.onerror=null;this.parentElement.innerHTML='<p style=color:#8B8577;padding:2rem;>面相图加载中...</p>';">
-    <p style="font-size:0.75rem;color:#8B8577;margin-top:4px;">道器命理 · 面相全图</p>
-  </div>`;
-
-  let gongsHtml = '';
-  const gongs = Object.entries(mx.keyGongs).slice(0, 4);
-  for (const [name, analysis] of gongs) {
-    gongsHtml += `<div style="padding:var(--space-xs);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:2px;font-size:0.85rem;"><strong style="color:#C9A84C;">${name}</strong> ${analysis}</div>`;
-  }
-
-  const content = `<div style="text-align:center;margin-bottom:var(--space-sm);">${faceHTML}</div>
-    <p><strong>面型：</strong>${mx.faceShape}</p>
-    <p style="margin-top:var(--space-sm);"><strong>三停分析：</strong>${mx.santing}</p>
-    <div style="margin-top:var(--space-md);">${gongsHtml}</div>`;
-
-  if (isFree) {
-    content += `<div class="lock-overlay" style="margin-top:var(--space-lg);"><p>付费版解锁十二宫全面相详解、痣相分析、气色推断</p><a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整面相分析</a></div>`;
-  } else {
-    const feats = mx.features;
-    content += `<div style="margin-top:var(--space-lg);display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-sm);">
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>额头：</strong>${feats.forehead}</div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>眉眼：</strong>${feats.eyes}</div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>鼻子：</strong>${feats.nose}</div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>嘴唇：</strong>${feats.mouth}</div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>耳朵：</strong>${feats.ears}</div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>事业：</strong>${mx.career}</div>
-    </div>`;
-  }
-
-  return cardTemplate('eye', '面相分析', '五行面相特征解读', content);
-}
-
-// ===== 手相分析（专业手掌图示）=====
-function buildShouXiangCard(d, isFree) {
-  const sx = d.shouxiang;
-  const lines = sx.lines;
-
-  // 专业级手相 SVG（中国古典风格）
-  const handSVG = `<svg viewBox="0 0 400 500" width="400" height="500" style="max-width:100%;">
-    <defs>
-      <filter id="glow"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    </defs>
-    <!-- 宣纸底纹 -->
-    <rect width="400" height="500" fill="#1a1f2e" rx="8"/>
-    <rect x="15" y="15" width="370" height="470" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="2" rx="4"/>
-    <!-- 背景网格 -->
-    <g opacity="0.03">
-      <line x1="0" y1="100" x2="400" y2="100" stroke="#fff"/><line x1="0" y1="200" x2="400" y2="200" stroke="#fff"/>
-      <line x1="0" y1="300" x2="400" y2="300" stroke="#fff"/><line x1="0" y1="400" x2="400" y2="400" stroke="#fff"/>
-      <line x1="100" y1="0" x2="100" y2="500" stroke="#fff"/><line x1="200" y1="0" x2="200" y2="500" stroke="#fff"/>
-      <line x1="300" y1="0" x2="300" y2="500" stroke="#fff"/>
-    </g>
-    <!-- 标题 -->
-    <text x="200" y="38" text-anchor="middle" fill="#C9A84C" font-size="14" font-weight="bold">手相全图</text>
-    <!-- 手腕 -->
-    <rect x="120" y="430" width="160" height="35" rx="8" fill="none" stroke="#8B8577" stroke-width="1" opacity="0.4"/>
-    <line x1="150" y1="432" x2="150" y2="462" stroke="#8B8577" stroke-width="0.5" opacity="0.3"/>
-    <line x1="200" y1="432" x2="200" y2="462" stroke="#8B8577" stroke-width="0.5" opacity="0.3"/>
-    <line x1="250" y1="432" x2="250" y2="462" stroke="#8B8577" stroke-width="0.5" opacity="0.3"/>
-    <!-- 手掌主体 -->
-    <path d="M200,55 Q155,50 120,75 L90,140 L80,200 L82,270 Q85,330 110,370 L140,410 Q165,430 200,430 Q235,430 260,410 L290,370 Q315,330 318,270 L320,200 L310,140 L280,75 Q245,50 200,55Z"
-      fill="rgba(201,168,76,0.03)" stroke="#C9A84C" stroke-width="1.8"/>
-    <!-- 手指 -->
-    <path d="M155,55 L155,18 Q155,10 162,10 L172,10 Q179,10 179,18 L179,52" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
-    <path d="M130,58 L130,22 Q130,14 137,14 L147,14 Q154,14 154,22 L154,54" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
-    <path d="M180,58 L180,22 Q180,14 187,14 L197,14 Q204,14 204,22 L204,56" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
-    <path d="M208,65 L208,32 Q208,24 215,24 L225,24 Q232,24 232,32 L232,68" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
-    <path d="M238,78 L238,50 Q238,42 245,42 L255,42 Q262,42 262,50 L262,82" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
-    <!-- 指节线 -->
-    <line x1="155" y1="35" x2="179" y2="35" stroke="#8B8577" stroke-width="0.5" opacity="0.5"/>
-    <line x1="130" y1="36" x2="154" y2="36" stroke="#8B8577" stroke-width="0.5" opacity="0.5"/>
-    <line x1="180" y1="40" x2="204" y2="40" stroke="#8B8577" stroke-width="0.5" opacity="0.5"/>
-    <line x1="208" y1="48" x2="232" y2="48" stroke="#8B8577" stroke-width="0.5" opacity="0.5"/>
-    <!-- 生命线（绿色弧形）-->
-    <path d="M190,115 Q185,95 200,90 Q235,85 260,120 Q285,165 280,230 Q275,300 245,360 Q225,395 200,415"
-      fill="none" stroke="#4A9E8B" stroke-width="2.5" filter="url(#glow)"/>
-    <circle cx="260" cy="120" r="3" fill="#4A9E8B"/>
-    <text x="265" y="120" fill="#4A9E8B" font-size="11" font-weight="bold">生命线</text>
-    <!-- 智慧线（金色横穿）-->
-    <path d="M190,110 Q220,100 260,108 Q300,118 310,140 Q320,160 315,185"
-      fill="none" stroke="#C9A84C" stroke-width="2.5" filter="url(#glow)"/>
-    <circle cx="310" cy="140" r="3" fill="#C9A84C"/>
-    <text x="315" y="145" fill="#C9A84C" font-size="11" font-weight="bold">智慧线</text>
-    <!-- 感情线（红色横线）-->
-    <path d="M95,195 Q140,175 200,185 Q260,195 315,185"
-      fill="none" stroke="#C75B5B" stroke-width="2.5" filter="url(#glow)"/>
-    <circle cx="95" cy="195" r="3" fill="#C75B5B"/>
-    <text x="75" y="200" fill="#C75B5B" font-size="11" font-weight="bold">感情线</text>
-    <!-- 命运线（紫色竖线）-->
-    <path d="M202,400 Q200,360 200,310 Q200,250 202,180 Q205,130 210,95"
-      fill="none" stroke="#6B5B95" stroke-width="2" filter="url(#glow)"/>
-    <circle cx="202" cy="180" r="3" fill="#6B5B95"/>
-    <text x="210" y="195" fill="#6B5B95" font-size="11" font-weight="bold">命运线</text>
-    <!-- 掌丘标注 -->
-    <!-- 金星丘（拇指根部）-->
-    <ellipse cx="245" cy="370" rx="30" ry="22" fill="rgba(74,158,139,0.08)" stroke="rgba(74,158,139,0.3)" stroke-dasharray="4,3" stroke-width="1"/>
-    <text x="245" y="375" text-anchor="middle" fill="#4A9E8B" font-size="9">金星丘</text>
-    <!-- 太阴丘（掌缘）-->
-    <ellipse cx="305" cy="265" rx="20" ry="28" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.3)" stroke-dasharray="4,3" stroke-width="1"/>
-    <text x="305" y="270" text-anchor="middle" fill="#C9A84C" font-size="9">太阴丘</text>
-    <!-- 木星丘（食指根部）-->
-    <ellipse cx="145" cy="115" rx="18" ry="14" fill="rgba(107,91,149,0.06)" stroke="rgba(107,91,149,0.3)" stroke-dasharray="4,3" stroke-width="1"/>
-    <text x="145" y="119" text-anchor="middle" fill="#6B5B95" font-size="9">木星丘</text>
-    <!-- 水星丘（小指根部）-->
-    <ellipse cx="270" cy="135" rx="16" ry="14" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.3)" stroke-dasharray="4,3" stroke-width="1"/>
-    <text x="270" y="139" text-anchor="middle" fill="#C9A84C" font-size="9">水星丘</text>
-    <!-- 拇指标注 -->
-    <text x="260" y="410" text-anchor="middle" fill="#8B8577" font-size="8">拇指</text>
-    <!-- 底部标签 -->
-    <text x="200" y="485" text-anchor="middle" fill="#8B8577" font-size="9">道器命理 · 手相全图</text>
-  </svg>`;
-
-  const content = `<div style="display:flex;flex-wrap:wrap;gap:var(--space-md);align-items:flex-start;">
-    <div style="flex:0 0 220px;text-align:center;">${handSVG}</div>
-    <div style="flex:1;min-width:200px;">
-      <p><strong>掌型：</strong>${sx.palmType}</p>
-      <div style="margin-top:var(--space-sm);font-size:0.9rem;">
-        <p><span style="color:#4A9E8B;font-weight:600;">● 生命线</span> — ${lines.lifeLine}</p>
-        <p><span style="color:#C9A84C;font-weight:600;">● 智慧线</span> — ${lines.headLine}</p>
-        <p><span style="color:#C75B5B;font-weight:600;">● 感情线</span> — ${lines.heartLine}</p>
-        <p><span style="color:#6B5B95;font-weight:600;">● 命运线</span> — ${lines.fateLine}</p>
-      </div>
-    </div>
-  </div>`;
-
-  if (isFree) {
-    content += `<div class="lock-overlay" style="margin-top:var(--space-lg);"><p>付费版解锁丘位分析、婚姻线与子女线、健康线、贵人线</p><a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整手相分析</a></div>`;
-  } else {
-    content += `<div style="margin-top:var(--space-lg);"><strong style="color:#8B8577;">掌丘分析</strong><p style="margin-top:var(--space-sm);">${sx.mounts}</p></div>
-    <div style="margin-top:var(--space-md);padding:var(--space-md);background:rgba(201,168,76,0.05);border-radius:var(--radius-sm);border-left:3px solid #C9A84C;"><strong>总结：</strong>${sx.summary}<br><span style="font-size:0.9rem;color:#8B8577;margin-top:var(--space-xs);display:block;">${sx.advice}</span></div>`;
-  }
-
-  return cardTemplate('hand', '手相分析', '掌纹与掌丘解读', content);
-}
-
-// ===== 风水布局 =====
-function buildFengshuiCard(d, isFree) {
-  const fs = d.fengshui;
-  const yf = fs.yongShenFengshui;
-
-  const content = `<p style="margin-bottom:var(--space-md);">${fs.generalAdvice}</p>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-sm);">
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>🚪 大门</strong><br><span style="font-size:0.9rem;">${yf.door}</span></div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>🛋 客厅</strong><br><span style="font-size:0.9rem;">${yf.livingRoom}</span></div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>🛏 卧室</strong><br><span style="font-size:0.9rem;">${yf.bedroom}</span></div>
-      <div style="padding:var(--space-sm);background:var(--color-ink);border-radius:var(--radius-sm);"><strong>🍳 厨房</strong><br><span style="font-size:0.9rem;">${yf.kitchen}</span></div>
-    </div>`;
-
-  if (isFree) {
-    content += `<div class="lock-overlay" style="margin-top:var(--space-lg);"><p>付费版解锁完整风水布局方案、玄关/阳台/书房/卫生间详解</p><a href="checkout.html" class="btn btn-primary" style="margin-top:0.5rem;">解锁完整风水布局</a></div>`;
-  } else {
-    content += `<div style="margin-top:var(--space-lg);">
-      <div style="padding:var(--space-md);background:rgba(74,158,139,0.08);border-radius:var(--radius-sm);margin-bottom:var(--space-sm);"><strong style="color:var(--color-jade);">色彩方案</strong><br>${yf.colors}</div>
-      <div style="padding:var(--space-md);background:rgba(74,158,139,0.08);border-radius:var(--radius-sm);margin-bottom:var(--space-sm);"><strong style="color:var(--color-jade);">🌱 绿植</strong><br>${yf.plants}</div>
-      <div style="padding:var(--space-md);background:rgba(201,168,76,0.08);border-radius:var(--radius-sm);"><strong style="color:#C9A84C;">⚠ 规避</strong><br>${yf.avoid}</div>
-    </div>`;
-    if (fs.secondaryFengshui) {
-      const sf = fs.secondaryFengshui;
-      content += `<div style="margin-top:var(--space-lg);padding:var(--space-md);border:1px dashed rgba(201,168,76,0.2);border-radius:var(--radius-sm);"><strong style="color:#C9A84C;">辅助布局建议</strong><p style="margin-top:var(--space-sm);font-size:0.9rem;">${sf.livingRoom}</p></div>`;
-    }
-  }
-
-  return cardTemplate('home', '田宅风水布局', '基于命局喜用神的居家调理', content);
-}
-
-function buildExpertCard() {
-  return `<div class="card" style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(107,91,149,0.08));border:1px solid rgba(201,168,76,0.3);">
-    <div style="text-align:center;padding:var(--space-lg) 0;">
-      <div style="font-size:0.875rem;color:#C9A84C;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:var(--space-sm);">真人专家</div>
-      <h3>山医堂主 · 医命双修</h3>
-      <p style="color:#8B8577;margin-bottom:var(--space-md);max-width:500px;margin:0 auto;">
-        不是纯算命，是身体+命理双重诊断。能开药方、调风水、做养生方案。
-      </p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-md);text-align:left;margin:var(--space-lg) 0;padding:0 var(--space-lg);">
-        <div style="padding:var(--space-md);background:rgba(26,31,46,0.6);border-radius:var(--radius-sm);">
-          <strong style="color:#C9A84C;">¥99/次</strong>
-          <p style="font-size:0.875rem;color:#8B8577;margin-top:var(--space-xs);">1v1问诊30分钟</p>
-        </div>
-        <div style="padding:var(--space-md);background:rgba(26,31,46,0.6);border-radius:var(--radius-sm);">
-          <strong style="color:#C9A84C;">¥599/年</strong>
-          <p style="font-size:0.875rem;color:#8B8577;margin-top:var(--space-xs);">山医堂主私人顾问</p>
-        </div>
-      </div>
+// ---- 真人专家 CTA ----
+function buildExpertCTA() {
+  return `<div class="tech-card" style="background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(107,91,149,0.06));border-color:rgba(201,168,76,0.25);">
+    <div class="hex-corner tl"></div><div class="hex-corner br"></div>
+    <div style="text-align:center;padding:var(--space-sm) 0;">
+      <div style="font-size:0.75rem;color:#8B8577;letter-spacing:0.2em;text-transform:uppercase;">真人专家 · 医命双修</div>
+      <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:#C9A84C;margin:var(--space-xs) 0;">山医堂主</h3>
+      <p style="color:#8B8577;max-width:480px;margin:0 auto var(--space-md);">不是纯算命，是身体+命理双重诊断。能开药方、调风水、做养生方案。</p>
       <a href="checkout.html" class="btn btn-primary">预约真人问诊</a>
     </div>
   </div>`;
 }
 
-function buildUpgradeCard() {
-  return `<div class="card" style="text-align:center;padding:var(--space-xl);border:2px dashed var(--color-border);margin-top:var(--space-lg);">
-    <h3>升级完整AI报告</h3>
-    <p style="color:#8B8577;margin-bottom:var(--space-lg);">¥10起，解锁十年大运、逐年逐月详细解读</p>
-    <a href="checkout.html" class="btn btn-primary">查看全部方案</a>
-  </div>`;
-}
+// ===== 紫微十二宫（供紫微面板用）=====
+const ZW_PALACES = ['命宫','兄弟','夫妻','子女','财帛','疾厄','迁移','交友','官禄','田宅','福德','父母'];
 
-// ===== 五行分析文本生成 =====
-function generateWuxingText(d) {
-  const wc = d.wuxingCount;
-  const maxK = Object.keys(wc).reduce((a, b) => wc[a] > wc[b] ? a : b);
-  const minK = Object.keys(wc).reduce((a, b) => wc[a] < wc[b] ? a : b);
-
-  const dw = d.dayWuxing;
-  const s = d.strength;
-
-  let text = `命局中<span style="color:#C9A84C;">${maxK}</span>最旺，<span style="color:var(--color-cinnabar);">${minK}</span>最弱。日主${dw}`;
-
-  if (s.includes('强')) {
-    text += '偏强，需用克泄之法平衡。';
-    if (d.yongShen.yongWuxing.includes('金')) text += '金可克木泄火，';
-    if (d.yongShen.yongWuxing.includes('水')) text += '水可克火润局，';
-    if (d.yongShen.yongWuxing.includes('土')) text += '土可泄火生金，';
-  } else {
-    text += '偏弱，需用生扶之法补益。';
-    if (d.yongShen.yongWuxing.includes('木')) text += '木可生火助身，';
-    if (d.yongShen.yongWuxing.includes('火')) text += '火可扶助日主，';
-    if (d.yongShen.yongWuxing.includes('水')) text += '水可生木养局，';
-  }
-
-  text += `忌${d.yongShen.avoid}过旺。`;
-
-  return text;
-}
-
-// ===== 卡片模板 =====
-function cardTemplate(icon, title, subtitle, content, expanded) {
-  const exp = expanded ? ' expanded' : '';
-  return `<div class="card report-card${exp}">
-    <div class="report-card-header" onclick="toggleCard(this.parentElement)">
-      <div class="report-card-icon"><i data-lucide="${icon}"></i></div>
-      <div class="report-card-title"><h3>${title}</h3><p>${subtitle}</p></div>
-      <div class="report-card-toggle"><i data-lucide="chevron-down"></i></div>
-    </div>
-    <div class="report-card-content">${content}</div>
-  </div>`;
-}
-
-// ===== 卡片折叠切换 =====
-window.toggleCard = function(card) {
-  card.classList.toggle('expanded');
-  // 重新渲染图标
-  setTimeout(() => lucide.createIcons(), 50);
-};
-
-// ===== 页面初始化 =====
+// ===== 启动 =====
 document.addEventListener('DOMContentLoaded', loadReport);
 </script>
 
