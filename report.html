@@ -295,18 +295,39 @@ async function loadReport() {
     params.set('hour', birthData.hour || '子时');
     params.set('calendar', birthData.calendar || 'solar');
 
-    // Try current origin first, fallback to relative path
-    const apiBase = window.location.origin;
-    let resp;
-    try {
-      resp = await fetch(apiBase + '/api/bazi?' + params.toString());
-    } catch (e) {
-      // Fallback to relative path
-      resp = await fetch('/api/bazi?' + params.toString());
+    const params = new URLSearchParams();
+    params.set('name', birthData.name);
+    params.set('gender', birthData.gender || 'male');
+    params.set('year', birthData.year);
+    params.set('month', birthData.month);
+    params.set('day', birthData.day);
+    params.set('hour', birthData.hour || '子时');
+    params.set('calendar', birthData.calendar || 'solar');
+
+    // Timeout wrapper
+    const timeout = (ms, promise) => {
+      return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error('请求超时（' + (ms/1000) + '秒），请检查网络后重试')), ms);
+        promise.then(r => { clearTimeout(timer); resolve(r); }).catch(e => { clearTimeout(timer); reject(e); });
+      });
+    };
+
+    // Try relative path first (works on same origin), then absolute URL
+    const paths = ['/api/bazi?', window.location.origin + '/api/bazi?'];
+    let resp, lastErr;
+    for (const base of paths) {
+      try {
+        resp = await timeout(20000, fetch(base + params.toString()));
+        if (resp.ok) break;
+        lastErr = 'HTTP ' + resp.status;
+      } catch (e) {
+        lastErr = e.message;
+      }
     }
-    if (!resp.ok) throw new Error('API error: ' + resp.status);
-    baziResult = await resp.json();
-    if (baziResult.error) throw new Error(baziResult.error);
+    if (!resp || !resp.ok) throw new Error('API连接失败: ' + lastErr + '，请返回重新填写');
+    const text = await resp.text();
+    try { baziResult = JSON.parse(text); } catch { throw new Error('数据解析失败，返回数据格式异常'); }
+    if (baziResult.error) throw new Error('排盘失败：' + baziResult.error);
     if (loading) loading.remove();
     renderHeader();
     renderAllTabs();
@@ -314,7 +335,15 @@ async function loadReport() {
     lucide.createIcons();
   } catch (err) {
     console.error('loadReport error:', err);
-    if (loading) loading.innerHTML = '<p style="color:#C75B5B;">数据加载失败，请稍后重试。</p><p style="color:#8B8577;font-size:0.85rem;margin-top:8px;">'+err.message+'</p><a href="form.html" class="btn btn-primary" style="margin-top:1rem;">返回填写</a>';
+    const msg = err.message || String(err);
+    if (loading) loading.innerHTML = '<div style="max-width:480px;margin:0 auto;text-align:center;padding:2rem 1rem;">' +
+      '<div style="font-size:3rem;margin-bottom:1rem;">⚠️</div>' +
+      '<h3 style="color:#C9A84C;margin-bottom:0.8rem;">加载失败</h3>' +
+      '<p style="color:#8B8577;font-size:0.9rem;line-height:1.6;">' + msg + '</p>' +
+      '<div style="margin-top:1.2rem;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">' +
+      '<button onclick="location.reload()" style="padding:8px 20px;border-radius:8px;background:rgba(201,168,76,0.1);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);cursor:pointer;">重新加载</button>' +
+      '<a href="form.html" style="padding:8px 20px;border-radius:8px;background:rgba(201,168,76,0.1);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);text-decoration:none;">返回填写</a>' +
+      '</div></div>';
   }
 }
 
