@@ -415,13 +415,118 @@ function buildZiweiCard(d, isFree) {
   return cardTemplate('globe', '紫微斗数', `命宫${zw.mingPalace} · ${zw.wuxingJu}局`, content);
 }
 
-// ===== 面相分析（含专业图示）=====
+// ===== 面相分析（出版级图示）=====
 function buildMianXiangCard(d, isFree) {
   const mx = d.mianxiang;
 
-  const faceImg = `<div style="text-align:center;margin-bottom:var(--space-sm);">
-    <img src="assets/mianxiang-chart.jpg" alt="面相分析图" style="max-width:100%;height:auto;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
-  </div>`;
+  // 出版级面相 SVG
+  const faceSVG = `<svg viewBox="0 0 400 500" width="400" height="500" style="max-width:100%;">
+    <defs>
+      <filter id="fglow"><feGaussianBlur stdDeviation="1.5"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <radialGradient id="faceGrad" cx="50%" cy="50%"><stop offset="0%" stop-color="rgba(201,168,76,0.06)"/><stop offset="100%" stop-color="rgba(201,168,76,0.01)"/></radialGradient>
+    </defs>
+    <rect width="400" height="500" fill="#1a1f2e" rx="8"/>
+    <rect x="10" y="10" width="380" height="480" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="2" rx="4"/>
+    <text x="200" y="35" text-anchor="middle" fill="var(--color-gold)" font-size="14" font-weight="bold">面相全图</text>
+
+    <!-- 面部轮廓 -->
+    <ellipse cx="200" cy="270" rx="95" ry="135" fill="url(#faceGrad)" stroke="var(--color-gold)" stroke-width="1.5" opacity="0.6"/>
+    <!-- 发型 -->
+    <path d="M105,220 Q100,140 140,95 Q170,70 200,65 Q230,70 260,95 Q300,140 295,220" fill="none" stroke="var(--color-text-muted)" stroke-width="1.2" opacity="0.6"/>
+    <!-- 额头纹 -->
+    <path d="M145,155 Q200,148 255,155" fill="none" stroke="var(--color-text-muted)" stroke-width="0.4" opacity="0.3"/>
+    <path d="M150,165 Q200,158 250,165" fill="none" stroke="var(--color-text-muted)" stroke-width="0.4" opacity="0.3"/>
+
+    <!-- === 三停分区 === -->
+    <!-- 上停（天庭-额头）-->
+    <rect x="105" y="115" width="190" height="75" rx="6" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.25)" stroke-dasharray="6,3"/>
+    <text x="200" y="145" text-anchor="middle" fill="#C9A84C" font-size="14" font-weight="600">上停 · 天庭</text>
+    <text x="200" y="162" text-anchor="middle" fill="var(--color-text-muted)" font-size="10">少年运 · 15-30岁</text>
+    <!-- 上停→中停分割线 -->
+    <line x1="108" y1="195" x2="292" y2="195" stroke="var(--color-gold)" stroke-width="1" opacity="0.4" stroke-dasharray="8,4"/>
+
+    <!-- 中停（眉眼鼻）-->
+    <rect x="105" y="198" width="190" height="95" rx="6" fill="rgba(74,158,139,0.05)" stroke="rgba(74,158,139,0.25)" stroke-dasharray="6,3"/>
+    <text x="200" y="225" text-anchor="middle" fill="#4A9E8B" font-size="14" font-weight="600">中停 · 眉眼鼻</text>
+    <text x="200" y="242" text-anchor="middle" fill="var(--color-text-muted)" font-size="10">中年运 · 31-50岁</text>
+    <!-- 中停→下停分割线 -->
+    <line x1="108" y1="296" x2="292" y2="296" stroke="var(--color-gold)" stroke-width="1" opacity="0.4" stroke-dasharray="8,4"/>
+
+    <!-- 下停（口颏）-->
+    <rect x="105" y="299" width="190" height="85" rx="6" fill="rgba(107,91,149,0.05)" stroke="rgba(107,91,149,0.25)" stroke-dasharray="6,3"/>
+    <text x="200" y="325" text-anchor="middle" fill="#6B5B95" font-size="14" font-weight="600">下停 · 口颏地阁</text>
+    <text x="200" y="342" text-anchor="middle" fill="var(--color-text-muted)" font-size="10">晚年运 · 51岁后</text>
+
+    <!-- === 眉毛 === -->
+    <path d="M130,245 Q165,232 200,236" fill="none" stroke="var(--color-text)" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M200,236 Q235,232 270,245" fill="none" stroke="var(--color-text)" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- 保寿宫（眉）标注 -->
+    <text x="120" y="240" fill="var(--color-text-muted)" font-size="7">保寿宫</text>
+
+    <!-- === 眼睛 === -->
+    <ellipse cx="160" cy="272" rx="20" ry="10" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
+    <circle cx="160" cy="272" r="5" fill="var(--color-text)"/>
+    <circle cx="160" cy="272" r="2" fill="var(--color-void)"/>
+    <!-- 上眼睑 -->
+    <path d="M140,268 Q160,260 180,268" fill="none" stroke="var(--color-text)" stroke-width="1"/>
+
+    <ellipse cx="240" cy="272" rx="20" ry="10" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
+    <circle cx="240" cy="272" r="5" fill="var(--color-text)"/>
+    <circle cx="240" cy="272" r="2" fill="var(--color-void)"/>
+    <path d="M220,268 Q240,260 260,268" fill="none" stroke="var(--color-text)" stroke-width="1"/>
+    <!-- 田宅宫（上眼睑）-->
+    <text x="250" y="258" fill="var(--color-text-muted)" font-size="7">田宅宫</text>
+
+    <!-- === 鼻子（财帛宫）=== -->
+    <path d="M200,245 L192,315 Q200,322 208,315 Z" fill="rgba(201,168,76,0.15)" stroke="var(--color-gold)" stroke-width="1.5"/>
+    <!-- 鼻头 -->
+    <ellipse cx="200" cy="318" rx="12" ry="8" fill="rgba(201,168,76,0.1)" stroke="var(--color-gold)" stroke-width="1"/>
+    <!-- 鼻翼 -->
+    <ellipse cx="185" cy="320" rx="5" ry="4" fill="none" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.7"/>
+    <ellipse cx="215" cy="320" rx="5" ry="4" fill="none" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.7"/>
+    <text x="200" y="340" text-anchor="middle" fill="#C9A84C" font-size="9" font-weight="600">财帛宫</text>
+
+    <!-- === 嘴巴 === -->
+    <path d="M165,365 Q200,375 235,365" fill="none" stroke="var(--color-text)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M165,365 Q200,355 235,365" fill="none" stroke="var(--color-cinnabar)" stroke-width="0.8" opacity="0.4"/>
+
+    <!-- === 耳朵 === -->
+    <path d="M105,240 Q90,230 95,260 Q90,295 105,300" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
+    <path d="M105,255 Q100,260 105,265" fill="none" stroke="var(--color-text)" stroke-width="0.8"/>
+    <path d="M295,240 Q310,230 305,260 Q310,295 295,300" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
+    <path d="M295,255 Q300,260 295,265" fill="none" stroke="var(--color-text)" stroke-width="0.8"/>
+    <text x="82" y="270" fill="var(--color-text-muted)" font-size="7">福德宫</text>
+
+    <!-- === 印堂（命宫）=== -->
+    <circle cx="200" cy="238" r="8" fill="rgba(201,168,76,0.2)" stroke="#C9A84C" stroke-width="1.5" filter="url(#fglow)"/>
+    <text x="200" y="222" text-anchor="middle" fill="#C9A84C" font-size="9" font-weight="600">命宫</text>
+
+    <!-- === 官禄宫 === -->
+    <circle cx="200" cy="145" r="7" fill="rgba(74,158,139,0.15)" stroke="#4A9E8B" stroke-width="1" filter="url(#fglow)"/>
+    <text x="200" y="132" text-anchor="middle" fill="#4A9E8B" font-size="8" font-weight="600">官禄宫</text>
+
+    <!-- === 夫妻宫（眼尾）=== -->
+    <circle cx="130" cy="268" r="5" fill="rgba(201,168,76,0.15)" stroke="#C9A84C" stroke-width="1" filter="url(#fglow)"/>
+    <circle cx="270" cy="268" r="5" fill="rgba(201,168,76,0.15)" stroke="#C9A84C" stroke-width="1" filter="url(#fglow)"/>
+    <text x="115" y="290" fill="#C9A84C" font-size="7">夫妻宫</text>
+    <text x="268" y="290" fill="#C9A84C" font-size="7">夫妻宫</text>
+
+    <!-- === 颧骨（交友宫）=== -->
+    <circle cx="135" cy="295" r="5" fill="rgba(107,91,149,0.1)" stroke="#6B5B95" stroke-width="0.8"/>
+    <circle cx="265" cy="295" r="5" fill="rgba(107,91,149,0.1)" stroke="#6B5B95" stroke-width="0.8"/>
+    <text x="120" y="315" fill="#6B5B95" font-size="6">交友</text>
+    <text x="272" y="315" fill="#6B5B95" font-size="6">交友</text>
+
+    <!-- === 下巴地阁 === -->
+    <path d="M170,390 Q200,410 230,390" fill="none" stroke="var(--color-text)" stroke-width="1" opacity="0.5"/>
+    <text x="200" y="408" text-anchor="middle" fill="var(--color-text-muted)" font-size="7">地阁（奴仆宫）</text>
+
+    <!-- === 人中 === -->
+    <line x1="200" y1="358" x2="200" y2="375" stroke="var(--color-text-muted)" stroke-width="1" opacity="0.5"/>
+
+    <!-- 底部标签 -->
+    <text x="200" y="485" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">道器命理 · 面相全图 · 三停十二宫</text>
+  </svg>`;
 
   let gongsHtml = '';
   const gongs = Object.entries(mx.keyGongs).slice(0, 4);
@@ -429,7 +534,7 @@ function buildMianXiangCard(d, isFree) {
     gongsHtml += `<div style="padding:var(--space-xs);background:var(--color-ink);border-radius:var(--radius-sm);margin-bottom:2px;font-size:0.85rem;"><strong style="color:var(--color-gold);">${name}</strong> ${analysis}</div>`;
   }
 
-  const content = `${faceImg}
+  const content = `<div style="text-align:center;margin-bottom:var(--space-sm);">${faceSVG}</div>
     <p><strong>面型：</strong>${mx.faceShape}</p>
     <p style="margin-top:var(--space-sm);"><strong>三停分析：</strong>${mx.santing}</p>
     <div style="margin-top:var(--space-md);">${gongsHtml}</div>`;
