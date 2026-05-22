@@ -119,6 +119,26 @@
               </select>
             </div>
           </div>
+          <div class="form-group">
+            <label class="form-label" for="location">出生地点（城市）</label>
+            <input type="text" id="location" name="location" class="form-input" placeholder="例如：北京、上海、广州">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">面相照片 <span style="font-size:0.75rem;color:#8B8577;">（可选，上传后解锁面相分析）</span></label>
+              <div style="border:1px dashed rgba(201,168,76,0.3);border-radius:8px;padding:12px;text-align:center;cursor:pointer;" onclick="document.getElementById('facePhoto').click()" id="faceDropZone">
+                <input type="file" id="facePhoto" name="facePhoto" accept="image/*" style="display:none;" onchange="previewUpload('face')">
+                <span id="faceStatus" style="color:#8B8577;font-size:0.85rem;">📷 点击上传面相照片</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">手相照片 <span style="font-size:0.75rem;color:#8B8577;">（可选，上传后解锁手相分析）</span></label>
+              <div style="border:1px dashed rgba(201,168,76,0.3);border-radius:8px;padding:12px;text-align:center;cursor:pointer;" onclick="document.getElementById('palmPhoto').click()" id="palmDropZone">
+                <input type="file" id="palmPhoto" name="palmPhoto" accept="image/*" style="display:none;" onchange="previewUpload('palm')">
+                <span id="palmStatus" style="color:#8B8577;font-size:0.85rem;">✋ 点击上传手相照片</span>
+              </div>
+            </div>
+          </div>
           <div class="form-actions">
             <button type="button" class="btn btn-ghost" onclick="prevStep(1)">上一步</button>
             <button type="button" class="btn btn-primary" onclick="nextStep(3)">下一步</button>
@@ -302,6 +322,18 @@
       showStep(step);
     }
 
+    // Upload preview
+    function previewUpload(type) {
+      const input = document.getElementById(type === 'face' ? 'facePhoto' : 'palmPhoto');
+      const status = document.getElementById(type === 'face' ? 'faceStatus' : 'palmStatus');
+      if (input.files && input.files[0]) {
+        status.textContent = '✅ ' + input.files[0].name;
+        status.style.color = '#4A9E8B';
+        // Store flag in sessionStorage
+        sessionStorage.setItem(type === 'face' ? 'hasFacePhoto' : 'hasPalmPhoto', 'true');
+      }
+    }
+
     // Form submission
     document.getElementById('birthForm').addEventListener('submit', function(e) {
       e.preventDefault();
@@ -314,13 +346,17 @@
         year: document.getElementById('birthYear').value,
         month: document.getElementById('birthMonth').value,
         day: document.getElementById('birthDay').value,
-        hour: document.getElementById('birthHour').value
+        hour: document.getElementById('birthHour').value,
+        location: document.getElementById('location').value || ''
       };
 
-      // Store in sessionStorage for demo
+      // Store in sessionStorage
       sessionStorage.setItem('birthData', JSON.stringify(formData));
+      // Keep photo flags
+      if (!sessionStorage.getItem('hasFacePhoto')) sessionStorage.setItem('hasFacePhoto', 'false');
+      if (!sessionStorage.getItem('hasPalmPhoto')) sessionStorage.setItem('hasPalmPhoto', 'false');
 
-      // Navigate to report page (demo mode)
+      // Navigate to report page
       window.location.href = 'report.html';
     });
 

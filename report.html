@@ -12,74 +12,55 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    /* ===== 科技道家风 ===== */
     :root {
       --glow-gold: 0 0 20px rgba(201,168,76,0.3), 0 0 40px rgba(201,168,76,0.1);
       --glow-cyan: 0 0 20px rgba(74,158,139,0.3), 0 0 40px rgba(74,158,139,0.1);
       --border-tech: 1px solid rgba(201,168,76,0.25);
-      --scan-speed: 6s;
     }
 
-    /* 全局扫描线覆盖 */
     .tech-overlay {
       position: fixed; inset: 0; pointer-events: none; z-index: 9999;
-      background: repeating-linear-gradient(
-        0deg, transparent, transparent 2px, rgba(201,168,76,0.015) 2px, rgba(201,168,76,0.015) 4px
-      );
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(201,168,76,0.012) 2px, rgba(201,168,76,0.012) 4px);
     }
 
-    /* ---- Tab 导航栏 ---- */
+    /* Tab nav */
     .tab-nav {
       position: sticky; top: 60px; z-index: 100;
-      background: rgba(13,17,23,0.92);
-      backdrop-filter: blur(20px) saturate(1.5);
-      border-bottom: 1px solid rgba(201,168,76,0.15);
-      margin-bottom: var(--space-lg);
+      background: rgba(13,17,23,0.94); backdrop-filter: blur(20px) saturate(1.5);
+      border-bottom: 1px solid rgba(201,168,76,0.15); margin-bottom: var(--space-lg);
     }
     .tab-nav-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; gap: 0; overflow-x: auto;
+      max-width: 1100px; margin: 0 auto; display: flex; gap: 0; overflow-x: auto;
       padding: 0 var(--space-md); scrollbar-width: none;
     }
     .tab-nav-inner::-webkit-scrollbar { display: none; }
-
     .tab-btn {
-      position: relative;
-      flex-shrink: 0; padding: var(--space-sm) var(--space-md);
+      position: relative; flex-shrink: 0; padding: var(--space-sm) var(--space-md);
       background: none; border: none; color: #8B8577;
       font-family: var(--font-body); font-size: 0.9rem; font-weight: 500;
-      cursor: pointer; transition: all 0.3s;
-      white-space: nowrap;
+      cursor: pointer; transition: all 0.3s; white-space: nowrap;
       display: flex; align-items: center; gap: 8px;
     }
     .tab-btn:hover { color: #C9A84C; }
-    .tab-btn.active {
-      color: #C9A84C;
-      text-shadow: 0 0 12px rgba(201,168,76,0.4);
-    }
+    .tab-btn.active { color: #C9A84C; text-shadow: 0 0 12px rgba(201,168,76,0.4); }
     .tab-btn.active::after {
       content: ''; position: absolute; bottom: 0; left: 20%; right: 20%;
       height: 2px; background: linear-gradient(90deg,transparent,#C9A84C,#C9A84C,transparent);
       box-shadow: 0 0 10px rgba(201,168,76,0.5);
     }
-    .tab-btn .tab-icon { font-size: 1.1em; }
     @media (max-width: 768px) {
       .tab-btn { padding: 0.6rem 0.9rem; font-size: 0.8rem; }
       .tab-nav { top: 52px; }
     }
 
-    /* ---- 内容面板 ---- */
-    .tab-panel {
-      display: none;
-      animation: panelFadeIn 0.4s ease;
-    }
+    .tab-panel { display: none; animation: panelFadeIn 0.4s ease; }
     .tab-panel.active { display: block; }
     @keyframes panelFadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ---- 科技感卡片 ---- */
+    /* Tech card */
     .tech-card {
       background: linear-gradient(135deg, rgba(26,31,46,0.85), rgba(13,17,23,0.9));
       border: var(--border-tech); border-radius: var(--radius-md);
@@ -87,25 +68,18 @@
       position: relative; overflow: hidden;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
-    .tech-card:hover {
-      border-color: rgba(201,168,76,0.4);
-      box-shadow: var(--glow-gold);
-    }
+    .tech-card:hover { border-color: rgba(201,168,76,0.4); box-shadow: var(--glow-gold); }
     .tech-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0;
-      height: 1px;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
       background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
     }
-    /* 六边形装饰角 */
     .hex-corner {
-      position: absolute; width: 24px; height: 24px;
-      opacity: 0.15; pointer-events: none;
+      position: absolute; width: 24px; height: 24px; opacity: 0.12; pointer-events: none;
       border: 1px solid #C9A84C;
       clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     }
     .hex-corner.tl { top: 8px; left: 8px; }
     .hex-corner.br { bottom: 8px; right: 8px; }
-
     .tech-card-header {
       display: flex; align-items: center; gap: var(--space-md);
       margin-bottom: var(--space-md); padding-bottom: var(--space-sm);
@@ -113,182 +87,122 @@
     }
     .tech-card-icon {
       width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
-      border: 1px solid rgba(201,168,76,0.3);
-      background: rgba(201,168,76,0.06);
+      display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+      border: 1px solid rgba(201,168,76,0.3); background: rgba(201,168,76,0.06);
     }
     .tech-card-title { font-family: var(--font-heading); font-size: 1.15rem; color: #C9A84C; }
     .tech-card-sub { font-size: 0.8rem; color: #8B8577; }
 
-    /* ---- 八字柱阵 ---- */
+    /* Pillar grid */
     .pillar-grid {
-      display: flex; justify-content: center; gap: var(--space-lg);
-      flex-wrap: wrap; margin-top: var(--space-md);
+      display: flex; justify-content: center; gap: var(--space-lg); flex-wrap: wrap; margin-top: var(--space-md);
     }
-    .pillar-cell {
-      text-align: center; position: relative;
-    }
+    .pillar-cell { text-align: center; position: relative; }
     .pillar-cell::before {
-      content: ''; position: absolute; inset: -8px;
-      border: 1px solid rgba(201,168,76,0.12);
-      border-radius: 12px;
-      background: radial-gradient(circle at center, rgba(201,168,76,0.03) 0%, transparent 70%);
-      z-index: -1;
+      content: ''; position: absolute; inset: -8px; border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 12px; background: radial-gradient(circle at center, rgba(201,168,76,0.03) 0%, transparent 70%); z-index: -1;
     }
-    .pillar-label { font-size: 0.75rem; color: #8B8577; margin-bottom: 4px; letter-spacing: 0.1em; text-transform: uppercase; }
-    .pillar-gan, .pillar-zhi {
-      font-family: var(--font-heading); font-size: 2rem; font-weight: 700;
-      line-height: 1.2; transition: text-shadow 0.3s;
-    }
+    .pillar-label { font-size: 0.75rem; color: #8B8577; margin-bottom: 4px; letter-spacing: 0.1em; }
+    .pillar-gan, .pillar-zhi { font-family: var(--font-heading); font-size: 2rem; font-weight: 700; line-height: 1.2; }
     .pillar-gan { color: #E8E0D4; }
     .pillar-zhi { color: #8B8577; }
-    .pillar-cell.highlight .pillar-gan {
-      color: #C9A84C;
-      text-shadow: 0 0 20px rgba(201,168,76,0.5);
-    }
+    .pillar-cell.highlight .pillar-gan { color: #C9A84C; text-shadow: 0 0 20px rgba(201,168,76,0.5); }
     .pillar-cell.highlight .pillar-zhi { color: #C9A84C; }
 
-    /* ---- 五行能量环 ---- */
-    .wuxing-ring {
-      display: flex; justify-content: center; gap: var(--space-md);
-      margin-top: var(--space-md); flex-wrap: wrap;
-    }
+    /* Wuxing ring */
+    .wuxing-ring { display: flex; justify-content: center; gap: var(--space-md); margin-top: var(--space-md); flex-wrap: wrap; }
     .wuxing-node {
-      width: 48px; height: 48px; border-radius: 50%;
+      width: 50px; height: 50px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; font-weight: 600;
-      border: 2px solid transparent;
-      transition: all 0.4s;
-      position: relative;
+      font-size: 1rem; font-weight: 600; border: 2px solid transparent;
+      transition: all 0.4s; position: relative;
     }
-    .wuxing-node::after {
-      content: attr(data-count);
-      position: absolute; bottom: -18px; font-size: 0.7rem; color: #8B8577;
-    }
+    .wuxing-node::after { content: attr(data-count); position: absolute; bottom: -18px; font-size: 0.7rem; color: #8B8577; }
     .wuxing-node.wood { background: rgba(107,142,35,0.15); border-color: #6B8E23; color: #6B8E23; }
     .wuxing-node.fire { background: rgba(220,53,69,0.15); border-color: #DC3545; color: #DC3545; }
     .wuxing-node.earth { background: rgba(205,133,63,0.15); border-color: #CD853F; color: #CD853F; }
     .wuxing-node.metal { background: rgba(168,169,173,0.15); border-color: #A8A9AD; color: #A8A9AD; }
     .wuxing-node.water { background: rgba(70,130,180,0.15); border-color: #4682B4; color: #4682B4; }
 
-    /* ---- 紫微星盘 ---- */
-    .ziwei-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 4px; margin-top: var(--space-md);
+    /* Ziwei Wenmo Tianji grid */
+    .zw-wt-container {
+      display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-rows: auto auto auto auto;
+      gap: 4px;
+      max-width: 640px; margin: 0 auto;
     }
-    @media (max-width: 600px) { .ziwei-grid { grid-template-columns: repeat(3, 1fr); } }
+    .zw-wt-cell {
+      background: rgba(17,21,30,0.92); border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 6px; padding: 10px 8px; text-align: center;
+      min-height: 78px; display: flex; flex-direction: column; justify-content: center;
+      position: relative; transition: all 0.3s;
+    }
+    .zw-wt-cell.ming { border-color: rgba(201,168,76,0.55); background: rgba(201,168,76,0.07); }
+    .zw-wt-cell.shen { border-color: rgba(74,158,139,0.55); background: rgba(74,158,139,0.07); }
+    .zw-wt-cell .zw-branch { font-size: 0.65rem; color: #5a5a5a; position: absolute; top: 3px; left: 6px; }
+    .zw-wt-cell .zw-pname { font-size: 0.9rem; color: #C9A84C; font-weight: 700; margin-bottom: 2px; }
+    .zw-wt-cell .zw-stars { font-size: 0.82rem; color: #E8E0D4; font-weight: 500; line-height: 1.3; }
+    .zw-wt-cell .zw-stars .si-hua { font-size: 0.7rem; margin-left: 2px; }
+    .zw-wt-cell .zw-stars .si-hua.lu { color: #4A9E8B; }
+    .zw-wt-cell .zw-stars .si-hua.quan { color: #C9A84C; }
+    .zw-wt-cell .zw-stars .si-hua.ke { color: #6B5B95; }
+    .zw-wt-cell .zw-stars .si-hua.ji { color: #C75B5B; }
+    .zw-wt-empty {
+      background: rgba(13,17,23,0.6); border: 1px solid rgba(201,168,76,0.05);
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      color: #2a2a2a; font-family: serif; font-size: 1.5rem;
+    }
+    @media (max-width: 500px) {
+      .zw-wt-container { max-width: 100%; }
+      .zw-wt-cell { padding: 6px 4px; min-height: 60px; }
+      .zw-wt-cell .zw-pname { font-size: 0.75rem; }
+      .zw-wt-cell .zw-stars { font-size: 0.68rem; }
+    }
 
-    .ziwei-palace {
-      background: rgba(26,31,46,0.7); border: 1px solid rgba(201,168,76,0.12);
-      border-radius: 8px; padding: var(--space-sm); text-align: center;
-      min-height: 80px; display: flex; flex-direction: column; justify-content: center;
+    /* Life stages */
+    .stage-tabs { display: flex; gap: 6px; margin-bottom: var(--space-md); flex-wrap: wrap; }
+    .stage-tab {
+      padding: 6px 16px; border-radius: 100px; border: 1px solid rgba(201,168,76,0.2);
+      background: transparent; color: #8B8577; cursor: pointer; font-size: 0.85rem;
       transition: all 0.3s;
     }
-    .ziwei-palace.ming { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.08); }
-    .ziwei-palace.shen { border-color: rgba(74,158,139,0.5); background: rgba(74,158,139,0.08); }
-    .ziwei-palace-name { font-size: 0.75rem; color: #8B8577; margin-bottom: 4px; }
-    .ziwei-palace-stars { font-size: 0.85rem; color: #C9A84C; font-weight: 500; }
-    .ziwei-palace:empty::after { content: '—'; color: rgba(139,133,119,0.3); }
+    .stage-tab:hover { border-color: rgba(201,168,76,0.4); color: #C9A84C; }
+    .stage-tab.active { background: rgba(201,168,76,0.1); border-color: #C9A84C; color: #C9A84C; }
+    .stage-content { display: none; animation: panelFadeIn 0.3s ease; }
+    .stage-content.active { display: block; }
 
-    /* ---- 卦象装饰 ---- */
-    .gua-decoration {
-      display: flex; gap: 6px; justify-content: center; margin: var(--space-md) 0;
-    }
-    .gua-line {
-      width: 40px; height: 3px; border-radius: 2px; opacity: 0.2;
-    }
-    .gua-line.yang { background: #C9A84C; width: 40px; }
-    .gua-line.yin { display: flex; gap: 3px; }
-    .gua-line.yin span { flex: 1; height: 3px; background: #C9A84C; border-radius: 2px; }
-
-    /* ---- 太极旋转 ---- */
-    @keyframes taijiSpin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    .taiji-spin {
-      animation: taijiSpin 20s linear infinite;
-    }
-
-    /* ---- 逐字显现文本 ---- */
-    @keyframes textReveal {
-      from { opacity: 0; transform: translateY(2px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .reveal-text span {
-      display: inline-block; animation: textReveal 0.3s ease both;
-    }
-
-    /* ---- 数据涟漪 ---- */
+    /* Ripple */
     .ripple-bar {
-      height: 6px; border-radius: 3px; margin-bottom: var(--space-sm);
-      background: rgba(201,168,76,0.1);
-      position: relative; overflow: hidden;
+      height: 4px; border-radius: 2px; margin-bottom: var(--space-sm);
+      background: rgba(201,168,76,0.06); position: relative; overflow: hidden;
     }
     .ripple-bar::after {
-      content: ''; position: absolute; top: 0; left: 0; height: 100%;
-      border-radius: 3px;
+      content: ''; position: absolute; top: 0; left: 0; height: 100%; border-radius: 2px;
       animation: rippleFlow 2s ease infinite;
     }
     .ripple-bar.gold::after { background: linear-gradient(90deg, transparent, #C9A84C, transparent); }
     .ripple-bar.jade::after { background: linear-gradient(90deg, transparent, #4A9E8B, transparent); animation-delay: 0.5s; }
     .ripple-bar.red::after  { background: linear-gradient(90deg, transparent, #C75B5B, transparent); animation-delay: 1s; }
     @keyframes rippleFlow {
-      0% { left: -50%; width: 30%; }
-      60% { left: 100%; width: 30%; }
-      100% { left: 100%; width: 0; }
+      0% { left: -50%; width: 30%; } 60% { left: 100%; width: 30%; } 100% { left: 100%; width: 0; }
     }
 
-    /* ---- 网格背景（紫微盘） ---- */
-    .grid-bg {
-      background-image:
-        linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
+    /* Gua decoration */
+    .gua-decoration { display: flex; gap: 6px; justify-content: center; margin: var(--space-md) 0; }
+    .gua-line { width: 40px; height: 3px; border-radius: 2px; opacity: 0.2; }
+    .gua-line.yang { background: #C9A84C; width: 40px; }
+    .gua-line.yin { display: flex; gap: 3px; }
+    .gua-line.yin span { flex: 1; height: 3px; background: #C9A84C; border-radius: 2px; }
 
-    /* ---- 流年时间轴 ---- */
-    .timeline-bar {
-      display: flex; align-items: center; gap: 8px; margin: var(--space-md) 0;
-    }
-    .timeline-dot {
-      width: 12px; height: 12px; border-radius: 50%;
-      border: 2px solid #C9A84C;
-      position: relative;
-    }
-    .timeline-dot.current {
-      width: 16px; height: 16px; background: #C9A84C;
-      box-shadow: 0 0 12px rgba(201,168,76,0.5);
-    }
-    .timeline-line {
-      flex: 1; height: 1px; background: linear-gradient(90deg, rgba(201,168,76,0.5), rgba(201,168,76,0.1));
-    }
+    @keyframes taijiSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-    /* ---- Lock overlay 重写 ---- */
-    .lock-overlay {
-      text-align: center; padding: var(--space-lg);
-      background: linear-gradient(180deg, transparent, rgba(13,17,23,0.8));
-      border-radius: var(--radius-md);
+    /* Photo placeholder */
+    .photo-placeholder {
+      text-align: center; padding: 3rem 1.5rem;
+      background: linear-gradient(135deg, rgba(26,31,46,0.5), rgba(13,17,23,0.7));
+      border: 1px dashed rgba(201,168,76,0.25); border-radius: 12px;
     }
-
-    /* ---- 综合运势卡片 ---- */
-    .fortune-summary {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: var(--space-md);
-    }
-    .fortune-stat {
-      text-align: center; padding: var(--space-lg);
-      background: rgba(26,31,46,0.6); border-radius: var(--radius-md);
-      border: 1px solid rgba(201,168,76,0.1);
-    }
-    .fortune-stat-value {
-      font-family: var(--font-heading); font-size: 2.5rem;
-      background: linear-gradient(135deg, #C9A84C 30%, #E8C97A 60%, #C9A84C 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .fortune-stat-label { color: #8B8577; font-size: 0.85rem; margin-top: var(--space-xs); }
+    .photo-placeholder .icon { font-size: 3rem; opacity: 0.4; margin-bottom: var(--space-sm); }
   </style>
 </head>
 <body>
@@ -302,87 +216,51 @@
 </nav>
 
 <main class="report-page">
-  <!-- ===== 顶部 · 八字柱阵 ===== -->
-  <header class="report-header" id="reportHeader" style="text-align:center;">
+  <!-- Header -->
+  <header class="report-header" style="text-align:center;">
     <h1 id="reportTitle" style="font-family:var(--font-heading);font-size:2rem;color:#E8E0D4;">道器 · 命理推演</h1>
-    <p style="color:#8B8577;margin-bottom:var(--space-md);">紫微斗数 · 四柱八字 · 面相手相 · 风水布局</p>
-
-    <!-- 卦象装饰线 -->
+    <p style="color:#8B8577;margin-bottom:var(--space-md);" id="reportLocation"></p>
     <div class="gua-decoration" id="guaDeco"></div>
-
-    <!-- 四柱显示 -->
     <div class="pillar-grid" id="baziDisplay">
       <div class="pillar-cell"><div class="pillar-label">年柱</div><div class="pillar-gan" id="yearGan">—</div><div class="pillar-zhi" id="yearZhi">—</div></div>
       <div class="pillar-cell"><div class="pillar-label">月柱</div><div class="pillar-gan" id="monthGan">—</div><div class="pillar-zhi" id="monthZhi">—</div></div>
       <div class="pillar-cell highlight"><div class="pillar-label">日柱</div><div class="pillar-gan" id="dayGan">—</div><div class="pillar-zhi" id="dayZhi">—</div></div>
       <div class="pillar-cell"><div class="pillar-label">时柱</div><div class="pillar-gan" id="hourGan">—</div><div class="pillar-zhi" id="hourZhi">—</div></div>
     </div>
-
-    <!-- 五行能量环 -->
     <div class="wuxing-ring" id="wuxingRing"></div>
-
-    <!-- 日主强弱的脉冲波纹 -->
-    <div id="strengthZone" style="margin-top:var(--space-md);">
+    <div style="margin-top:var(--space-md);">
       <div class="ripple-bar gold" style="width:60%;margin:0 auto;"></div>
-      <div class="ripple-bar jade" style="width:40%;margin:var(--space-xs) auto;"></div>
-      <div class="ripple-bar red" style="width:30%;margin:var(--space-xs) auto;"></div>
+      <div class="ripple-bar jade" style="width:40%;margin:4px auto;"></div>
+      <div class="ripple-bar red" style="width:30%;margin:4px auto;"></div>
     </div>
-
     <div id="strengthBadge" style="margin-top:var(--space-sm);"></div>
   </header>
 
-  <!-- ===== Tab 导航 ===== -->
-  <nav class="tab-nav" id="tabNav">
+  <!-- Tab Nav -->
+  <nav class="tab-nav">
     <div class="tab-nav-inner">
-      <button class="tab-btn active" data-panel="bazi">
-        <span class="tab-icon">☯</span> 命盘总览
-      </button>
-      <button class="tab-btn" data-panel="ziwei">
-        <span class="tab-icon">⭐</span> 紫微斗数
-      </button>
-      <button class="tab-btn" data-panel="mianxiang">
-        <span class="tab-icon">👁</span> 面相分析
-      </button>
-      <button class="tab-btn" data-panel="shouxiang">
-        <span class="tab-icon">✋</span> 手相分析
-      </button>
-      <button class="tab-btn" data-panel="fengshui">
-        <span class="tab-icon">🏠</span> 风水布局
-      </button>
-      <button class="tab-btn" data-panel="liunian">
-        <span class="tab-icon">📅</span> 流年运势
-      </button>
+      <button class="tab-btn active" data-panel="bazi">☯ 命盘总览</button>
+      <button class="tab-btn" data-panel="ziwei">⭐ 紫微斗数</button>
+      <button class="tab-btn" data-panel="mianxiang">👁 面相分析</button>
+      <button class="tab-btn" data-panel="shouxiang">✋ 手相分析</button>
+      <button class="tab-btn" data-panel="fengshui">🏠 风水布局</button>
+      <button class="tab-btn" data-panel="liunian">📅 流年运势</button>
     </div>
   </nav>
 
-  <!-- ===== 内容面板 ===== -->
-  <div class="report-sections" id="reportSections" style="max-width:1100px;margin:0 auto;padding:0 var(--space-md);">
-    <!-- 加载动画 -->
+  <!-- Panels -->
+  <div class="report-sections" style="max-width:1100px;margin:0 auto;padding:0 var(--space-md);">
     <div id="loadingIndicator" style="text-align:center;padding:4rem 0;">
       <div style="width:60px;height:60px;margin:0 auto;border:2px solid rgba(201,168,76,0.2);border-top-color:#C9A84C;border-radius:50%;animation:taijiSpin 2s linear infinite;"></div>
       <p style="color:#C9A84C;font-size:1.2rem;margin-top:var(--space-md);">推演中，接通天地之气……</p>
       <p style="color:#8B8577;">请稍候</p>
     </div>
-
-    <!-- Tab 1: 命盘总览 -->
     <div class="tab-panel active" id="panel-bazi"></div>
-
-    <!-- Tab 2: 紫微斗数 -->
     <div class="tab-panel" id="panel-ziwei"></div>
-
-    <!-- Tab 3: 面相 -->
     <div class="tab-panel" id="panel-mianxiang"></div>
-
-    <!-- Tab 4: 手相 -->
     <div class="tab-panel" id="panel-shouxiang"></div>
-
-    <!-- Tab 5: 风水 -->
     <div class="tab-panel" id="panel-fengshui"></div>
-
-    <!-- Tab 6: 流年 -->
     <div class="tab-panel" id="panel-liunian"></div>
-
-    <!-- 真人专家 CTA（始终可见） -->
     <div id="expertCTA" style="margin-top:var(--space-xl);"></div>
   </div>
 </main>
@@ -392,55 +270,51 @@
 </footer>
 
 <script>
-// ===== 核心数据 =====
-const birthData = JSON.parse(sessionStorage.getItem('birthData') || '{}');
-const urlParams = new URLSearchParams(window.location.search);
-const IS_TESTING = true;  // 测试阶段全部开放
+// ===== GUARD: 必须从表单页进入 =====
+const birthData = JSON.parse(sessionStorage.getItem('birthData') || 'null');
+if (!birthData || !birthData.name || !birthData.year) {
+  window.location.replace('form.html');
+  throw new Error('redirect');
+}
+
+const IS_TESTING = true;
+const hasFacePhoto = sessionStorage.getItem('hasFacePhoto') === 'true';
+const hasPalmPhoto = sessionStorage.getItem('hasPalmPhoto') === 'true';
+const userLocation = birthData.location || '';
 let baziResult = null;
 
-// ===== 加载报告 =====
 async function loadReport() {
   const loading = document.getElementById('loadingIndicator');
   try {
     const params = new URLSearchParams();
-    if (birthData.name) {
-      params.set('name', birthData.name);
-      params.set('gender', birthData.gender || 'male');
-      params.set('year', birthData.year);
-      params.set('month', birthData.month);
-      params.set('day', birthData.day);
-      params.set('hour', birthData.hour || '子时');
-      params.set('calendar', birthData.calendar || 'solar');
-    } else {
-      const now = new Date();
-      params.set('name', '访客');
-      params.set('year', now.getFullYear());
-      params.set('month', now.getMonth() + 1);
-      params.set('day', now.getDate());
-      params.set('hour', '子时');
-    }
+    params.set('name', birthData.name);
+    params.set('gender', birthData.gender || 'male');
+    params.set('year', birthData.year);
+    params.set('month', birthData.month);
+    params.set('day', birthData.day);
+    params.set('hour', birthData.hour || '子时');
+    params.set('calendar', birthData.calendar || 'solar');
     const resp = await fetch('/api/bazi?' + params.toString());
     baziResult = await resp.json();
     if (loading) loading.remove();
-
     renderHeader();
     renderAllTabs();
     initTabs();
     lucide.createIcons();
-
   } catch (err) {
-    if (loading) loading.innerHTML = '<p style="color:#C75B5B;">数据加载失败</p><a href="form.html" class="btn btn-primary" style="margin-top:1rem;">返回填写</a>';
+    if (loading) loading.innerHTML = '<p style="color:#C75B5B;">数据加载失败，请返回重新填写</p><a href="form.html" class="btn btn-primary" style="margin-top:1rem;">返回填写</a>';
   }
 }
 
-// ===== 渲染顶部 =====
+// ===== Header =====
 function renderHeader() {
   const d = baziResult;
   const p = d.pillars;
-
   document.getElementById('reportTitle').textContent = d.name + ' · 命理报告';
+  document.getElementById('reportLocation').innerHTML = userLocation
+    ? `<span style="font-size:0.85rem;">📍 ${userLocation} · ${birthData.year}年${birthData.month}月${birthData.day}日 ${birthData.hour}</span>`
+    : `<span style="font-size:0.85rem;">${birthData.year}年${birthData.month}月${birthData.day}日 ${birthData.hour}</span>`;
 
-  // 四柱
   document.getElementById('yearGan').textContent = p.year[0];
   document.getElementById('yearZhi').textContent = p.year[1];
   document.getElementById('monthGan').textContent = p.month[0];
@@ -450,7 +324,6 @@ function renderHeader() {
   document.getElementById('hourGan').textContent = p.hour[0];
   document.getElementById('hourZhi').textContent = p.hour[1];
 
-  // 五行能量环
   const wc = d.wuxingCount;
   const wnn = { '金':'metal','木':'wood','水':'water','火':'fire','土':'earth' };
   const ring = document.getElementById('wuxingRing');
@@ -461,40 +334,48 @@ function renderHeader() {
     ring.innerHTML += `<div class="wuxing-node ${v}" data-count="${cnt}" style="opacity:${opacity}">${k}</div>`;
   }
 
-  // 强弱标记
   const s = d.strength;
   const sc = s.includes('强') ? '#C75B5B' : s.includes('弱') ? '#4A9E8B' : '#C9A84C';
   document.getElementById('strengthBadge').innerHTML = `<span style="display:inline-block;padding:0.3rem 1.2rem;border-radius:100px;font-size:0.9rem;background:${sc}15;color:${sc};border:1px solid ${sc}30;">日主 ${d.dayMaster}${d.dayWuxing} · ${s}</span>`;
 
-  // 随机卦象装饰
-  const guaDeco = document.getElementById('guaDeco');
-  const guas = [
-    '111111', '000000', '111010', '010111', '101010', '110011', '001100', '100010'
-  ];
+  const guas = ['111111','000000','111010','010111','101010','110011','001100','100010'];
   const gArr = (guas[Math.floor(Math.random() * guas.length)]).split('');
   let gHtml = '';
   for (const l of gArr) {
     if (l === '1') gHtml += '<div class="gua-line yang"></div>';
     else gHtml += '<div class="gua-line yin"><span></span><span></span></div>';
   }
-  guaDeco.innerHTML = gHtml;
+  document.getElementById('guaDeco').innerHTML = gHtml;
 }
 
-// ===== 渲染所有 Tab =====
+// ===== Render all tabs =====
 function renderAllTabs() {
   const d = baziResult;
-  const isFree = IS_TESTING ? false : true;
-
   document.getElementById('panel-bazi').innerHTML = buildBaziPanel(d);
-  document.getElementById('panel-ziwei').innerHTML = buildZiweiPanel(d, isFree);
-  document.getElementById('panel-mianxiang').innerHTML = buildMianXiangPanel(d, isFree);
-  document.getElementById('panel-shouxiang').innerHTML = buildShouXiangPanel(d, isFree);
-  document.getElementById('panel-fengshui').innerHTML = buildFengshuiPanel(d, isFree);
-  document.getElementById('panel-liunian').innerHTML = buildLiunianPanel(d, isFree);
+  document.getElementById('panel-ziwei').innerHTML = buildZiweiPanel(d);
+  document.getElementById('panel-mianxiang').innerHTML = hasFacePhoto ? buildMianXiangPanel(d) : buildPhotoPlaceholder('面相', 'face');
+  document.getElementById('panel-shouxiang').innerHTML = hasPalmPhoto ? buildShouXiangPanel(d) : buildPhotoPlaceholder('手相', 'palm');
+  document.getElementById('panel-fengshui').innerHTML = buildFengshuiPanel(d);
+  document.getElementById('panel-liunian').innerHTML = buildLiunianPanel(d);
   document.getElementById('expertCTA').innerHTML = buildExpertCTA();
 }
 
-// ===== Tab 切换 =====
+function buildPhotoPlaceholder(type, key) {
+  const icon = key === 'face' ? '👁' : '✋';
+  const desc = key === 'face' ? '面相照片' : '手相照片';
+  return `<div class="tech-card">
+    <div class="hex-corner tl"></div><div class="hex-corner br"></div>
+    <div class="photo-placeholder">
+      <div class="icon">${icon}</div>
+      <h3 style="color:#C9A84C;margin-bottom:var(--space-sm);">请上传${desc}以解锁${type}分析</h3>
+      <p style="color:#8B8577;max-width:400px;margin:0 auto;font-size:0.9rem;">
+        上传清晰的面部正面照片或手掌照片，我们将为您提供精准的${type}学分析。请返回<a href="form.html" style="color:#C9A84C;">信息填写页</a>上传照片。
+      </p>
+    </div>
+  </div>`;
+}
+
+// ===== Tabs =====
 function initTabs() {
   const btns = document.querySelectorAll('.tab-btn');
   btns.forEach(btn => {
@@ -503,13 +384,11 @@ function initTabs() {
       btn.classList.add('active');
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
-      // 延迟重新初始化图标
       setTimeout(() => lucide.createIcons(), 100);
     });
   });
 }
 
-// ===== 科技卡片模板 =====
 function techCard(icon, title, subtitle, content, extraClass) {
   return `<div class="tech-card ${extraClass||''}">
     <div class="hex-corner tl"></div><div class="hex-corner br"></div>
@@ -521,14 +400,14 @@ function techCard(icon, title, subtitle, content, extraClass) {
   </div>`;
 }
 
-// ============ TAB 面板构建函数 ============
-
-// ---- 命盘总览 ----
+// =====================================================
+//  TAB 1: 命盘总览 — 含详细人生阶段解析
+// =====================================================
 function buildBaziPanel(d) {
   const p = d.personality;
   let pos = '', neg = '';
-  p.positive.forEach(t => pos += `<li>✦ ${t}</li>`);
-  p.negative.forEach(t => neg += `<li>◇ ${t}</li>`);
+  p.positive.forEach(t => pos += '<li style="padding:2px 0;">✦ ' + t + '</li>');
+  p.negative.forEach(t => neg += '<li style="padding:2px 0;">◇ ' + t + '</li>');
 
   const wc = d.wuxingCount;
   const wn = ['金','木','水','火','土'];
@@ -539,10 +418,9 @@ function buildBaziPanel(d) {
     const v = wc[k]||0; const pct = Math.round(v/maxV*100);
     bars += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
       <span style="width:20px;color:${wm[k]};font-weight:600;">${k}</span>
-      <div style="flex:1;height:18px;background:rgba(13,17,23,0.6);border-radius:4px;overflow:hidden;">
+      <div style="flex:1;height:16px;background:rgba(13,17,23,0.6);border-radius:4px;overflow:hidden;">
         <div style="width:${pct}%;height:100%;background:${wm[k]};border-radius:4px;transition:width 1s ease;"></div>
-      </div>
-      <span style="font-size:0.8rem;color:#8B8577;width:18px;">${v}</span>
+      </div><span style="font-size:0.8rem;color:#8B8577;width:18px;">${v}</span>
     </div>`;
   });
 
@@ -552,15 +430,17 @@ function buildBaziPanel(d) {
   let shenRows = '';
   for (const [k, v] of Object.entries(ss)) {
     shenRows += `<div style="display:flex;justify-content:space-between;padding:6px 8px;background:rgba(26,31,46,0.5);border-radius:6px;margin-bottom:4px;">
-      <span style="color:#8B8577;">${pn[k]||k}</span>
+      <span style="color:#8B8577;min-width:40px;">${pn[k]||k}</span>
       <span style="color:#C9A84C;font-weight:600;">${v[0]}</span>
       <span style="color:#8B8577;font-size:0.8rem;">${v[1]}</span>
     </div>`;
   }
 
+  const lifeStages = buildLifeStageAnalysis(d);
+
   return `
     ${techCard('user', '日主性格', `日主${d.dayMaster}${d.dayWuxing} · ${d.strength}`,
-      `<p style="margin-bottom:var(--space-md);">日主 <span style="color:#C9A84C;font-weight:600;">${d.dayMaster}${d.dayWuxing}</span>，命局${d.strength}。${d.yongShen.principle}。</p>
+      `<p style="margin-bottom:var(--space-md);">日主 <span style="color:#C9A84C;font-weight:600;">${d.dayMaster}${d.dayWuxing}</span>，命局${d.strength}。${d.yongShen.principle}</p>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);">
         <div style="padding:var(--space-sm);background:rgba(26,31,46,0.6);border-radius:8px;border-left:3px solid #4A9E8B;">
           <div style="font-size:0.8rem;color:#4A9E8B;margin-bottom:6px;">✦ 优势特质</div>
@@ -578,24 +458,24 @@ function buildBaziPanel(d) {
         <span style="color:#C75B5B;margin-left:var(--space-md);">忌：${d.yongShen.avoid}</span>
       </div>`)}
 
-    ${techCard('git-branch', '十神关系', '天干生克互动',
-      shenRows)}
+    ${techCard('clock', '人生阶段详析', '少年 · 青年 · 中年 · 晚年',
+      `<p style="margin-bottom:var(--space-md);color:#8B8577;">基于日主<strong style="color:#C9A84C;">${d.dayMaster}${d.dayWuxing}</strong>（${d.strength}）的五运六气推演，以下为各年龄阶段在不同维度的详细解读：</p>
+      ${lifeStages}`)}
+
+    ${techCard('git-branch', '十神关系', '天干生克互动', shenRows)}
 
     ${techCard('star', '喜用神 · 吉祥指南', '趋吉避凶之钥',
       `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm);margin-bottom:var(--space-md);">
         <div style="text-align:center;padding:var(--space-sm);background:rgba(26,31,46,0.6);border-radius:8px;">
-          <div style="font-size:1.5rem;">🧭</div>
-          <div style="font-size:0.75rem;color:#8B8577;">幸运方位</div>
+          <div style="font-size:1.5rem;">🧭</div><div style="font-size:0.75rem;color:#8B8577;">幸运方位</div>
           <div style="font-weight:600;font-size:0.9rem;">${g.directions.join(' / ')}</div>
         </div>
         <div style="text-align:center;padding:var(--space-sm);background:rgba(26,31,46,0.6);border-radius:8px;">
-          <div style="font-size:1.5rem;">🎨</div>
-          <div style="font-size:0.75rem;color:#8B8577;">幸运颜色</div>
+          <div style="font-size:1.5rem;">🎨</div><div style="font-size:0.75rem;color:#8B8577;">幸运颜色</div>
           <div style="font-weight:600;font-size:0.9rem;">${g.colors.join(' / ')}</div>
         </div>
         <div style="text-align:center;padding:var(--space-sm);background:rgba(26,31,46,0.6);border-radius:8px;">
-          <div style="font-size:1.5rem;">🔢</div>
-          <div style="font-size:0.75rem;color:#8B8577;">幸运数字</div>
+          <div style="font-size:1.5rem;">🔢</div><div style="font-size:0.75rem;color:#8B8577;">幸运数字</div>
           <div style="font-weight:600;font-size:0.9rem;">${g.numbers.join(', ')}</div>
         </div>
       </div>
@@ -608,50 +488,199 @@ function buildBaziPanel(d) {
   `;
 }
 
-// ---- 紫微斗数 ----
-function buildZiweiPanel(d, isFree) {
+// ===== 人生阶段详细分析引擎 =====
+function buildLifeStageAnalysis(d) {
+  const dayWx = d.dayWuxing;
+  const strength = d.strength;
+  const dayStem = d.dayMaster;
+  const yongWx = d.yongShen.yongWuxing[0];
+  const avoidWx = d.yongShen.avoid;
+
+  // Stage-specific data based on day stem
+  const stemProfiles = {
+    '甲': { academic: '学业聪颖，理解力强，适合学术研究和专业深造', love: '感情主动热情，喜欢有担当的伴侣', marriage: '婚姻需包容对方，避免大男子/大女子主义', career: '领导力强，适合管理岗位或自主创业', health: '注意肝胆保养，忌酗酒熬夜' },
+    '乙': { academic: '学习灵活，善于举一反三，适合文科艺术', love: '感情细腻温和，追求精神契合', marriage: '婚姻和谐但容易迁就对方，需保持自我', career: '适合文化教育、艺术创作、咨询行业', health: '注意颈椎和神经系统，多运动' },
+    '丙': { academic: '学习热情高但持久力不足，需培养专注', love: '感情热烈奔放，桃花运较旺', marriage: '婚姻需注意沟通方式，避免急躁冲突', career: '适合互联网、演艺、能源行业', health: '注意心血管和眼睛，避免上火' },
+    '丁': { academic: '专注力强，精于钻研，适合技术类学习', love: '感情专注但容易多疑，需建立信任', marriage: '婚姻稳定，但需多表达爱意避免冷漠', career: '适合技术研发、精密制造、金融分析', health: '注意心脏和血液循环' },
+    '戊': { academic: '学习扎实稳健，厚积薄发型', love: '感情真诚可靠，不善表达但行动力强', marriage: '婚姻责任重，是家庭的坚实依靠', career: '适合地产、建筑、农业、资源行业', health: '注意脾胃消化，饮食规律' },
+    '己': { academic: '学习勤奋但吸收稍慢，适合实践类', love: '感情温和包容，善解人意', marriage: '婚姻需要对方主导，自己善于配合', career: '适合服务、教育、行政管理', health: '注意脾胃湿气，适度运动' },
+    '庚': { academic: '逻辑思维强，适合数学、工程、法律', love: '感情刚直果断，不喜欢拖泥带水', marriage: '婚姻需要柔韧，不可过于强势', career: '适合机械、法律、金融、军警', health: '注意呼吸系统和筋骨' },
+    '辛': { academic: '精益求精，适合设计、珠宝、医学', love: '感情追求完美，对伴侣要求高', marriage: '婚姻需降低完美主义，多些包容', career: '适合珠宝、医疗、精密制造', health: '注意肺部呼吸和皮肤' },
+    '壬': { academic: '博学多才，领悟力极强', love: '感情丰富浪漫，异性缘好', marriage: '婚姻需稳定心意，避免飘忽不定', career: '适合贸易、传媒、旅游、外交', health: '注意肾泌尿系统' },
+    '癸': { academic: '内敛深思，适合哲学、心理、玄学', love: '感情细腻深沉，不轻易动心', marriage: '婚姻需主动沟通，避免将心事隐藏', career: '适合咨询、研究、玄学、医疗', health: '注意肾脏和内分泌' },
+  };
+  const sp = stemProfiles[dayStem] || stemProfiles['甲'];
+
+  // Build 4 stages with 10 dimensions each
+  const stages = [
+    {
+      name: '🌱 少年运', age: '0-20岁',
+      items: [
+        { label: '📚 学业', text: sp.academic + (strength.includes('强') ? '少年早慧，学业名列前茅。' : '少年需多鼓励引导，厚积薄发。') },
+        { label: '👨‍👩‍👧 父母', text: `日主${dayWx}性, ${yongWx === '水' ? '父母缘深，多得长辈提携' : yongWx === '火' ? '与父母关系融洽，家庭教育开明' : yongWx === '木' ? '父母培养用心，教育环境好' : yongWx === '金' ? '家教严格，培养出良好习惯' : '家庭氛围和睦，基础稳固'}。` },
+        { label: '🏥 健康', text: `${strength.includes('强') ? '少年体质强健，精力旺盛。' : '少年体质偏弱，需加强锻炼和营养。'}特别注意${sp.health}。` },
+        { label: '🤝 社交', text: strength.includes('强') ? '自信开朗，人缘好，易成孩子王。' : '性格偏内向，需鼓励多参与集体活动。' },
+        { label: '👫 朋友', text: `交友以${yongWx}性为佳，互补成长。${avoidWx === '火' ? '少近火爆脾气之人' : avoidWx === '水' ? '远离心机深沉之辈' : avoidWx === '金' ? '少与过于刚硬之人争执' : avoidWx === '木' ? '近朱者赤，交友宜选稳重者' : '远离过于优柔之人'}。` },
+      ]
+    },
+    {
+      name: '🔥 青年运', age: '20-35岁',
+      items: [
+        { label: '❤️ 爱情', text: sp.love + (strength.includes('强') ? '桃花较旺，早年即可遇到心仪对象。' : '感情含蓄，需主动争取，良缘在后。') },
+        { label: '💍 婚姻', text: sp.marriage + ` 适婚年龄建议${strength.includes('强') ? '25-28' : '28-32'}岁，早婚需磨合，晚婚更稳。` },
+        { label: '💼 事业', text: sp.career + ` 青年时期${strength.includes('强') ? '锐意进取，25岁后事业快速上升' : '稳扎稳打，30岁后渐入佳境'}。` },
+        { label: '🏠 家庭', text: `青年组建家庭${yongWx === '土' ? '稳定踏实，适合早立家业' : yongWx === '水' ? '需要磨合期，包容对方差异' : yongWx === '火' ? '家庭氛围热烈，但需注意情绪管理' : yongWx === '金' ? '家庭责任明确，分工合理' : '家庭生活温馨，注重精神建设'}。` },
+        { label: '💰 财运', text: strength.includes('强') ? '青年财运起步快，正财为主，宜储蓄。' : '财运平稳增长，不宜冒险投资，量入为出。' },
+        { label: '🏥 健康', text: `青年时期精力充沛，但勿透支。重点注意${sp.health}方面的保养。` },
+        { label: '🤝 社交', text: '社交圈快速扩大，贵人多为同龄人或长辈。' },
+      ]
+    },
+    {
+      name: '🏔 中年运', age: '35-55岁',
+      items: [
+        { label: '💼 事业', text: `中年事业${strength.includes('强') ? '迎来高峰期，40岁前可达事业巅峰，宜守不宜冒进' : '稳步上升，45岁左右有重要机遇，需把握'}。行业建议：${d.luckyGuide.industries.slice(0,3).join('、')}。` },
+        { label: '💰 财运', text: `中年财运${yongWx === '金' ? '丰厚，正偏财俱佳，投资眼光精准' : yongWx === '水' ? '流动大，需稳健理财，避免投机' : yongWx === '木' ? '细水长流，以积蓄为主' : yongWx === '火' ? '波动较大，高风险高回报，需谨慎' : '稳定增长，适合长期投资'}。` },
+        { label: '👨‍👩‍👧 子女', text: `子女缘分${strength.includes('强') ? '深厚，教育有方，子女独立性强' : '温和，与子女关系融洽，需多陪伴'}。${dayWx === '火' ? '子女个性较强，需耐心引导。' : dayWx === '水' ? '子女聪慧灵活，多才多艺。' : dayWx === '木' ? '子女善良正直，学业顺利。' : dayWx === '金' ? '子女坚韧，有自己的主见。' : '子女踏实稳重，让人省心。'}` },
+        { label: '💍 婚姻', text: `中年婚姻${yongWx === '水' ? '需增加生活情趣，避免平淡' : yongWx === '火' ? '需注意小事争吵，大方向不变' : yongWx === '木' ? '相敬如宾，共同成长' : yongWx === '金' ? '关系稳固，相互成就' : '夫唱妇随或妻贤夫安，家庭和睦'}。此阶段为婚姻稳定关键期。` },
+        { label: '🏥 健康', text: `中年需重点关注${sp.health}，同时注意${avoidWx === '火' ? '三高和心血管' : avoidWx === '水' ? '肾虚和腰椎' : avoidWx === '木' ? '肝功能和精神压力' : avoidWx === '金' ? '呼吸道和骨骼' : '消化系统和体重管理'}。建议每年体检。` },
+        { label: '🤝 社交', text: '社交圈趋于核心化，重质不重量。贵人多为行业内的合作伙伴。' },
+      ]
+    },
+    {
+      name: '🍂 晚年运', age: '55岁以上',
+      items: [
+        { label: '🏠 家庭', text: `晚年家庭${yongWx === '土' ? '根基稳固，儿孙绕膝之福' : yongWx === '水' ? '自由自在，旅居养老为佳' : yongWx === '木' ? '闲适安宁，享受田园生活' : yongWx === '金' ? '经济充裕，生活品质高' : '温馨和睦，享天伦之乐'}。晚年宜居${d.luckyGuide.directions[0]}方。` },
+        { label: '💰 财运', text: `晚年财运${strength.includes('强') ? '稳固，有积蓄和不动产支撑，生活无忧' : '需提前做好养老规划，不宜再进行高风险投资'}。` },
+        { label: '👶 子孙', text: `子孙运${dayWx === '土' ? '旺，后代孝顺，家族延续兴旺' : dayWx === '水' ? '较旺，子孙聪明灵活' : dayWx === '木' ? '良好，子孙善良正直' : dayWx === '火' ? '旺盛，子孙活力充沛' : '尚可，子孙生活稳定'}。` },
+        { label: '🏥 健康', text: `晚年健康重点养护${sp.health}，建议${yongWx === '水' ? '多饮水、适当游泳' : yongWx === '火' ? '适量运动、保持心情愉快' : yongWx === '木' ? '多散步、太极拳' : yongWx === '金' ? '呼吸练习、瑜伽' : '慢走、园艺活动'}。` },
+        { label: '🤝 社交', text: '老友三五知己足矣，宜培养书法、园艺等雅好以养心性。' },
+      ]
+    }
+  ];
+
+  // Generate the HTML with stage tabs
+  let html = '<div class="stage-tabs">';
+  stages.forEach((s, i) => {
+    html += `<button class="stage-tab${i===0?' active':''}" data-stage="${i}" onclick="switchStage(${i})">${s.name}<br><span style="font-size:0.7rem;opacity:0.7;">${s.age}</span></button>`;
+  });
+  html += '</div>';
+
+  stages.forEach((s, i) => {
+    html += `<div class="stage-content${i===0?' active':''}" id="stage-${i}">`;
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">';
+    s.items.forEach(item => {
+      html += `<div style="padding:10px 12px;background:rgba(26,31,46,0.5);border-radius:8px;border-left:2px solid #C9A84C;">
+        <div style="font-weight:600;color:#C9A84C;margin-bottom:4px;font-size:0.9rem;">${item.label}</div>
+        <p style="font-size:0.85rem;line-height:1.6;color:#C8C0B8;margin:0;">${item.text}</p>
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+
+  return html;
+}
+
+// ===== Stage switcher (called from onclick) =====
+function switchStage(idx) {
+  document.querySelectorAll('.stage-tab').forEach((b, i) => b.classList.toggle('active', i === idx));
+  document.querySelectorAll('.stage-content').forEach((c, i) => {
+    c.classList.toggle('active', i === idx);
+    c.style.display = i === idx ? 'block' : 'none';
+  });
+}
+window.switchStage = switchStage;
+
+// =====================================================
+//  TAB 2: 紫微斗数 — 文墨天机风格
+// =====================================================
+function buildZiweiPanel(d) {
   const zw = d.ziwei;
 
-  // 星盘网格
-  let palaceHtml = '';
-  const allPalaces = ZW_PALACES.slice();
-  for (let i = 0; i < 12; i++) {
-    const pname = allPalaces[i];
-    const stars = zw.allStarsInPalaces[pname] || [];
-    let cls = '';
-    if (pname === zw.mingPalace) cls = ' ming';
-    if (pname === zw.shenPalace) cls += ' shen';
-    palaceHtml += `<div class="ziwei-palace${cls}">
-      <div class="ziwei-palace-name">${pname}</div>
-      <div class="ziwei-palace-stars">${stars.length ? stars.join(' ') : ''}</div>
-    </div>`;
+  // Build Wenmo Tianji style grid
+  // Standard layout: branches in fixed position, palaces rotate
+  const branchOrder = ['巳','午','未','申','辰',null,null,'酉','卯',null,null,'戌','寅','丑','子','亥'];
+  const branchIdx = { '巳':0,'午':1,'未':2,'申':3,'辰':4,'酉':7,'卯':8,'戌':11,'寅':12,'丑':13,'子':14,'亥':15 };
+
+  // Map palace names to branch positions
+  const mingIdx = ZW_PALACES.indexOf(zw.mingPalace);
+  const palaceMap = {}; // branch -> palace name
+  ZW_PALACES.forEach((p, i) => {
+    const offset = (i - mingIdx + 12) % 12;
+    palaceMap[branchOrder.filter(Boolean)[offset]] = p;
+  });
+
+  // Stars by position
+  const starsByBranch = {};
+  for (const [star, pos] of Object.entries(zw.starPositions || {})) {
+    const branch = branchOrder.filter(Boolean)[pos];
+    if (!starsByBranch[branch]) starsByBranch[branch] = [];
+    starsByBranch[branch].push(star);
   }
 
-  // 重点宫位分析
+  let gridHtml = '<div class="zw-wt-container">';
+  const positions = [
+    { branch:'巳', gRow:'1', gCol:'1' }, { branch:'午', gRow:'1', gCol:'2' }, { branch:'未', gRow:'1', gCol:'3' }, { branch:'申', gRow:'1', gCol:'4' },
+    { branch:'辰', gRow:'2', gCol:'1' }, { empty:true, gRow:'2', gCol:'2' }, { empty:true, gRow:'2', gCol:'3' }, { branch:'酉', gRow:'2', gCol:'4' },
+    { branch:'卯', gRow:'3', gCol:'1' }, { empty:true, gRow:'3', gCol:'2' }, { empty:true, gRow:'3', gCol:'3' }, { branch:'戌', gRow:'3', gCol:'4' },
+    { branch:'寅', gRow:'4', gCol:'1' }, { branch:'丑', gRow:'4', gCol:'2' }, { branch:'子', gRow:'4', gCol:'3' }, { branch:'亥', gRow:'4', gCol:'4' },
+  ];
+
+  positions.forEach(pos => {
+    if (pos.empty) {
+      gridHtml += '<div class="zw-wt-empty">☯</div>';
+    } else {
+      const palace = palaceMap[pos.branch] || '';
+      const stars = starsByBranch[pos.branch] || [];
+      const isMing = palace === zw.mingPalace;
+      const isShen = palace === zw.shenPalace;
+      let cls = '';
+      if (isMing) cls += ' ming';
+      if (isShen) cls += ' shen';
+
+      // Brightness indicators (simplified)
+      const brightnessMap = { '紫微':'庙','天机':'旺','太阳':'庙','武曲':'得','天同':'平','廉贞':'利','天府':'庙','太阴':'旺','贪狼':'平','巨门':'陷','天相':'得','天梁':'旺','七杀':'平','破军':'陷' };
+      let starsHtml = '';
+      stars.forEach(s => {
+        const bri = brightnessMap[s] || '平';
+        const briColor = bri === '庙' ? '#FFD700' : bri === '旺' ? '#FFA500' : bri === '得' ? '#4A9E8B' : bri === '利' ? '#87CEEB' : bri === '平' ? '#A0A0A0' : '#C75B5B';
+        starsHtml += `<span>${s}<sup style="font-size:0.6rem;color:${briColor};">${bri}</sup></span><br>`;
+      });
+      if (!starsHtml) starsHtml = '<span style="color:#3a3a3a;">—</span>';
+
+      gridHtml += `<div class="zw-wt-cell${cls}">
+        <span class="zw-branch">${pos.branch}</span>
+        <div class="zw-pname">${palace}</div>
+        <div class="zw-stars">${starsHtml}</div>
+      </div>`;
+    }
+  });
+  gridHtml += '</div>';
+
+  // Key palace analysis
   let keyHtml = '';
   for (const [palace, analysis] of Object.entries(zw.keyAnalysis)) {
-    keyHtml += `<div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;margin-bottom:4px;font-size:0.9rem;">
-      <strong style="color:#C9A84C;">${palace}</strong> ${analysis}
+    keyHtml += `<div style="padding:10px 12px;background:rgba(26,31,46,0.5);border-radius:8px;margin-bottom:4px;font-size:0.9rem;">
+      <strong style="color:#C9A84C;">${palace}</strong> — ${analysis}
     </div>`;
   }
 
   const mingStars = zw.mingStars.length ? zw.mingStars.join('、') : '无主星';
   const shenStars = zw.shenStars.length ? zw.shenStars.join('、') : '无主星';
 
-  let content = `
+  return `
     ${techCard('compass', '命身宫', '紫微斗数核心',
       `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
         <div style="padding:var(--space-md);background:rgba(201,168,76,0.05);border-radius:8px;border:1px solid rgba(201,168,76,0.2);text-align:center;">
           <div style="font-size:0.8rem;color:#8B8577;">命宫</div>
           <div style="font-size:1.5rem;color:#C9A84C;font-family:var(--font-heading);">${zw.mingPalace}</div>
           <div style="color:#C9A84C;font-weight:500;">主星：${mingStars}</div>
-          <div style="margin-top:8px;font-size:0.9rem;">${zw.mingInterpret}</div>
+          <div style="margin-top:8px;font-size:0.9rem;line-height:1.6;">${zw.mingInterpret}</div>
         </div>
         <div style="padding:var(--space-md);background:rgba(74,158,139,0.05);border-radius:8px;border:1px solid rgba(74,158,139,0.2);text-align:center;">
           <div style="font-size:0.8rem;color:#8B8577;">身宫</div>
           <div style="font-size:1.5rem;color:#4A9E8B;font-family:var(--font-heading);">${zw.shenPalace}</div>
           <div style="color:#4A9E8B;font-weight:500;">主星：${shenStars}</div>
-          <div style="margin-top:8px;font-size:0.9rem;">${zw.shenInterpret}</div>
+          <div style="margin-top:8px;font-size:0.9rem;line-height:1.6;">${zw.shenInterpret}</div>
         </div>
       </div>
       <div style="margin-top:var(--space-md);text-align:center;">
@@ -660,137 +689,112 @@ function buildZiweiPanel(d, isFree) {
         </span>
       </div>`)}
 
-    ${techCard('globe', '紫微命盘 · 全宫星曜', '十四主星飞布',
-      `<div class="ziwei-grid grid-bg">${palaceHtml}</div>
-      <p style="margin-top:var(--space-sm);font-size:0.8rem;color:#8B8577;text-align:center;">金色边框 = 命宫 · 绿色边框 = 身宫</p>`)}
+    ${techCard('globe', '紫微命盘 · 文墨天机式', '十二宫星辰飞布 · 庙旺得利平陷',
+      gridHtml + `<div style="display:flex;justify-content:center;gap:12px;margin-top:10px;flex-wrap:wrap;font-size:0.72rem;color:#8B8577;">
+        <span><span style="color:#FFD700;">●</span> 庙</span><span><span style="color:#FFA500;">●</span> 旺</span>
+        <span><span style="color:#4A9E8B;">●</span> 得</span><span><span style="color:#87CEEB;">●</span> 利</span>
+        <span><span style="color:#A0A0A0;">●</span> 平</span><span><span style="color:#C75B5B;">●</span> 陷</span>
+      </div>`)}
 
-    ${techCard('target', '重点宫位解读', '关键人生领域',
-      keyHtml)}
+    ${techCard('target', '重点宫位解读', '关键人生领域', keyHtml)}
   `;
-
-  if (isFree) {
-    content += `<div class="tech-card" style="text-align:center;">
-      <div class="lock-overlay">
-        <p style="margin-bottom:var(--space-sm);">付费版解锁四化星、辅星详解及三方四正深度联动</p>
-        <a href="checkout.html" class="btn btn-primary">解锁完整紫微命盘</a>
-      </div></div>`;
-  }
-
-  return content;
 }
 
-// ---- 面相分析 ----
-function buildMianXiangPanel(d, isFree) {
+// =====================================================
+//  TAB 3: 面相分析 — 仅上传照片后显示
+// =====================================================
+function buildMianXiangPanel(d) {
   const mx = d.mianxiang;
-
   let gongsHtml = '';
   for (const [name, analysis] of Object.entries(mx.keyGongs)) {
-    gongsHtml += `<div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;margin-bottom:4px;font-size:0.9rem;">
-      <strong style="color:#C9A84C;">${name}</strong> — ${analysis}
+    gongsHtml += `<div style="padding:10px;background:rgba(26,31,46,0.5);border-radius:8px;margin-bottom:4px;font-size:0.9rem;">
+      <strong style="color:#C9A84C;">${name}</strong> — <span style="line-height:1.6;">${analysis}</span>
     </div>`;
   }
 
-  let content = `
-    ${techCard('eye', '面相全图', `${mx.faceShape}`,
-      `<div style="text-align:center;margin-bottom:var(--space-md);">
-        <img src="assets/mianxiang-chart.png" alt="面相全图" style="width:100%;max-width:420px;border-radius:8px;display:block;margin:0 auto;" onerror="this.onerror=null;this.style.display='none';">
-        <p style="font-size:0.75rem;color:#8B8577;margin-top:4px;">道器 · 面相全图</p>
-      </div>
-      <p style="margin-bottom:var(--space-sm);"><strong style="color:#C9A84C;">面型：</strong>${mx.faceShape}</p>
-      <p><strong style="color:#C9A84C;">三停：</strong>${mx.santing}</p>`)}
+  const f = mx.features;
+  return `
+    ${techCard('eye', '面相全图', `面型：${mx.faceShape}`,
+      `<div style="display:flex;flex-wrap:wrap;gap:var(--space-md);align-items:flex-start;">
+        <div style="flex:0 0 280px;text-align:center;">
+          <img src="assets/mianxiang-chart-v2.svg" alt="面相十二宫全图" style="width:100%;max-width:280px;border-radius:8px;display:block;margin:0 auto;" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='block';">
+          <p style="display:none;color:#8B8577;font-size:0.8rem;margin-top:4px;">面相全图 · 十二宫标注</p>
+          <p style="font-size:0.75rem;color:#8B8577;margin-top:4px;">道器 · 面相十二宫全图</p>
+        </div>
+        <div style="flex:1;min-width:220px;">
+          <p style="margin-bottom:var(--space-sm);"><strong style="color:#C9A84C;">面型：</strong>${mx.faceShape}</p>
+          <p style="margin-bottom:var(--space-sm);"><strong style="color:#C9A84C;">三停：</strong></p>
+          <p style="font-size:0.9rem;line-height:1.6;margin-bottom:var(--space-md);">${mx.santing}</p>
+          <p style="margin-bottom:var(--space-sm);"><strong style="color:#C9A84C;">事业运：</strong>${mx.career}</p>
+          <p><strong style="color:#C9A84C;">感情运：</strong>${mx.love}</p>
+        </div>
+      </div>`)}
 
-    ${techCard('layout-grid', '十二宫简析', '面相核心部位',
+    ${techCard('layout-grid', '十二宫简析', '面相关键部位',
       gongsHtml)}
+
+    ${techCard('scan-face', '五官详析', '各部位深度解读',
+      `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--space-sm);">
+        <div style="padding:10px;background:rgba(26,31,46,0.5);border-radius:8px;"><strong style="color:#C9A84C;">额头（天庭）</strong><p style="font-size:0.85rem;margin-top:4px;">${f.forehead}</p></div>
+        <div style="padding:10px;background:rgba(26,31,46,0.5);border-radius:8px;"><strong style="color:#C9A84C;">眉眼</strong><p style="font-size:0.85rem;margin-top:4px;">${f.eyes}</p></div>
+        <div style="padding:10px;background:rgba(26,31,46,0.5);border-radius:8px;"><strong style="color:#C9A84C;">鼻子（财帛宫）</strong><p style="font-size:0.85rem;margin-top:4px;">${f.nose}</p></div>
+        <div style="padding:10px;background:rgba(26,31,46,0.5);border-radius:8px;"><strong style="color:#C9A84C;">嘴唇</strong><p style="font-size:0.85rem;margin-top:4px;">${f.mouth}</p></div>
+        <div style="padding:10px;background:rgba(26,31,46,0.5);border-radius:8px;"><strong style="color:#C9A84C;">耳朵（福德宫）</strong><p style="font-size:0.85rem;margin-top:4px;">${f.ears}</p></div>
+        <div style="padding:10px;background:rgba(26,31,46,0.5);border-radius:8px;"><strong style="color:#C9A84C;">事业运</strong><p style="font-size:0.85rem;margin-top:4px;">${mx.career}</p></div>
+      </div>`)}
   `;
-
-  if (!isFree) {
-    const f = mx.features;
-    content += `
-      ${techCard('scan-face', '五官详析', '各部位深度解读',
-        `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-sm);">
-          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">额头</strong><br><span style="font-size:0.9rem;">${f.forehead}</span></div>
-          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">眉眼</strong><br><span style="font-size:0.9rem;">${f.eyes}</span></div>
-          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">鼻子</strong><br><span style="font-size:0.9rem;">${f.nose}</span></div>
-          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">嘴唇</strong><br><span style="font-size:0.9rem;">${f.mouth}</span></div>
-          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">耳朵</strong><br><span style="font-size:0.9rem;">${f.ears}</span></div>
-          <div style="padding:8px;background:rgba(26,31,46,0.5);border-radius:6px;"><strong style="color:#C9A84C;">事业</strong><br><span style="font-size:0.9rem;">${mx.career}</span></div>
-        </div>`)}
-    `;
-  } else {
-    content += `<div class="tech-card" style="text-align:center;"><div class="lock-overlay"><p>付费版解锁十二宫全面相详解、痣相及气色分析</p><a href="checkout.html" class="btn btn-primary">解锁完整面相</a></div></div>`;
-  }
-
-  return content;
 }
 
-// ---- 手相分析 ----
-function buildShouXiangPanel(d, isFree) {
+// =====================================================
+//  TAB 4: 手相分析 — 仅上传照片后显示
+// =====================================================
+function buildShouXiangPanel(d) {
   const sx = d.shouxiang;
   const l = sx.lines;
 
-  const handSVG = `<svg viewBox="0 0 400 500" width="100%" style="max-width:320px;">
-    <rect width="400" height="500" fill="#1a1f2e" rx="8"/>
-    <rect x="15" y="15" width="370" height="470" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="2" rx="4"/>
-    <text x="200" y="38" text-anchor="middle" fill="#C9A84C" font-size="14" font-weight="bold">手相全图</text>
-    <rect x="120" y="430" width="160" height="35" rx="8" fill="none" stroke="#8B8577" stroke-width="1" opacity="0.4"/>
-    <path d="M200,55 Q155,50 120,75 L90,140 L80,200 L82,270 Q85,330 110,370 L140,410 Q165,430 200,430 Q235,430 260,410 L290,370 Q315,330 318,270 L320,200 L310,140 L280,75 Q245,50 200,55Z" fill="rgba(201,168,76,0.03)" stroke="#C9A84C" stroke-width="1.8"/>
-    <!-- 五指 -->
-    <path d="M155,55 L155,18 Q155,10 162,10 L172,10 Q179,10 179,18 L179,52" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
-    <path d="M130,58 L130,22 Q130,14 137,14 L147,14 Q154,14 154,22 L154,54" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
-    <path d="M180,58 L180,22 Q180,14 187,14 L197,14 Q204,14 204,22 L204,56" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
-    <path d="M208,65 L208,32 Q208,24 215,24 L225,24 Q232,24 232,32 L232,68" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
-    <path d="M238,78 L238,50 Q238,42 245,42 L255,42 Q262,42 262,50 L262,82" fill="none" stroke="#E8E0D4" stroke-width="1.2"/>
-    <!-- 生命线 -->
-    <path d="M190,115 Q185,95 200,90 Q235,85 260,120 Q285,165 280,230 Q275,300 245,360 Q225,395 200,415" fill="none" stroke="#4A9E8B" stroke-width="2.5"/>
-    <text x="268" y="125" fill="#4A9E8B" font-size="11" font-weight="bold">生命线</text>
-    <!-- 智慧线 -->
-    <path d="M190,110 Q220,100 260,108 Q300,118 310,140 Q320,160 315,185" fill="none" stroke="#C9A84C" stroke-width="2.5"/>
-    <text x="318" y="150" fill="#C9A84C" font-size="11" font-weight="bold">智慧线</text>
-    <!-- 感情线 -->
-    <path d="M95,195 Q140,175 200,185 Q260,195 315,185" fill="none" stroke="#C75B5B" stroke-width="2.5"/>
-    <text x="70" y="200" fill="#C75B5B" font-size="11" font-weight="bold">感情线</text>
-    <!-- 命运线 -->
-    <path d="M202,400 Q200,360 200,310 Q200,250 202,180 Q205,130 210,95" fill="none" stroke="#6B5B95" stroke-width="2"/>
-    <text x="214" y="200" fill="#6B5B95" font-size="11" font-weight="bold">命运线</text>
-    <!-- 掌丘 -->
-    <ellipse cx="245" cy="370" rx="28" ry="20" fill="none" stroke="rgba(74,158,139,0.3)" stroke-dasharray="4,3"/>
-    <text x="245" y="375" text-anchor="middle" fill="#4A9E8B" font-size="9">金星丘</text>
-    <ellipse cx="305" cy="265" rx="18" ry="26" fill="none" stroke="rgba(201,168,76,0.3)" stroke-dasharray="4,3"/>
-    <text x="305" y="270" text-anchor="middle" fill="#C9A84C" font-size="9">太阴丘</text>
-    <text x="200" y="485" text-anchor="middle" fill="#8B8577" font-size="9">道器 · 手相全图</text>
-  </svg>`;
-
-  let content = `
+  return `
     ${techCard('hand', '手相全图', `掌型：${sx.palmType}`,
       `<div style="display:flex;flex-wrap:wrap;gap:var(--space-md);align-items:flex-start;">
-        <div style="flex:0 0 240px;text-align:center;">${handSVG}</div>
-        <div style="flex:1;min-width:220px;">
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#4A9E8B;margin-right:6px;"></span><strong>生命线</strong> — ${l.lifeLine}</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#C9A84C;margin-right:6px;"></span><strong>智慧线</strong> — ${l.headLine}</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#C75B5B;margin-right:6px;"></span><strong>感情线</strong> — ${l.heartLine}</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6B5B95;margin-right:6px;"></span><strong>命运线</strong> — ${l.fateLine}</div>
+        <div style="flex:0 0 260px;text-align:center;">
+          <img src="assets/palm-chart.svg" alt="手相全图" style="width:100%;max-width:260px;border-radius:8px;display:block;margin:0 auto;">
+          <p style="font-size:0.75rem;color:#8B8577;margin-top:4px;">道器 · 手相全图 · 四大主线</p>
+        </div>
+        <div style="flex:1;min-width:240px;">
+          <div style="margin-bottom:10px;padding:8px;background:rgba(74,158,139,0.08);border-radius:6px;border-left:3px solid #4A9E8B;">
+            <strong style="color:#4A9E8B;">生命线</strong>
+            <p style="font-size:0.85rem;margin:4px 0 0;">${l.lifeLine}</p>
+          </div>
+          <div style="margin-bottom:10px;padding:8px;background:rgba(201,168,76,0.08);border-radius:6px;border-left:3px solid #C9A84C;">
+            <strong style="color:#C9A84C;">智慧线</strong>
+            <p style="font-size:0.85rem;margin:4px 0 0;">${l.headLine}</p>
+          </div>
+          <div style="margin-bottom:10px;padding:8px;background:rgba(199,91,91,0.08);border-radius:6px;border-left:3px solid #C75B5B;">
+            <strong style="color:#C75B5B;">感情线</strong>
+            <p style="font-size:0.85rem;margin:4px 0 0;">${l.heartLine}</p>
+          </div>
+          <div style="margin-bottom:10px;padding:8px;background:rgba(107,91,149,0.08);border-radius:6px;border-left:3px solid #6B5B95;">
+            <strong style="color:#6B5B95;">命运线</strong>
+            <p style="font-size:0.85rem;margin:4px 0 0;">${l.fateLine}</p>
+          </div>
         </div>
       </div>`)}
+
+    ${techCard('layers', '掌丘与总结', '综合手相解读',
+      `<div style="margin-bottom:var(--space-sm);padding:10px;background:rgba(26,31,46,0.5);border-radius:8px;">
+        <strong style="color:#C9A84C;">掌丘分析：</strong>
+        <p style="font-size:0.9rem;margin-top:4px;line-height:1.6;">${sx.mounts}</p>
+      </div>
+      <div style="padding:12px;background:rgba(201,168,76,0.05);border-radius:8px;border-left:3px solid #C9A84C;">
+        <strong>综合解读：</strong>${sx.summary}
+        <p style="margin-top:8px;color:#8B8577;font-size:0.85rem;line-height:1.6;">💡 ${sx.advice}</p>
+      </div>`)}
   `;
-
-  if (!isFree) {
-    content += `
-      ${techCard('layers', '掌丘与总结', '综合手相解读',
-        `<p style="margin-bottom:var(--space-sm);"><strong style="color:#C9A84C;">掌丘分析：</strong>${sx.mounts}</p>
-        <div style="padding:var(--space-sm);background:rgba(201,168,76,0.05);border-radius:8px;border-left:3px solid #C9A84C;">
-          <strong>总结：</strong>${sx.summary}
-          <p style="margin-top:4px;color:#8B8577;font-size:0.85rem;">${sx.advice}</p>
-        </div>`)}
-    `;
-  } else {
-    content += `<div class="tech-card" style="text-align:center;"><div class="lock-overlay"><p>付费版解锁掌丘详解、婚姻线、子女线、健康线</p><a href="checkout.html" class="btn btn-primary">解锁完整手相</a></div></div>`;
-  }
-
-  return content;
 }
 
-// ---- 风水布局 ----
-function buildFengshuiPanel(d, isFree) {
+// =====================================================
+//  TAB 5: 风水布局
+// =====================================================
+function buildFengshuiPanel(d) {
   const fs = d.fengshui;
   const yf = fs.yongShenFengshui;
 
@@ -798,57 +802,40 @@ function buildFengshuiPanel(d, isFree) {
     ${techCard('home', '居家风水布局', fs.generalAdvice,
       `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-sm);margin-bottom:var(--space-md);">
         <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;">
-          <div style="font-size:1.2rem;">🚪</div>
-          <strong>大门</strong>
+          <div style="font-size:1.2rem;">🚪</div><strong>大门</strong>
           <p style="font-size:0.85rem;color:#8B8577;margin-top:4px;">${yf.door}</p>
         </div>
         <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;">
-          <div style="font-size:1.2rem;">🛋</div>
-          <strong>客厅</strong>
+          <div style="font-size:1.2rem;">🛋</div><strong>客厅</strong>
           <p style="font-size:0.85rem;color:#8B8577;margin-top:4px;">${yf.livingRoom}</p>
         </div>
         <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;">
-          <div style="font-size:1.2rem;">🛏</div>
-          <strong>卧室</strong>
+          <div style="font-size:1.2rem;">🛏</div><strong>卧室</strong>
           <p style="font-size:0.85rem;color:#8B8577;margin-top:4px;">${yf.bedroom}</p>
         </div>
         <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;">
-          <div style="font-size:1.2rem;">🍳</div>
-          <strong>厨房</strong>
+          <div style="font-size:1.2rem;">🍳</div><strong>厨房</strong>
           <p style="font-size:0.85rem;color:#8B8577;margin-top:4px;">${yf.kitchen}</p>
         </div>
       </div>`)}
+
+    ${techCard('palette', '色彩 · 绿植 · 规避', '细节调和建议',
+      `<div style="padding:10px;background:rgba(74,158,139,0.06);border-radius:6px;margin-bottom:8px;">
+        <strong style="color:#4A9E8B;">色彩方案</strong><br><span style="font-size:0.9rem;">${yf.colors}</span>
+      </div>
+      <div style="padding:10px;background:rgba(74,158,139,0.06);border-radius:6px;margin-bottom:8px;">
+        <strong style="color:#4A9E8B;">🌱 绿植</strong><br><span style="font-size:0.9rem;">${yf.plants}</span>
+      </div>
+      <div style="padding:10px;background:rgba(201,168,76,0.06);border-radius:6px;">
+        <strong style="color:#C9A84C;">⚠ 规避</strong><br><span style="font-size:0.9rem;">${yf.avoid}</span>
+      </div>`)}
   `;
 
-  if (!isFree) {
-    content += `
-      ${techCard('palette', '色彩 · 绿植 · 规避', '细节调和建议',
-        `<div style="padding:var(--space-sm);background:rgba(74,158,139,0.06);border-radius:6px;margin-bottom:8px;">
-          <strong style="color:#4A9E8B;">色彩方案</strong><br>${yf.colors}
-        </div>
-        <div style="padding:var(--space-sm);background:rgba(74,158,139,0.06);border-radius:6px;margin-bottom:8px;">
-          <strong style="color:#4A9E8B;">🌱 绿植</strong><br>${yf.plants}
-        </div>
-        <div style="padding:var(--space-sm);background:rgba(201,168,76,0.06);border-radius:6px;">
-          <strong style="color:#C9A84C;">⚠ 规避</strong><br>${yf.avoid}
-        </div>`)}
-    `;
-    if (fs.secondaryFengshui) {
-      content += `
-        ${techCard('layout', '辅助布局', '次要用神调和',
-          `<p>${fs.secondaryFengshui.livingRoom}</p>`)}
-      `;
-    }
-  } else {
-    content += `<div class="tech-card" style="text-align:center;"><div class="lock-overlay"><p>付费版解锁完整风水方案</p><a href="checkout.html" class="btn btn-primary">解锁完整风水</a></div></div>`;
-  }
-
-  // 快速贴士
   if (fs.quickTips) {
     let tipsHtml = '';
     fs.quickTips.forEach((t, i) => {
       tipsHtml += `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(201,168,76,0.05);">
-        <span style="width:20px;height:20px;border-radius:50%;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#C9A84C;">${i+1}</span>
+        <span style="width:22px;height:22px;border-radius:50%;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#C9A84C;flex-shrink:0;">${i+1}</span>
         <span style="font-size:0.9rem;">${t}</span>
       </div>`;
     });
@@ -858,72 +845,63 @@ function buildFengshuiPanel(d, isFree) {
   return content;
 }
 
-// ---- 流年运势 ----
-function buildLiunianPanel(d, isFree) {
+// =====================================================
+//  TAB 6: 流年运势
+// =====================================================
+function buildLiunianPanel(d) {
   const cl = d.currentYearLuck;
   const colors = { '大吉': '#4A9E8B', '小吉': '#4A9E8B', '平稳': '#C9A84C', '需注意': '#C75B5B', '挑战多': '#C75B5B' };
 
-  // 流月 grid
   const ml = d.monthlyLuck;
   const mColors = { '上升': '#4A9E8B', '平稳': '#C9A84C', '波动': '#C75B5B' };
   let monthsHtml = '';
   ml.forEach(m => {
-    monthsHtml += `<div style="text-align:center;padding:6px;background:rgba(26,31,46,0.5);border-radius:6px;font-size:0.8rem;">
+    monthsHtml += `<div style="text-align:center;padding:6px 4px;background:rgba(26,31,46,0.5);border-radius:6px;font-size:0.8rem;">
       <strong>${m.month}月</strong><br>
       <span style="color:${mColors[m.status]};font-size:0.75rem;">${m.status}</span>
     </div>`;
   });
 
-  let content = `
+  return `
     ${techCard('calendar-days', `${cl.year}年 · 流年运势`, `岁君 ${cl.yearPillar}`,
       `<div style="text-align:center;margin-bottom:var(--space-md);">
-        <div style="font-size:3rem;font-weight:700;font-family:var(--font-heading);background:linear-gradient(135deg,#C9A84C,#E8C97A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${cl.overall}</div>
+        <div style="font-size:3.5rem;font-weight:700;font-family:var(--font-heading);background:linear-gradient(135deg,#C9A84C,#E8C97A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${cl.overall}</div>
         <div style="color:${colors[cl.overall]};font-size:1.1rem;font-weight:500;">总体运势评级</div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);">
-        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
-          <div style="font-size:0.8rem;color:#8B8577;">💼 事业</div>
-          <div style="font-weight:500;">${cl.career}</div>
+        <div style="padding:12px;background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
+          <div style="font-size:0.85rem;color:#8B8577;">💼 事业</div>
+          <div style="font-weight:500;margin-top:4px;">${cl.career}</div>
         </div>
-        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
-          <div style="font-size:0.8rem;color:#8B8577;">💰 财运</div>
-          <div style="font-weight:500;">${cl.wealth}</div>
+        <div style="padding:12px;background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
+          <div style="font-size:0.85rem;color:#8B8577;">💰 财运</div>
+          <div style="font-weight:500;margin-top:4px;">${cl.wealth}</div>
         </div>
-        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
-          <div style="font-size:0.8rem;color:#8B8577;">💕 感情</div>
-          <div style="font-weight:500;">${cl.love}</div>
+        <div style="padding:12px;background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
+          <div style="font-size:0.85rem;color:#8B8577;">💕 感情</div>
+          <div style="font-weight:500;margin-top:4px;">${cl.love}</div>
         </div>
-        <div style="padding:var(--space-sm);background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
-          <div style="font-size:0.8rem;color:#8B8577;">🏥 健康</div>
-          <div style="font-weight:500;">${cl.health}</div>
+        <div style="padding:12px;background:rgba(26,31,46,0.5);border-radius:8px;text-align:center;">
+          <div style="font-size:0.85rem;color:#8B8577;">🏥 健康</div>
+          <div style="font-weight:500;margin-top:4px;">${cl.health}</div>
         </div>
       </div>`)}
 
     ${techCard('calendar', '流月趋势', `${cl.year}年 逐月走势`,
       `<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;">${monthsHtml}</div>
-      <p style="margin-top:var(--space-sm);font-size:0.8rem;color:#8B8577;text-align:center;">
+      <p style="margin-top:10px;font-size:0.8rem;color:#8B8577;text-align:center;">
         <span style="color:#4A9E8B;">● 上升</span> &nbsp;
         <span style="color:#C9A84C;">● 平稳</span> &nbsp;
         <span style="color:#C75B5B;">● 波动</span>
       </p>`)}
-  `;
 
-  // 大运（简化版）
-  content += `
     ${techCard('trending-up', '十年大运', '人生阶段运势',
       `<p>大运十年一转，顺逆交替。命局行运遵循<span style="color:#C9A84C;">阳年男顺排/阴年女逆排</span>规则。</p>
-      <p style="margin-top:var(--space-sm);">完整分析含起运年龄、每步大运十年吉凶、大运与命局互动关系。</p>
-      ${isFree ? `<div class="lock-overlay" style="margin-top:var(--space-md);"><p>付费版解锁完整大运解读</p><a href="checkout.html" class="btn btn-primary">解锁完整报告</a></div>` : ''}`)}
+      <p style="margin-top:var(--space-sm);">本命盘大运的精确起运年龄、每步大运的吉凶应期及详细解读，请预约真人专家进行深度推演。</p>`)}
   `;
-
-  if (isFree) {
-    content += `<div class="tech-card" style="text-align:center;"><div class="lock-overlay"><p>升级完整报告 · 解锁逐年逐月详细解读</p><a href="checkout.html" class="btn btn-primary">查看全部方案</a></div></div>`;
-  }
-
-  return content;
 }
 
-// ---- 趋吉避凶（命盘总览内用）----
+// ===== 趋吉避凶 =====
 function buildJixiongCard(d) {
   const g = d.luckyGuide;
   const yiItems = [
@@ -931,16 +909,18 @@ function buildJixiongCard(d) {
     `多接近${g.directions[0]}方位`,
     `从事${g.industries.slice(0,2).join('、')}相关行业`,
     `上午（7-11点）做重要决定`,
+    '保持积极心态，顺势而为',
   ];
   const jiItems = [
     '避免过于鲜艳的衣物',
     '下午（13-17点）不宜做重大决策',
     '忌冲动行事、与人争执',
-    '忌长期熬夜',
+    '忌长期熬夜透支',
+    '忌投机取巧，走正道',
   ];
   let yi = '', ji = '';
-  yiItems.forEach(t => yi += `<li style="padding-left:var(--space-md);position:relative;"><span style="position:absolute;left:0;color:#4A9E8B;">✦</span>${t}</li>`);
-  jiItems.forEach(t => ji += `<li style="padding-left:var(--space-md);position:relative;"><span style="position:absolute;left:0;color:#C75B5B;">✗</span>${t}</li>`);
+  yiItems.forEach(t => yi += `<li style="padding:4px 0;padding-left:18px;position:relative;"><span style="position:absolute;left:0;color:#4A9E8B;">✦</span>${t}</li>`);
+  jiItems.forEach(t => ji += `<li style="padding:4px 0;padding-left:18px;position:relative;"><span style="position:absolute;left:0;color:#C75B5B;">✗</span>${t}</li>`);
 
   return techCard('shield', '趋吉避凶 · 行动指南', '基于命局的实用建议',
     `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
@@ -949,26 +929,25 @@ function buildJixiongCard(d) {
     </div>`);
 }
 
-// ---- 真人专家 CTA ----
+// ===== 专家 CTA =====
 function buildExpertCTA() {
   return `<div class="tech-card" style="background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(107,91,149,0.06));border-color:rgba(201,168,76,0.25);">
     <div class="hex-corner tl"></div><div class="hex-corner br"></div>
     <div style="text-align:center;padding:var(--space-sm) 0;">
-      <div style="font-size:0.75rem;color:#8B8577;letter-spacing:0.2em;text-transform:uppercase;">真人专家 · 医命双修</div>
+      <div style="font-size:0.75rem;color:#8B8577;letter-spacing:0.2em;">真人专家 · 医命双修</div>
       <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:#C9A84C;margin:var(--space-xs) 0;">山医堂主</h3>
-      <p style="color:#8B8577;max-width:480px;margin:0 auto var(--space-md);">不是纯算命，是身体+命理双重诊断。能开药方、调风水、做养生方案。</p>
+      <p style="color:#8B8577;max-width:480px;margin:0 auto var(--space-md);">AI推演为基，真人断命为核。能开药方、调风水、做养生方案——身体+命理双重诊断。</p>
       <a href="checkout.html" class="btn btn-primary">预约真人问诊</a>
     </div>
   </div>`;
 }
 
-// ===== 紫微十二宫（供紫微面板用）=====
+// ===== 紫微十二宫 =====
 const ZW_PALACES = ['命宫','兄弟','夫妻','子女','财帛','疾厄','迁移','交友','官禄','田宅','福德','父母'];
 
-// ===== 启动 =====
+// ===== Start =====
 document.addEventListener('DOMContentLoaded', loadReport);
 </script>
-
 <script src="js/app.js"></script>
 </body>
 </html>

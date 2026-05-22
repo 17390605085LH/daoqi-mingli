@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 640" width="500" height="640">
+  <defs>
+    <radialGradient id="palmBg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2a2035"/><stop offset="100%" stop-color="#1a1525"/>
+    </radialGradient>
+    <linearGradient id="lifeGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4ade80"/><stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="headGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#facc15"/><stop offset="100%" stop-color="#eab308"/>
+    </linearGradient>
+    <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f87171"/><stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <linearGradient id="fateGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="500" height="640" rx="16" fill="url(#palmBg)"/>
+  <rect x="2" y="2" width="496" height="636" rx="14" fill="none" stroke="rgba(212,175,55,0.2)" stroke-width="1.5"/>
+
+  <!-- Title -->
+  <text x="250" y="36" text-anchor="middle" fill="#d4af37" font-family="serif" font-size="18" font-weight="bold" letter-spacing="3">手相全图 · 掌中乾坤</text>
+  <line x1="80" y1="48" x2="420" y2="48" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+
+  <!-- Palm outline -->
+  <g transform="translate(250, 350)">
+    <!-- Fingers -->
+    <!-- Thumb -->
+    <path d="M-85,-80 Q-95,-140 -88,-175 Q-82,-200 -72,-210 Q-58,-222 -48,-210 Q-38,-198 -42,-170 Q-48,-130 -58,-90" fill="rgba(212,175,55,0.04)" stroke="#d4af37" stroke-width="1.5"/>
+    <!-- Index -->
+    <path d="M-52,-145 Q-58,-200 -55,-240 Q-52,-268 -42,-278 Q-28,-286 -18,-274 Q-10,-262 -12,-235 Q-16,-195 -28,-145" fill="rgba(212,175,55,0.04)" stroke="#d4af37" stroke-width="1.5"/>
+    <!-- Middle -->
+    <path d="M-15,-165 Q-16,-225 -15,-270 Q-14,-302 -8,-312 Q2,-320 10,-308 Q18,-296 18,-260 Q18,-215 5,-165" fill="rgba(212,175,55,0.04)" stroke="#d4af37" stroke-width="1.5"/>
+    <!-- Ring -->
+    <path d="M22,-155 Q22,-210 24,-255 Q26,-285 32,-295 Q42,-303 50,-290 Q56,-278 55,-245 Q54,-200 45,-155" fill="rgba(212,175,55,0.04)" stroke="#d4af37" stroke-width="1.5"/>
+    <!-- Pinky -->
+    <path d="M58,-140 Q62,-185 64,-225 Q66,-252 72,-260 Q82,-266 88,-254 Q94,-242 92,-215 Q90,-170 78,-140" fill="rgba(212,175,55,0.04)" stroke="#d4af37" stroke-width="1.5"/>
+
+    <!-- Main palm shape -->
+    <path d="M-80,-80 Q-70,-150 -60,-145 Q-30,-145 -20,-165 Q-5,-165 5,-165 Q22,-165 25,-155 Q45,-155 58,-140 Q70,-130 82,-80 Q92,-30 95,20 Q98,70 95,120 Q90,160 80,190 Q65,220 45,240 Q20,260 0,265 Q-20,260 -45,240 Q-65,220 -80,190 Q-90,160 -95,120 Q-98,70 -92,20 Q-88,-30 -80,-80Z" fill="rgba(212,175,55,0.05)" stroke="#d4af37" stroke-width="2"/>
+
+    <!-- Wrist lines -->
+    <path d="M-55,260 Q-20,268 0,265 Q20,268 55,260" fill="none" stroke="rgba(212,175,55,0.3)" stroke-width="1"/>
+    <path d="M-60,275 Q-20,283 0,280 Q20,283 60,275" fill="none" stroke="rgba(212,175,55,0.2)" stroke-width="1"/>
+    <path d="M-65,290 Q-20,298 0,295 Q20,298 65,290" fill="none" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+
+    <!-- ===== LIFE LINE ===== -->
+    <path d="M-30,-60 Q-40,-40 -35,-10 Q-25,30 -10,70 Q10,120 25,160 Q38,195 45,225" fill="none" stroke="url(#lifeGrad)" stroke-width="3.5" stroke-linecap="round" filter="url(#glow)"/>
+    <ellipse cx="34" cy="86" rx="4" ry="3" fill="#4ade80" opacity="0.7"/>
+
+    <!-- ===== HEAD LINE ===== -->
+    <path d="M-22,-50 Q10,-45 35,-35 Q60,-25 78,-10 Q90,2 95,22" fill="none" stroke="url(#headGrad)" stroke-width="3.5" stroke-linecap="round" filter="url(#glow)"/>
+    <ellipse cx="52" cy="-28" rx="4" ry="3" fill="#facc15" opacity="0.7"/>
+
+    <!-- ===== HEART LINE ===== -->
+    <path d="M-75,-40 Q-55,-48 -30,-52 Q-5,-55 20,-52 Q45,-48 65,-40 Q78,-30 85,-18" fill="none" stroke="url(#heartGrad)" stroke-width="3.5" stroke-linecap="round" filter="url(#glow)"/>
+    <ellipse cx="-30" cy="-50" rx="4" ry="3" fill="#f87171" opacity="0.7"/>
+
+    <!-- ===== FATE LINE ===== -->
+    <path d="M0,260 Q-5,220 -5,170 Q-5,110 -8,50 Q-10,-5 -12,-40" fill="none" stroke="url(#fateGrad)" stroke-width="3" stroke-linecap="round" filter="url(#glow)"/>
+    <ellipse cx="-6" cy="130" rx="4" ry="3" fill="#a78bfa" opacity="0.7"/>
+
+    <!-- ===== Marriage line (horizontal, below pinky) ===== -->
+    <path d="M55,-15 Q62,-12 72,-10 Q82,-8 88,-6" fill="none" stroke="rgba(251,191,36,0.7)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M60,-25 Q68,-22 76,-20 Q84,-18 90,-17" fill="none" stroke="rgba(251,191,36,0.5)" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- ===== Health line ===== -->
+    <path d="M75,-40 Q73,-10 70,20 Q68,50 65,90" fill="none" stroke="rgba(248,113,113,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="6,3"/>
+
+    <!-- ===== Sun line (Apollo) ===== -->
+    <path d="M40,240 Q42,200 42,160 Q42,110 40,60 Q38,20 36,-10" fill="none" stroke="rgba(250,204,21,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="4,3"/>
+
+    <!-- Finger phalanges lines -->
+    <line x1="-50" y1="-180" x2="-30" y2="-180" stroke="rgba(212,175,55,0.15)" stroke-width="0.8"/>
+    <line x1="-48" y1="-215" x2="-32" y2="-215" stroke="rgba(212,175,55,0.15)" stroke-width="0.8"/>
+    <line x1="-16" y1="-220" x2="0" y2="-220" stroke="rgba(212,175,55,0.15)" stroke-width="0.8"/>
+    <line x1="-15" y1="-255" x2="1" y2="-255" stroke="rgba(212,175,55,0.15)" stroke-width="0.8"/>
+    <line x1="24" y1="-210" x2="40" y2="-210" stroke="rgba(212,175,55,0.15)" stroke-width="0.8"/>
+    <line x1="26" y1="-245" x2="42" y2="-245" stroke="rgba(212,175,55,0.15)" stroke-width="0.8"/>
+    <line x1="60" y1="-185" x2="74" y2="-185" stroke="rgba(212,175,55,0.15)" stroke-width="0.8"/>
+    <line x1="62" y1="-215" x2="76" y2="-215" stroke="rgba(212,175,55,0.15)" stroke-width="0.8"/>
+
+    <!-- Mount labels -->
+    <text x="-65" y="130" fill="#4ade80" font-size="10" font-weight="bold" text-anchor="middle">金星丘</text>
+    <text x="75" y="130" fill="#a78bfa" font-size="10" font-weight="bold" text-anchor="middle">太阴丘</text>
+    <text x="-45" y="-83" fill="#d4af37" font-size="9" text-anchor="middle">木星丘</text>
+    <text x="5" y="-170" fill="#d4af37" font-size="9" text-anchor="middle">土星丘</text>
+    <text x="55" y="-83" fill="#d4af37" font-size="9" text-anchor="middle">太阳丘</text>
+    <text x="0" y="20" fill="#d4af37" font-size="9" text-anchor="middle">火星平原</text>
+  </g>
+
+  <!-- Legend bottom -->
+  <g transform="translate(20, 580)">
+    <line x1="0" y1="0" x2="30" y2="0" stroke="#4ade80" stroke-width="3" stroke-linecap="round"/>
+    <text x="38" y="5" fill="#4ade80" font-size="12" font-weight="bold">生命线</text>
+    <line x1="120" y1="0" x2="150" y2="0" stroke="#facc15" stroke-width="3" stroke-linecap="round"/>
+    <text x="158" y="5" fill="#facc15" font-size="12" font-weight="bold">智慧线</text>
+    <line x1="250" y1="0" x2="280" y2="0" stroke="#f87171" stroke-width="3" stroke-linecap="round"/>
+    <text x="288" y="5" fill="#f87171" font-size="12" font-weight="bold">感情线</text>
+    <line x1="380" y1="0" x2="410" y2="0" stroke="#a78bfa" stroke-width="3" stroke-linecap="round"/>
+    <text x="418" y="5" fill="#a78bfa" font-size="12" font-weight="bold">命运线</text>
+  </g>
+
+  <text x="420" y="625" fill="rgba(212,175,55,0.25)" font-size="9" text-anchor="end">道器命理</text>
+</svg>
