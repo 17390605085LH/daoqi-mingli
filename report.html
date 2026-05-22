@@ -295,7 +295,9 @@ async function loadReport() {
     params.set('hour', birthData.hour || '子时');
     params.set('calendar', birthData.calendar || 'solar');
 
-    // Timeout wrapper
+    // Timeout + AbortController wrapper
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
     const timeout = (ms, promise) => {
       return new Promise((resolve, reject) => {
         const timer = setTimeout(() => reject(new Error('请求超时（' + (ms/1000) + '秒），请检查网络后重试')), ms);
@@ -303,21 +305,25 @@ async function loadReport() {
       });
     };
 
-    // Try relative path first (works on same origin), then absolute URL
+    // Try relative path first (same origin), then absolute URL
     const paths = ['/api/bazi?', window.location.origin + '/api/bazi?'];
     let resp, lastErr;
     for (const base of paths) {
       try {
-        resp = await timeout(20000, fetch(base + params.toString()));
+        resp = await Promise.race([
+          fetch(base + params.toString(), { signal: controller.signal }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('网络超时（20秒）')), 20000))
+        ]);
         if (resp.ok) break;
         lastErr = 'HTTP ' + resp.status;
       } catch (e) {
-        lastErr = e.message;
+        lastErr = e.name === 'AbortError' ? '请求超时' : e.message;
       }
     }
+    clearTimeout(timeoutId);
     if (!resp || !resp.ok) throw new Error('API连接失败: ' + lastErr + '，请返回重新填写');
     const text = await resp.text();
-    try { baziResult = JSON.parse(text); } catch { throw new Error('数据解析失败，返回数据格式异常'); }
+    try { baziResult = JSON.parse(text); } catch { throw new Error('数据解析失败，请稍后重试'); }
     if (baziResult.error) throw new Error('排盘失败：' + baziResult.error);
     if (loading) loading.remove();
     renderHeader();
