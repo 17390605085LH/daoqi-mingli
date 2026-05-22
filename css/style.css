@@ -1185,3 +1185,32 @@ p {
     scroll-behavior: auto;
   }
 }
+
+/* =========================================
+   数字客服浮窗
+   ========================================= */
+#customer-service{position:fixed;bottom:24px;right:24px;z-index:9999;}
+.cs-trigger{width:56px;height:56px;border-radius:50%;background:var(--color-gold);color:var(--color-void);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(201,168,76,0.4);transition:transform 0.2s,box-shadow 0.2s;}
+.cs-trigger:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(201,168,76,0.5);}
+.cs-panel{position:absolute;bottom:72px;right:0;width:360px;max-width:calc(100vw - 48px);background:var(--color-obsidian);border:1px solid var(--color-border);border-radius:var(--radius-md);box-shadow:0 8px 40px rgba(0,0,0,0.5);overflow:hidden;}
+.cs-header{background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(107,91,149,0.1));padding:var(--space-md);position:relative;}
+.cs-header h3{font-size:1rem;color:var(--color-gold);margin-bottom:2px;}
+.cs-header p{font-size:0.8rem;color:var(--color-text-muted);margin:0;}
+.cs-close{position:absolute;top:8px;right:12px;background:none;border:none;color:var(--color-text-muted);font-size:1.5rem;cursor:pointer;line-height:1;}
+.cs-close:hover{color:var(--color-text);}
+.cs-body{padding:var(--space-md);}
+.cs-field{margin-bottom:var(--space-sm);}
+.cs-field label{display:block;font-size:0.8rem;color:var(--color-text-muted);margin-bottom:4px;}
+.cs-field input,.cs-field textarea{width:100%;padding:0.6rem 0.8rem;background:var(--color-ink);border:1px solid var(--color-border);border-radius:var(--radius-sm);color:var(--color-text);font-family:var(--font-body);font-size:0.9rem;resize:vertical;transition:border-color 0.2s;}
+.cs-field input:focus,.cs-field textarea:focus{outline:none;border-color:var(--color-gold);}
+.cs-submit{width:100%;margin-top:var(--space-sm);}
+@media(max-width:400px){.cs-panel{width:320px;right:-8px;}}
+
+/* 报告分层 */
+.lock-overlay{text-align:center;padding:var(--space-lg);background:rgba(201,168,76,0.03);border-radius:var(--radius-sm);border:1px dashed rgba(201,168,76,0.2);}
+.lock-overlay p{color:var(--color-text-muted);font-size:0.9rem;margin-top:var(--space-xs);}
+@keyframes lockPulse{0%,100%{opacity:1}50%{opacity:0.85}}
+
+/* 支付安全 */
+.payment-security-badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;background:rgba(74,158,139,0.08);border:1px solid rgba(74,158,139,0.2);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--color-jade);margin-bottom:var(--space-md);}
+.payment-security-badge svg{flex-shrink:0;}
