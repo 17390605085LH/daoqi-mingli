@@ -216,7 +216,7 @@ function recognizeGeJu(pillars, dayStem, dayBranch) {
   let geJuName = '普通格局';
   let geJuType = '未定';
   let principal = '';
-  let喜忌 = '';
+  let xiJi = '';
 
   // 正官格判断
   if ((counts['正官'] || 0) >= 1 && (counts['七杀'] || 0) === 0) {
@@ -224,7 +224,7 @@ function recognizeGeJu(pillars, dayStem, dayBranch) {
     geJuType = '正官';
     principal = '以正官为用，柱中天干地支见正官为贵';
     // 正官格喜：财星、印绶；忌：七杀、刑冲破害、贪合忘官
-    喜忌 = '喜财星生官、印绶护官；忌七杀混杂、刑冲破害、贪合忘官（见财合则失贵）';
+    xiJi = '喜财星生官、印绶护官；忌七杀混杂、刑冲破害、贪合忘官（见财合则失贵）';
   }
   // 偏官格（七杀格）判断
   else if ((counts['七杀'] || 0) >= 1 && (counts['正官'] || 0) === 0) {
@@ -232,42 +232,42 @@ function recognizeGeJu(pillars, dayStem, dayBranch) {
     geJuType = '七杀';
     principal = '以七杀为用，身强有制为贵';
     // 偏官格喜：食神制杀、伤官架杀、羊刃合杀、印绶化杀
-    喜忌 = '喜食神制杀、伤官架杀（阴日）、羊刃合杀、印绶化杀；忌官杀混杂无印';
+    xiJi = '喜食神制杀、伤官架杀（阴日）、羊刃合杀、印绶化杀；忌官杀混杂无印';
   }
   // 时上偏官格
   else if ((counts['七杀'] || 0) === 1 && pillars[3][1] === dayBranch) {
     geJuName = '时上偏官格（时上一位贵）';
     geJuType = '七杀';
     principal = '时柱见一位七杀，不杂他杀，格局纯粹';
-    喜忌 = '喜财星生杀（财滋七杀）、食神制杀、羊刃合杀；忌伤官/食神过盛无财';
+    xiJi = '喜财星生杀（财滋七杀）、食神制杀、羊刃合杀；忌伤官/食神过盛无财';
   }
   // 正财格
   else if ((counts['正财'] || 0) >= 1 && (counts['偏财'] || 0) === 0 && (counts['七杀'] || 0) === 0) {
     geJuName = '正财格';
     geJuType = '正财';
     principal = '以正财为用，财星有气（地支藏干）为贵';
-    喜忌 = '喜身弱运逢杀（杀可制比护财）；忌比肩分财、禄冲马亡';
+    xiJi = '喜身弱运逢杀（杀可制比护财）；忌比肩分财、禄冲马亡';
   }
   // 偏财格
   else if ((counts['偏财'] || 0) >= 1 && (counts['正财'] || 0) === 0) {
     geJuName = '偏财格';
     geJuType = '偏财';
     principal = '以偏财为用，异乡发迹之象';
-    喜忌 = '喜木火通根（金空则鸣）；忌身弱财旺、羊刃被冲';
+    xiJi = '喜木火通根（金空则鸣）；忌身弱财旺、羊刃被冲';
   }
   // 食神格
   else if ((counts['食神'] || 0) >= 1 && (counts['伤官'] || 0) === 0) {
     geJuName = '食神格';
     geJuType = '食神';
     principal = '以食神为用，寿星之名，泄秀之美';
-    喜忌 = '喜身强财透、印绶生身；忌刑冲、枭神夺食、官杀混杂';
+    xiJi = '喜身强财透、印绶生身；忌刑冲、枭神夺食、官杀混杂';
   }
   // 伤官格
   else if ((counts['伤官'] || 0) >= 1 && (counts['食神'] || 0) === 0) {
     geJuName = '伤官格';
     geJuType = '伤官';
     principal = '以伤官为用，创造力强，叛逆之星';
-    喜忌 = '喜配财星（伤官生财）、印绶约制（伤官见官为祸）；忌官杀直接相冲';
+    xiJi = '喜配财星（伤官生财）、印绶约制（伤官见官为祸）；忌官杀直接相冲';
   }
   // 印绶格
   else if ((counts['正印'] || 0) >= 1 || (counts['偏印'] || 0) >= 1) {
@@ -278,10 +278,10 @@ function recognizeGeJu(pillars, dayStem, dayBranch) {
     }
     geJuType = '印';
     principal = '以印绶为用，护身之本，文贵之象';
-    喜忌 = '喜官杀生印、财星破印（忌财太重）；偏印忌枭神夺食';
+    xiJi = '喜官杀生印、财星破印（忌财太重）；偏印忌枭神夺食';
   }
 
-  return { geJuName, geJuType, principal, 喜忌, counts, guanShaStatus: checkGuanSha(pillars, dayStem) };
+  return { geJuName, geJuType, principal, xiJi, counts, guanShaStatus: checkGuanSha(pillars, dayStem) };
 }
 
 // ============================================================
@@ -853,7 +853,7 @@ function place14Stars(diao) {
 function placeSiHua(yearStem, starPositions) {
   const siHua = SIHUA_TABLE[yearStem] || SIHUA_TABLE['甲'];
   const result = {};
-  for (const [type, starName] of Object.entries(sihua)) {
+  for (const [type, starName] of Object.entries(siHua)) {
     if (starPositions[starName] !== undefined) {
       const typeName = type === 'lu' ? '禄' : type === 'quan' ? '权' : type === 'ke' ? '科' : '忌';
       result[starName] = { type: typeName, palace: ZW_PALACES[starPositions[starName]] };
@@ -1437,7 +1437,7 @@ export async function onRequestGet(context) {
         name: geJu.geJuName,
         type: geJu.geJuType,
         principal: geJu.principal,
-        喜忌: geJu.喜忌,
+        喜忌: geJu.xiJi,
         guanShaStatus: geJu.guanShaStatus
       },
       tiaoHou: {
