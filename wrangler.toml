@@ -1,0 +1,11 @@
+main = "worker.js"
+compatibility_date = "2026-05-23"
+
+[assets]
+directory = "dist"
+
+[dev]
+port = 8899
+
+[build]
+command = ""
