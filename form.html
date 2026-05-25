@@ -3,527 +3,325 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="favicon.svg"><title>生辰信息 · 道器命理</title>
+  <link rel="icon" href="favicon.svg">
+  <title>生辰信息 · 道器命理</title>
   <meta name="description" content="填写您的出生信息，获取专属命理报告。">
-  
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    .upload-zone {
-      border: 1px dashed rgba(201,168,76,0.3);
-      border-radius: 10px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      background: rgba(26,31,46,0.3);
-      position: relative;
-      min-height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .upload-zone:hover { border-color: rgba(201,168,76,0.6); background: rgba(201,168,76,0.05); }
-    .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-    .upload-placeholder { color: #8B8577; }
-    .upload-preview { display: flex; align-items: center; justify-content: center; gap: 12px; }
-    .upload-preview img { border: 1px solid rgba(201,168,76,0.3); object-fit: cover; }
-  </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="index.html" class="nav-logo">道器</a>
-    </div>
-  </nav>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">道器</a>
+  </div>
+</nav>
 
-  <!-- Form Page -->
-  <main class="form-page">
-    <div class="form-container">
-      <div class="form-header">
-        <h1>生辰信息</h1>
-        <p>填写您的基本信息，我们为您精准排盘</p>
+<main class="form-page">
+  <div class="form-header">
+    <h1>生辰信息</h1>
+    <p>填写您的基本信息，我们为您精准排盘</p>
+  </div>
+
+  <div class="form-progress">
+    <div class="progress-step">
+      <span class="progress-dot active" id="step1Dot"></span>
+      <span class="progress-label active" id="step1Label">基本信息</span>
+    </div>
+    <div class="progress-step">
+      <span class="progress-dot" id="step2Dot"></span>
+      <span class="progress-label" id="step2Label">出生时间</span>
+    </div>
+    <div class="progress-step">
+      <span class="progress-dot" id="step3Dot"></span>
+      <span class="progress-label" id="step3Label">确认提交</span>
+    </div>
+  </div>
+
+  <form id="birthForm">
+    <!-- Step 1: Basic Info -->
+    <div id="step1" class="form-step">
+      <div class="form-group">
+        <label class="form-label" for="name">姓名</label>
+        <input type="text" id="name" name="name" class="form-input" placeholder="请输入您的姓名" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">性别</label>
+        <div class="form-radio-group">
+          <label class="form-radio">
+            <input type="radio" name="gender" value="male" required><span></span>男
+          </label>
+          <label class="form-radio">
+            <input type="radio" name="gender" value="female"><span></span>女
+          </label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-primary" onclick="nextStep(2)">下一步</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Birth Date & Time -->
+    <div id="step2" class="form-step" style="display:none;">
+      <div class="form-group">
+        <label class="form-label">历法</label>
+        <div class="form-radio-group">
+          <label class="form-radio">
+            <input type="radio" name="calendar" value="solar" checked><span></span>公历
+          </label>
+          <label class="form-radio">
+            <input type="radio" name="calendar" value="lunar"><span></span>农历
+          </label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="birthYear">出生年份</label>
+          <select id="birthYear" name="birthYear" class="form-select" required><option value="">选择年份</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="birthMonth">出生月份</label>
+          <select id="birthMonth" name="birthMonth" class="form-select" required><option value="">选择月份</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="birthDay">出生日期</label>
+          <select id="birthDay" name="birthDay" class="form-select" required><option value="">选择日期</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="birthHour">出生时辰</label>
+          <select id="birthHour" name="birthHour" class="form-select" required><option value="">选择时辰</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="location">出生地点（城市）</label>
+        <input type="text" id="location" name="location" class="form-input" placeholder="例如：北京、上海、广州">
       </div>
 
-      <!-- Progress Steps -->
-      <div class="form-progress">
-        <div class="progress-step">
-          <span class="progress-dot active" id="step1Dot"></span>
-          <span class="progress-label" id="step1Label">基本信息</span>
+      <!-- Facial Features -->
+      <div class="form-group">
+        <label class="form-label">五官特征 <span style="font-size:0.75rem;color:var(--text-muted);">（选填）</span></label>
+        <div class="feature-grid">
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="额头:宽额"><span>宽额</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="额头:窄额"><span>窄额</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="眉形:粗眉"><span>粗眉</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="眉形:细眉"><span>细眉</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="眼形:圆眼"><span>圆眼</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="眼形:长眼"><span>长眼</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="鼻形:高鼻"><span>高鼻</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="鼻形:塌鼻"><span>塌鼻</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="唇形:厚唇"><span>厚唇</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="唇形:薄唇"><span>薄唇</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="脸型:圆脸"><span>圆脸</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="脸型:方脸"><span>方脸</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="脸型:长脸"><span>长脸</span></label>
+          <label class="feature-check"><input type="checkbox" name="facialFeature" value="脸型:瓜子脸"><span>瓜子脸</span></label>
         </div>
-        <div class="progress-step">
-          <span class="progress-dot" id="step2Dot"></span>
-          <span class="progress-label" id="step2Label">出生时间</span>
-        </div>
-        <div class="progress-step">
-          <span class="progress-dot" id="step3Dot"></span>
-          <span class="progress-label" id="step3Label">确认提交</span>
+        <!-- Palm Features -->
+        <label class="form-label" style="margin-top:16px;">手掌特征 <span style="font-size:0.75rem;color:var(--text-muted);">（选填）</span></label>
+        <div class="feature-grid">
+          <label class="feature-check"><input type="checkbox" name="palmFeature" value="掌形:方形掌"><span>方形掌</span></label>
+          <label class="feature-check"><input type="checkbox" name="palmFeature" value="掌形:长形掌"><span>长形掌</span></label>
+          <label class="feature-check"><input type="checkbox" name="palmFeature" value="掌形:锥形掌"><span>锥形掌</span></label>
+          <label class="feature-check"><input type="checkbox" name="palmFeature" value="掌色:红润"><span>红润掌色</span></label>
+          <label class="feature-check"><input type="checkbox" name="palmFeature" value="掌色:苍白"><span>苍白掌色</span></label>
+          <label class="feature-check"><input type="checkbox" name="palmFeature" value="生命线:深长"><span>生命线深长</span></label>
+          <label class="feature-check"><input type="checkbox" name="palmFeature" value="智慧线:平直"><span>智慧线平直</span></label>
+          <label class="feature-check"><input type="checkbox" name="palmFeature" value="感情线:深长"><span>感情线深长</span></label>
         </div>
       </div>
 
-      <!-- Step 1: Basic Info -->
-      <form id="birthForm">
-        <div id="step1" class="form-step">
-          <div class="form-group">
-            <label class="form-label" for="name">姓名</label>
-            <input type="text" id="name" name="name" class="form-input" placeholder="请输入您的姓名" required>
+      <!-- Photo Upload -->
+      <div class="form-group">
+        <label class="form-label">👁 面相照片 <span style="font-size:0.75rem;color:var(--text-muted);">（选填，清晰正面照）</span></label>
+        <div class="upload-zone" id="faceUploadZone" onclick="document.getElementById('facePhoto').click()">
+          <input type="file" id="facePhoto" name="facePhoto" accept="image/*" onchange="previewUpload('face')">
+          <div class="upload-placeholder" id="faceUploadPlaceholder">
+            <div style="font-size:1.5rem;">📷</div>
+            <p style="margin-top:6px;font-size:0.85rem;">点击上传清晰面部正面照</p>
+            <p style="font-size:0.75rem;color:var(--text-muted);">支持 JPG/PNG，建议正面免冠</p>
           </div>
-          <div class="form-group">
-            <label class="form-label">性别</label>
-            <div class="form-radio-group">
-              <label class="form-radio">
-                <input type="radio" name="gender" value="male" required>
-                <span></span>
-                男
-              </label>
-              <label class="form-radio">
-                <input type="radio" name="gender" value="female">
-                <span></span>
-                女
-              </label>
+          <div class="upload-preview" id="faceUploadPreview" style="display:none;">
+            <img id="facePreviewImg" src="" alt="预览" style="max-width:120px;max-height:90px;border-radius:8px;">
+            <div style="margin-left:10px;text-align:left;">
+              <div id="faceFileName" style="font-size:0.82rem;word-break:break-all;"></div>
+              <button type="button" onclick="event.stopPropagation();removeUpload('face')" style="margin-top:4px;font-size:0.75rem;color:var(--red);background:none;border:none;cursor:pointer;text-decoration:underline;">移除</button>
             </div>
-          </div>
-          <div class="form-actions">
-            <button type="button" class="btn btn-primary" onclick="nextStep(2)">下一步</button>
           </div>
         </div>
+        <div id="faceStatus" style="font-size:0.8rem;margin-top:6px;"></div>
+      </div>
 
-        <!-- Step 2: Birth Date & Time -->
-        <div id="step2" class="form-step" style="display: none;">
-          <div class="form-group">
-            <label class="form-label">历法</label>
-            <div class="form-radio-group">
-              <label class="form-radio">
-                <input type="radio" name="calendar" value="solar" checked>
-                <span></span>
-                公历
-              </label>
-              <label class="form-radio">
-                <input type="radio" name="calendar" value="lunar">
-                <span></span>
-                农历
-              </label>
-            </div>
+      <div class="form-group">
+        <label class="form-label">✋ 手相照片 <span style="font-size:0.75rem;color:var(--text-muted);">（选填，掌心朝上）</span></label>
+        <div class="upload-zone" id="palmUploadZone" onclick="document.getElementById('palmPhoto').click()">
+          <input type="file" id="palmPhoto" name="palmPhoto" accept="image/*" onchange="previewUpload('palm')">
+          <div class="upload-placeholder" id="palmUploadPlaceholder">
+            <div style="font-size:1.5rem;">🖐</div>
+            <p style="margin-top:6px;font-size:0.85rem;">点击上传手掌照片</p>
+            <p style="font-size:0.75rem;color:var(--text-muted);">请拍摄掌心朝上、清晰可见纹路</p>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="birthYear">出生年份</label>
-              <select id="birthYear" name="birthYear" class="form-select" required>
-                <option value="">选择年份</option>
-              </select>
+          <div class="upload-preview" id="palmUploadPreview" style="display:none;">
+            <img id="palmPreviewImg" src="" alt="预览" style="max-width:120px;max-height:90px;border-radius:8px;">
+            <div style="margin-left:10px;text-align:left;">
+              <div id="palmFileName" style="font-size:0.82rem;word-break:break-all;"></div>
+              <button type="button" onclick="event.stopPropagation();removeUpload('palm')" style="margin-top:4px;font-size:0.75rem;color:var(--red);background:none;border:none;cursor:pointer;text-decoration:underline;">移除</button>
             </div>
-            <div class="form-group">
-              <label class="form-label" for="birthMonth">出生月份</label>
-              <select id="birthMonth" name="birthMonth" class="form-select" required>
-                <option value="">选择月份</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="birthDay">出生日期</label>
-              <select id="birthDay" name="birthDay" class="form-select" required>
-                <option value="">选择日期</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="birthHour">出生时辰</label>
-              <select id="birthHour" name="birthHour" class="form-select" required>
-                <option value="">选择时辰</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="location">出生地点（城市）</label>
-            <input type="text" id="location" name="location" class="form-input" placeholder="例如：北京、上海、广州">
-          </div>
-          <div class="form-row">
-            <div class="form-group" style="margin-bottom:var(--space-md);">
-              <label class="form-label">五官特征 <span style="font-size:0.75rem;color:#8B8577;">（选填，提供后解锁面相分析）</span></label>
-              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.15)'">
-                  <input type="checkbox" name="facialFeature" value="额头:宽额" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">宽额</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="额头:窄额" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">窄额</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="眉形:粗眉" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">粗眉</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="眉形:细眉" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">细眉</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="眼形:圆眼" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">圆眼</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="眼形:长眼" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">长眼</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="鼻形:高鼻" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">高鼻</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="鼻形:塌鼻" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">塌鼻</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="唇形:厚唇" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">厚唇</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="唇形:薄唇" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">薄唇</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="脸型:圆脸" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">圆脸</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="脸型:方脸" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">方脸</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="脸型:长脸" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">长脸</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="facialFeature" value="脸型:瓜子脸" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">瓜子脸</span>
-                </label>
-              </div>
-            </div>
-            <div class="form-group" style="margin-bottom:var(--space-md);">
-              <label class="form-label">手掌特征 <span style="font-size:0.75rem;color:#8B8577;">（选填，提供后解锁手相分析）</span></label>
-              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="palmFeature" value="掌形:方形掌" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">方形掌</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="palmFeature" value="掌形:长形掌" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">长形掌</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="palmFeature" value="掌形:锥形掌" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">锥形掌</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="palmFeature" value="掌色:红润" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">红润掌色</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="palmFeature" value="掌色:苍白" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">苍白掌色</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="palmFeature" value="生命线:深长" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">生命线深长</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="palmFeature" value="智慧线:平直" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">智慧线平直</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(26,31,46,0.4);border:1px solid rgba(201,168,76,0.15);border-radius:8px;cursor:pointer;">
-                  <input type="checkbox" name="palmFeature" value="感情线:深长" style="accent-color:#C9A84C;"><span style="font-size:0.82rem;color:#E8E0D4;">感情线深长</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- 照片上传区域 -->
-            <div class="form-group" style="margin-bottom:var(--space-md);">
-              <label class="form-label">👁 面相照片上传 <span style="font-size:0.75rem;color:#8B8577;">（选填，清晰正面照）</span></label>
-              <div class="upload-zone" id="faceUploadZone">
-                <input type="file" id="facePhoto" name="facePhoto" accept="image/*" style="display:none;" onchange="previewUpload('face')">
-                <div class="upload-placeholder" id="faceUploadPlaceholder">
-                  <span style="font-size:1.5rem;">📷</span>
-                  <p style="margin-top:6px;font-size:0.85rem;">点击上传清晰面部正面照</p>
-                  <p style="font-size:0.75rem;color:#8B8577;">支持 JPG/PNG，建议正面免冠</p>
-                </div>
-                <div class="upload-preview" id="faceUploadPreview" style="display:none;">
-                  <img id="facePreviewImg" src="" alt="预览" style="max-width:120px;max-height:90px;border-radius:8px;object-fit:cover;">
-                  <div style="margin-left:10px;text-align:left;">
-                    <div id="faceFileName" style="font-size:0.82rem;color:#E8E0D4;word-break:break-all;"></div>
-                    <button type="button" onclick="removeUpload('face')" style="margin-top:4px;font-size:0.75rem;color:#C75B5B;background:none;border:none;cursor:pointer;text-decoration:underline;">移除</button>
-                  </div>
-                </div>
-              </div>
-              <div id="faceStatus" style="font-size:0.8rem;margin-top:6px;"></div>
-            </div>
-
-            <div class="form-group" style="margin-bottom:var(--space-md);">
-              <label class="form-label">✋ 手相照片上传 <span style="font-size:0.75rem;color:#8B8577;">（选填，掌心朝上照片）</span></label>
-              <div class="upload-zone" id="palmUploadZone">
-                <input type="file" id="palmPhoto" name="palmPhoto" accept="image/*" style="display:none;" onchange="previewUpload('palm')">
-                <div class="upload-placeholder" id="palmUploadPlaceholder">
-                  <span style="font-size:1.5rem;">🖐</span>
-                  <p style="margin-top:6px;font-size:0.85rem;">点击上传手掌照片</p>
-                  <p style="font-size:0.75rem;color:#8B8577;">请拍摄掌心朝上、清晰可见纹路</p>
-                </div>
-                <div class="upload-preview" id="palmUploadPreview" style="display:none;">
-                  <img id="palmPreviewImg" src="" alt="预览" style="max-width:120px;max-height:90px;border-radius:8px;object-fit:cover;">
-                  <div style="margin-left:10px;text-align:left;">
-                    <div id="palmFileName" style="font-size:0.82rem;color:#E8E0D4;word-break:break-all;"></div>
-                    <button type="button" onclick="removeUpload('palm')" style="margin-top:4px;font-size:0.75rem;color:#C75B5B;background:none;border:none;cursor:pointer;text-decoration:underline;">移除</button>
-                  </div>
-                </div>
-              </div>
-              <div id="palmStatus" style="font-size:0.8rem;margin-top:6px;"></div>
-            </div>
-          </div>
-          <div class="form-actions">
-            <button type="button" class="btn btn-ghost" onclick="prevStep(1)">上一步</button>
-            <button type="button" class="btn btn-primary" onclick="nextStep(3)">下一步</button>
           </div>
         </div>
+        <div id="palmStatus" style="font-size:0.8rem;margin-top:6px;"></div>
+      </div>
 
-        <!-- Step 3: Confirm -->
-        <div id="step3" class="form-step" style="display: none;">
-          <div class="card" style="margin-bottom: var(--space-lg);">
-            <h3 style="margin-bottom: var(--space-md); text-align: center;">确认信息</h3>
-            <div style="color: var(--color-text-muted);">
-              <p style="margin-bottom: var(--space-sm);"><strong style="color: var(--color-text);">姓名：</strong><span id="confirmName">-</span></p>
-              <p style="margin-bottom: var(--space-sm);"><strong style="color: var(--color-text);">性别：</strong><span id="confirmGender">-</span></p>
-              <p style="margin-bottom: var(--space-sm);"><strong style="color: var(--color-text);">出生：</strong><span id="confirmBirth">-</span></p>
-              <p><strong style="color: var(--color-text);">历法：</strong><span id="confirmCalendar">-</span></p>
-            </div>
-          </div>
-          <div class="form-actions">
-            <button type="button" class="btn btn-ghost" onclick="prevStep(2)">上一步</button>
-            <button type="submit" class="btn btn-primary">提交测算</button>
-          </div>
-        </div>
-      </form>
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" onclick="prevStep(1)">上一步</button>
+        <button type="button" class="btn btn-primary" onclick="nextStep(3)">下一步</button>
+      </div>
     </div>
-  </main>
 
-  <!-- JavaScript -->
-  <script>
-    let currentStep = 1;
+    <!-- Step 3: Confirm -->
+    <div id="step3" class="form-step" style="display:none;">
+      <div class="card" style="margin-bottom:20px;">
+        <h3>确认信息</h3>
+        <div style="color:var(--text-muted);">
+          <p style="margin-bottom:8px;"><strong style="color:var(--text);">姓名：</strong><span id="confirmName">-</span></p>
+          <p style="margin-bottom:8px;"><strong style="color:var(--text);">性别：</strong><span id="confirmGender">-</span></p>
+          <p style="margin-bottom:8px;"><strong style="color:var(--text);">出生：</strong><span id="confirmBirth">-</span></p>
+          <p><strong style="color:var(--text);">历法：</strong><span id="confirmCalendar">-</span></p>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" onclick="prevStep(2)">上一步</button>
+        <button type="submit" class="btn btn-primary">提交测算</button>
+      </div>
+    </div>
+  </form>
+</main>
 
-    // Initialize year/month/day selects
-    function initSelects() {
-      const yearSelect = document.getElementById('birthYear');
-      const monthSelect = document.getElementById('birthMonth');
-      const daySelect = document.getElementById('birthDay');
-      const hourSelect = document.getElementById('birthHour');
+<script>
+let currentStep = 1;
 
-      // Years: 1940 to current year
-      const currentYear = new Date().getFullYear();
-      for (let y = currentYear; y >= 1940; y--) {
-        const opt = document.createElement('option');
-        opt.value = y;
-        opt.textContent = y + '年';
-        yearSelect.appendChild(opt);
-      }
+function initSelects() {
+  const yearSel = document.getElementById('birthYear');
+  const monthSel = document.getElementById('birthMonth');
+  const daySel = document.getElementById('birthDay');
+  const hourSel = document.getElementById('birthHour');
+  const cy = new Date().getFullYear();
+  for (let y = cy; y >= 1940; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y + '年'; yearSel.appendChild(o); }
+  for (let m = 1; m <= 12; m++) { const o = document.createElement('option'); o.value = m; o.textContent = m + '月'; monthSel.appendChild(o); }
+  for (let d = 1; d <= 31; d++) { const o = document.createElement('option'); o.value = d; o.textContent = d + '日'; daySel.appendChild(o); }
+  const hours = [
+    {value:'子时',label:'子时 (23:00-01:00)'},{value:'丑时',label:'丑时 (01:00-03:00)'},
+    {value:'寅时',label:'寅时 (03:00-05:00)'},{value:'卯时',label:'卯时 (05:00-07:00)'},
+    {value:'辰时',label:'辰时 (07:00-09:00)'},{value:'巳时',label:'巳时 (09:00-11:00)'},
+    {value:'午时',label:'午时 (11:00-13:00)'},{value:'未时',label:'未时 (13:00-15:00)'},
+    {value:'申时',label:'申时 (15:00-17:00)'},{value:'酉时',label:'酉时 (17:00-19:00)'},
+    {value:'戌时',label:'戌时 (19:00-21:00)'},{value:'亥时',label:'亥时 (21:00-23:00)'}
+  ];
+  hours.forEach(h => { const o = document.createElement('option'); o.value = h.value; o.textContent = h.label; hourSel.appendChild(o); });
+  monthSel.addEventListener('change', updateDays);
+  yearSel.addEventListener('change', updateDays);
+}
 
-      // Months 1-12
-      for (let m = 1; m <= 12; m++) {
-        const opt = document.createElement('option');
-        opt.value = m;
-        opt.textContent = m + '月';
-        monthSelect.appendChild(opt);
-      }
+function updateDays() {
+  const y = parseInt(document.getElementById('birthYear').value);
+  const m = parseInt(document.getElementById('birthMonth').value);
+  const ds = document.getElementById('birthDay');
+  if (!y || !m) return;
+  const dim = new Date(y, m, 0).getDate();
+  ds.innerHTML = '<option value="">选择日期</option>';
+  for (let d = 1; d <= dim; d++) { const o = document.createElement('option'); o.value = d; o.textContent = d + '日'; ds.appendChild(o); }
+}
 
-      // Days 1-31 (simplified, real app would check month/year)
-      for (let d = 1; d <= 31; d++) {
-        const opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d + '日';
-        daySelect.appendChild(opt);
-      }
+function updateProgress(step) {
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('step' + i + 'Dot');
+    const label = document.getElementById('step' + i + 'Label');
+    dot.className = 'progress-dot' + (i < step ? ' completed' : i === step ? ' active' : '');
+    label.className = 'progress-label' + (i === step ? ' active' : '');
+  }
+}
 
-      // Hours: 子时(23-01) 丑时(01-03) 寅时(03-05) 卯时(05-07) 辰时(07-09) 巳时(09-11) 午时(11-13) 未时(13-15) 申时(15-17) 酉时(17-19) 戌时(19-21) 亥时(21-23)
-      const hours = [
-        { value: '子时', label: '子时 (23:00-01:00)' },
-        { value: '丑时', label: '丑时 (01:00-03:00)' },
-        { value: '寅时', label: '寅时 (03:00-05:00)' },
-        { value: '卯时', label: '卯时 (05:00-07:00)' },
-        { value: '辰时', label: '辰时 (07:00-09:00)' },
-        { value: '巳时', label: '巳时 (09:00-11:00)' },
-        { value: '午时', label: '午时 (11:00-13:00)' },
-        { value: '未时', label: '未时 (13:00-15:00)' },
-        { value: '申时', label: '申时 (15:00-17:00)' },
-        { value: '酉时', label: '酉时 (17:00-19:00)' },
-        { value: '戌时', label: '戌时 (19:00-21:00)' },
-        { value: '亥时', label: '亥时 (21:00-23:00)' }
-      ];
+function showStep(step) {
+  document.querySelectorAll('.form-step').forEach((el, i) => { el.style.display = (i + 1) === step ? 'block' : 'none'; });
+  updateProgress(step);
+}
 
-      hours.forEach(h => {
-        const opt = document.createElement('option');
-        opt.value = h.value;
-        opt.textContent = h.label;
-        hourSelect.appendChild(opt);
-      });
+function nextStep(step) {
+  if (step === 2) {
+    if (!document.getElementById('name').value.trim()) { alert('请输入姓名'); return; }
+    if (!document.querySelector('input[name="gender"]:checked')) { alert('请选择性别'); return; }
+  }
+  if (step === 3) {
+    const y = document.getElementById('birthYear').value, m = document.getElementById('birthMonth').value;
+    const d = document.getElementById('birthDay').value, h = document.getElementById('birthHour').value;
+    if (!y || !m || !d || !h) { alert('请填写完整的出生信息'); return; }
+    const name = document.getElementById('name').value;
+    const gender = document.querySelector('input[name="gender"]:checked')?.value;
+    const calendar = document.querySelector('input[name="calendar"]:checked')?.value;
+    document.getElementById('confirmName').textContent = name;
+    document.getElementById('confirmGender').textContent = gender === 'male' ? '男' : '女';
+    document.getElementById('confirmBirth').textContent = `${y}年${m}月${d}日 ${h}`;
+    document.getElementById('confirmCalendar').textContent = calendar === 'solar' ? '公历' : '农历';
+  }
+  currentStep = step; showStep(step);
+}
 
-      // Update days when month changes
-      monthSelect.addEventListener('change', updateDays);
-      yearSelect.addEventListener('change', updateDays);
-    }
+function prevStep(step) { currentStep = step; showStep(step); }
 
-    function updateDays() {
-      const year = parseInt(document.getElementById('birthYear').value);
-      const month = parseInt(document.getElementById('birthMonth').value);
-      const daySelect = document.getElementById('birthDay');
-      
-      if (!year || !month) return;
+function previewUpload(type) {
+  const input = document.getElementById(type === 'face' ? 'facePhoto' : 'palmPhoto');
+  const placeholder = document.getElementById(type === 'face' ? 'faceUploadPlaceholder' : 'palmUploadPlaceholder');
+  const preview = document.getElementById(type === 'face' ? 'faceUploadPreview' : 'palmUploadPreview');
+  const filenameEl = document.getElementById(type === 'face' ? 'faceFileName' : 'palmFileName');
+  const previewImg = document.getElementById(type === 'face' ? 'facePreviewImg' : 'palmPreviewImg');
+  const status = document.getElementById(type === 'face' ? 'faceStatus' : 'palmStatus');
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    filenameEl.textContent = file.name;
+    status.textContent = '✅ 已选择: ' + file.name; status.style.color = 'var(--jade)';
+    sessionStorage.setItem(type === 'face' ? 'hasFacePhoto' : 'hasPalmPhoto', 'true');
+    const reader = new FileReader();
+    reader.onload = function(e) { previewImg.src = e.target.result; sessionStorage.setItem(type === 'face' ? 'facePhotoData' : 'palmPhotoData', e.target.result); };
+    reader.readAsDataURL(file);
+    placeholder.style.display = 'none'; preview.style.display = 'flex';
+  }
+}
 
-      const daysInMonth = new Date(year, month, 0).getDate();
-      daySelect.innerHTML = '<option value="">选择日期</option>';
-      
-      for (let d = 1; d <= daysInMonth; d++) {
-        const opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d + '日';
-        daySelect.appendChild(opt);
-      }
-    }
+function removeUpload(type) {
+  const input = document.getElementById(type === 'face' ? 'facePhoto' : 'palmPhoto');
+  const placeholder = document.getElementById(type === 'face' ? 'faceUploadPlaceholder' : 'palmUploadPlaceholder');
+  const preview = document.getElementById(type === 'face' ? 'faceUploadPreview' : 'palmUploadPreview');
+  const status = document.getElementById(type === 'face' ? 'faceStatus' : 'palmStatus');
+  input.value = ''; sessionStorage.removeItem(type === 'face' ? 'hasFacePhoto' : 'hasPalmPhoto');
+  sessionStorage.removeItem(type === 'face' ? 'facePhotoData' : 'palmPhotoData');
+  placeholder.style.display = 'block'; preview.style.display = 'none'; status.textContent = '';
+}
 
-    function updateProgress(step) {
-      for (let i = 1; i <= 3; i++) {
-        const dot = document.getElementById('step' + i + 'Dot');
-        const label = document.getElementById('step' + i + 'Label');
-        
-        if (i < step) {
-          dot.classList.remove('active');
-          dot.classList.add('completed');
-          label.classList.remove('active');
-        } else if (i === step) {
-          dot.classList.add('active');
-          dot.classList.remove('completed');
-          label.classList.add('active');
-        } else {
-          dot.classList.remove('active', 'completed');
-          label.classList.remove('active');
-        }
-      }
-    }
+document.getElementById('birthForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = {
+    name: document.getElementById('name').value,
+    gender: document.querySelector('input[name="gender"]:checked')?.value,
+    calendar: document.querySelector('input[name="calendar"]:checked')?.value,
+    year: document.getElementById('birthYear').value,
+    month: document.getElementById('birthMonth').value,
+    day: document.getElementById('birthDay').value,
+    hour: document.getElementById('birthHour').value,
+    location: document.getElementById('location').value || ''
+  };
+  const ff = Array.from(document.querySelectorAll('input[name="facialFeature"]:checked')).map(cb => cb.value);
+  if (ff.length > 0) formData.facialFeatures = ff;
+  const pf = Array.from(document.querySelectorAll('input[name="palmFeature"]:checked')).map(cb => cb.value);
+  if (pf.length > 0) formData.palmFeatures = pf;
+  sessionStorage.setItem('birthData', JSON.stringify(formData));
+  window.location.href = 'report.html';
+});
 
-    function showStep(step) {
-      document.querySelectorAll('.form-step').forEach((el, idx) => {
-        el.style.display = (idx + 1) === step ? 'block' : 'none';
-      });
-      updateProgress(step);
-    }
-
-    function nextStep(step) {
-      // Validate current step
-      if (step === 2) {
-        const name = document.getElementById('name').value.trim();
-        const gender = document.querySelector('input[name="gender"]:checked');
-        if (!name) {
-          alert('请输入姓名');
-          return;
-        }
-        if (!gender) {
-          alert('请选择性别');
-          return;
-        }
-      }
-      
-      if (step === 3) {
-        const year = document.getElementById('birthYear').value;
-        const month = document.getElementById('birthMonth').value;
-        const day = document.getElementById('birthDay').value;
-        const hour = document.getElementById('birthHour').value;
-        
-        if (!year || !month || !day || !hour) {
-          alert('请填写完整的出生信息');
-          return;
-        }
-
-        // Update confirmation
-        const name = document.getElementById('name').value;
-        const gender = document.querySelector('input[name="gender"]:checked')?.value;
-        const calendar = document.querySelector('input[name="calendar"]:checked')?.value;
-
-        document.getElementById('confirmName').textContent = name;
-        document.getElementById('confirmGender').textContent = gender === 'male' ? '男' : '女';
-        document.getElementById('confirmBirth').textContent = 
-          `${year}年${month}月${day}日 ${hour}`;
-        document.getElementById('confirmCalendar').textContent = 
-          calendar === 'solar' ? '公历' : '农历';
-      }
-
-      currentStep = step;
-      showStep(step);
-    }
-
-    function prevStep(step) {
-      currentStep = step;
-      showStep(step);
-    }
-
-    // Upload preview
-    function previewUpload(type) {
-      const input = document.getElementById(type === 'face' ? 'facePhoto' : 'palmPhoto');
-      const placeholder = document.getElementById(type === 'face' ? 'faceUploadPlaceholder' : 'palmUploadPlaceholder');
-      const preview = document.getElementById(type === 'face' ? 'faceUploadPreview' : 'palmUploadPreview');
-      const filenameEl = document.getElementById(type === 'face' ? 'faceFileName' : 'palmFileName');
-      const previewImg = document.getElementById(type === 'face' ? 'facePreviewImg' : 'palmPreviewImg');
-      const status = document.getElementById(type === 'face' ? 'faceStatus' : 'palmStatus');
-      
-      if (input.files && input.files[0]) {
-        const file = input.files[0];
-        filenameEl.textContent = file.name;
-        status.textContent = '✅ 已选择: ' + file.name;
-        status.style.color = '#4A9E8B';
-        sessionStorage.setItem(type === 'face' ? 'hasFacePhoto' : 'hasPalmPhoto', 'true');
-        
-        // Read as base64 for storage
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const base64 = e.target.result;
-          sessionStorage.setItem(type === 'face' ? 'facePhotoData' : 'palmPhotoData', base64);
-          previewImg.src = base64;
-        };
-        reader.readAsDataURL(file);
-        
-        placeholder.style.display = 'none';
-        preview.style.display = 'flex';
-      }
-    }
-    
-    function removeUpload(type) {
-      const input = document.getElementById(type === 'face' ? 'facePhoto' : 'palmPhoto');
-      const placeholder = document.getElementById(type === 'face' ? 'faceUploadPlaceholder' : 'palmUploadPlaceholder');
-      const preview = document.getElementById(type === 'face' ? 'faceUploadPreview' : 'palmUploadPreview');
-      const status = document.getElementById(type === 'face' ? 'faceStatus' : 'palmStatus');
-      input.value = '';
-      sessionStorage.removeItem(type === 'face' ? 'hasFacePhoto' : 'hasPalmPhoto');
-      sessionStorage.removeItem(type === 'face' ? 'facePhotoData' : 'palmPhotoData');
-      placeholder.style.display = 'block';
-      preview.style.display = 'none';
-      status.textContent = '';
-    }
-
-    // Form submission
-    document.getElementById('birthForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Collect all form data
-      const formData = {
-        name: document.getElementById('name').value,
-        gender: document.querySelector('input[name="gender"]:checked')?.value,
-        calendar: document.querySelector('input[name="calendar"]:checked')?.value,
-        year: document.getElementById('birthYear').value,
-        month: document.getElementById('birthMonth').value,
-        day: document.getElementById('birthDay').value,
-        hour: document.getElementById('birthHour').value,
-        location: document.getElementById('location').value || ''
-      };
-
-      // Collect facial features
-      const facialFeatures = Array.from(document.querySelectorAll('input[name="facialFeature"]:checked')).map(cb => cb.value);
-      if (facialFeatures.length > 0) formData.facialFeatures = facialFeatures;
-
-      // Collect palm features
-      const palmFeatures = Array.from(document.querySelectorAll('input[name="palmFeature"]:checked')).map(cb => cb.value);
-      if (palmFeatures.length > 0) formData.palmFeatures = palmFeatures;
-
-      // Store in sessionStorage
-      sessionStorage.setItem('birthData', JSON.stringify(formData));
-
-      // Navigate to report page
-      window.location.href = 'report.html';
-    });
-
-    // Initialize
-    initSelects();
-    showStep(1);
-  </script>
-  <script src="js/app.js"></script>
+initSelects(); showStep(1);
+</script>
+<script src="js/app.js"></script>
 </body>
 </html>
