@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="favicon.svg">
+  <title>知识中心 · 道器命理</title>
+  <meta name="description" content="天干地支、五行生克、子午流注、四时调养、本草经方、山医命相卜、二十八宿、命理基础——经典溯源，道器传承">
+  <meta property="og:title" content="知识中心 · 道器命理">
+  <meta property="og:description" content="经典溯源，道器传承——从六十甲子到四柱八字，从天干地支到本草经方">
+  <meta property="og:type" content="website">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Knowledge page specific styles */
+    .knowledge-hero {
+      text-align: center;
+      padding: 60px 24px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .knowledge-hero::before {
+      content: '知';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-serif);
+      font-size: 14rem;
+      color: rgba(201,168,76,0.03);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .knowledge-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3rem);
+      background: linear-gradient(180deg, #e8d494 0%, #c9a84c 60%, #8b7530 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .knowledge-hero p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* Category grid */
+    .knowledge-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    @media (max-width: 768px) {
+      .knowledge-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .knowledge-grid { grid-template-columns: 1fr; }
+    }
+    .knowledge-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.35s;
+      text-decoration: none;
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+    .knowledge-card:hover {
+      border-color: var(--gold-soft);
+      background: rgba(201,168,76,0.04);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+    .knowledge-card .kc-icon {
+      font-size: 2.4rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .knowledge-card .kc-title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .knowledge-card .kc-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .knowledge-card .kc-hash {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      font-family: monospace;
+      margin-top: 8px;
+      display: block;
+    }
+
+    /* Section styling */
+    .knowledge-section {
+      padding: 60px 0;
+      scroll-margin-top: 60px;
+    }
+    .knowledge-section:nth-child(even) {
+      background: rgba(13,17,23,0.6);
+    }
+    .ks-header {
+      text-align: center;
+      margin-bottom: 32px;
+      position: relative;
+    }
+    .ks-header h2 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .ks-header .ks-subtitle {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+    .ks-header .ks-sources {
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      margin-top: 8px;
+    }
+    .ks-back {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--gold-dim);
+      transition: all 0.2s;
+    }
+    .ks-back:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    /* Content blocks */
+    .ks-content {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .ks-content p {
+      color: var(--text);
+      font-size: 0.9rem;
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+    .ks-content h3 {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ks-content h4 {
+      font-size: 0.95rem;
+      color: #c8c0b6;
+      margin: 16px 0 8px;
+    }
+
+    /* Reference quote block */
+    .ks-quote {
+      background: rgba(201,168,76,0.04);
+      border-left: 3px solid var(--gold-soft);
+      padding: 16px 20px;
+      margin: 20px 0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    .ks-quote blockquote {
+      font-family: var(--font-serif);
+      font-size: 0.92rem;
+      color: #c8c0b6;
+      font-style: italic;
+      line-height: 2;
+    }
+    .ks-quote cite {
+      display: block;
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-style: normal;
+    }
+
+    /* Nayin table */
+    .nayin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin: 20px 0;
+    }
+    .nayin-table td, .nayin-table th {
+      padding: 8px 10px;
+      border: 1px solid rgba(201,168,76,0.1);
+      text-align: center;
+    }
+    .nayin-table th {
+      background: rgba(201,168,76,0.06);
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+    .nayin-table td {
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .nayin-table td:first-child {
+      color: var(--gold);
+      font-family: var(--font-serif);
+      font-weight: 600;
+    }
+
+    /* Stems grid */
+    .stem-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 600px) {
+      .stem-detail-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .stem-detail-item {
+      background: rgba(26,31,46,0.5);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 8px;
+      text-align: center;
+    }
+    .stem-detail-item .sd-char {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    .stem-detail-item .sd-info {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .stem-detail-item.wood .sd-char { color: #7BA023; }
+    .stem-detail-item.fire .sd-char { color: #E84855; }
+    .stem-detail-item.earth .sd-char { color: #D4953F; }
+    .stem-detail-item.metal .sd-char { color: #B8B9BD; }
+    .stem-detail-item.water .sd-char { color: #5B95C8; }
+
+    /* Wuxing cycle diagram */
+    .wuxing-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .wuxing-node-lg {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid;
+      font-size: 0.8rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .wuxing-node-lg:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(201,168,76,0.3);
+    }
+    .wuxing-node-lg .wn-symbol {
+      font-size: 1.4rem;
+    }
+    .wuxing-node-lg .wn-name {
+      font-weight: 700;
+      margin: 2px 0;
+    }
+    .wuxing-node-lg .wn-organs {
+      font-size: 0.65rem;
+      opacity: 0.7;
+    }
+    .wl-wood { border-color: rgba(107,142,35,0.6); background: rgba(107,142,35,0.08); color: #7BA023; }
+    .wl-fire { border-color: rgba(220,53,69,0.6); background: rgba(220,53,69,0.08); color: #E84855; }
+    .wl-earth { border-color: rgba(205,133,63,0.6); background: rgba(205,133,63,0.08); color: #D4953F; }
+    .wl-metal { border-color: rgba(168,169,173,0.6); background: rgba(168,169,173,0.08); color: #B8B9BD; }
+    .wl-water { border-color: rgba(70,130,180,0.6); background: rgba(70,130,180,0.08); color: #5B95C8; }
+
+    /* Wuxing relations */
+    .wx-arrow {
+      font-size: 1.2rem;
+      color: var(--gold);
+      opacity: 0.6;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Meridian detail cards */
+    .meridian-detail-item {
+      background: rgba(26,31,46,0.45);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 16px;
+      align-items: start;
+      transition: all 0.3s;
+    }
+    .meridian-detail-item:hover {
+      border-color: var(--gold-soft);
+      background: rgba(201,168,76,0.04);
+    }
+    @media (max-width: 480px) {
+      .meridian-detail-item { grid-template-columns: 1fr; }
+    }
+    .md-time {
+      text-align: center;
+    }
+    .md-hour {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .md-range {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      font-family: monospace;
+    }
+    .md-organ {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .md-channel {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .md-body h4 {
+      color: var(--gold);
+      font-size: 0.92rem;
+      margin: 0 0 8px;
+    }
+    .md-body p {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+    .md-tip {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 3px 10px;
+      background: rgba(74,158,139,0.1);
+      border-radius: 100px;
+      font-size: 0.7rem;
+      color: var(--jade);
+    }
+
+    /* Season detail */
+    .season-detail {
+      background: rgba(26,31,46,0.45);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .season-detail .sd-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .season-detail .sd-icon {
+      font-size: 2.2rem;
+    }
+    .season-detail .sd-title {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: var(--gold);
+    }
+    .season-detail .sd-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .season-detail p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+    .season-detail .sd-modern {
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: rgba(74,158,139,0.05);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(74,158,139,0.1);
+    }
+    .season-detail .sd-modern h5 {
+      color: var(--jade);
+      font-size: 0.8rem;
+      margin-bottom: 6px;
+    }
+    .season-detail .sd-modern ul {
+      list-style: none;
+      padding: 0;
+    }
+    .season-detail .sd-modern li {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 3px 0;
+      line-height: 1.6;
+    }
+    .season-detail .sd-modern li::before {
+      content: '• ';
+      color: var(--jade);
+    }
+
+    /* Formula card */
+    .formula-card {
+      background: rgba(26,31,46,0.5);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .formula-card .fc-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .formula-card .fc-name {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: var(--gold);
+    }
+    .formula-card .fc-source {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+    .formula-card .fc-herbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .formula-card .fc-herb {
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .fc-herb.jun { background: rgba(201,168,76,0.12); border: 1px solid var(--gold-soft); color: var(--gold); }
+    .fc-herb.chen { background: rgba(74,158,139,0.08); border: 1px solid rgba(74,158,139,0.2); color: var(--jade); }
+    .fc-herb.zuo { background: rgba(107,91,149,0.08); border: 1px solid rgba(107,91,149,0.2); color: #6B5B95; }
+    .fc-herb.shi { background: rgba(168,169,173,0.08); border: 1px solid rgba(168,169,173,0.2); color: #A8A9AD; }
+    .fc-herb .fc-role {
+      font-size: 0.65rem;
+      font-weight: 400;
+      margin-left: 4px;
+    }
+    .formula-card .fc-desc {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    /* Acupoint detail */
+    .acupoint-card {
+      background: rgba(26,31,46,0.45);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: 100px 140px 1fr;
+      gap: 16px;
+      align-items: start;
+      transition: all 0.3s;
+    }
+    .acupoint-card:hover {
+      border-color: var(--gold-soft);
+      background: rgba(201,168,76,0.03);
+    }
+    @media (max-width: 600px) {
+      .acupoint-card { grid-template-columns: 1fr; gap: 6px; }
+    }
+    .acupoint-card .ap-name {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .acupoint-card .ap-channel {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+    .acupoint-card .ap-location {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .acupoint-card .ap-location strong {
+      color: var(--gold);
+      font-weight: 500;
+    }
+    .acupoint-card .ap-indication {
+      font-size: 0.82rem;
+      color: #c8c0b6;
+      line-height: 1.6;
+    }
+
+    /* Wushu cards */
+    .wushu-card {
+      background: rgba(26,31,46,0.5);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .wushu-card .ws-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .wushu-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .wushu-card .ws-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .wushu-card .ws-books {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .wushu-card .ws-book {
+      padding: 4px 10px;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 100px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* Xingchen grid */
+    .xingchen-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+    }
+    @media (max-width: 600px) {
+      .xingchen-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .xingchen-item {
+      background: rgba(26,31,46,0.45);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+    .xingchen-item .xc-icon {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+    .xingchen-item h4 {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .xingchen-item .xc-stars {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: #c8c0b6;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+    .xingchen-item .xc-attr {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Mingli basics */
+    .mingli-card {
+      background: rgba(26,31,46,0.5);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .mingli-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: var(--gold);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mingli-card p, .mingli-card li {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+    .mingli-card ul {
+      padding-left: 18px;
+    }
+    .mingli-card li {
+      padding: 2px 0;
+    }
+
+    /* Ten gods table */
+    .tengod-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      margin: 16px 0;
+    }
+    .tengod-table th, .tengod-table td {
+      padding: 8px 10px;
+      border: 1px solid rgba(201,168,76,0.08);
+    }
+    .tengod-table th {
+      background: rgba(201,168,76,0.06);
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .tengod-table td {
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .tengod-table .tg-name {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* Back to top specific */
+    .back-to-top {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(26,31,46,0.88);
+      border: 1px solid var(--gold-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 998;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.35s;
+      pointer-events: none;
+      backdrop-filter: blur(10px);
+    }
+    .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .back-to-top:hover { border-color: var(--gold); background: var(--gold-dim); box-shadow: 0 0 24px rgba(201,168,76,0.35); transform: translateY(-2px); }
+    .back-to-top svg { width: 18px; height: 18px; color: var(--gold); }
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body>
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Back to Top -->
+  <div class="back-to-top" id="backToTop" title="返回顶部">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">道器</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#features">能力</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+        <li><a href="knowledge.html">知识库</a></li>
+        <li><a href="index.html#services">服务</a></li>
+      </ul>
+      <a href="form.html" class="btn btn-primary nav-cta">立即测算</a>
+      <button class="nav-toggle" id="navToggle" aria-label="菜单">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Knowledge Hero -->
+  <section class="knowledge-hero">
+    <h1>道器知识中心</h1>
+    <p>经典溯源，道器传承。以《黄帝内经》《渊海子平》《滴天髓》《神农本草经》等传世典籍为宗，系统阐释天干地支、五行生克、子午流注、四时调养、本草经方、山医命相卜、三垣四象与命理基础。</p>
+  </section>
+
+  <!-- Category Grid -->
+  <section class="section" id="knowledge-top">
+    <div class="container">
+      <div class="section-header">
+        <h2>分类浏览</h2>
+        <p>点击任一卡片，平滑滚动至详细知识区</p>
+      </div>
+      <div class="knowledge-grid">
+        <a href="#ganzhi" class="knowledge-card">
+          <span class="kc-icon">☯</span>
+          <span class="kc-title">天干地支 · 六十甲子</span>
+          <span class="kc-sub">十天干 · 十二地支 · 纳音五行</span>
+          <span class="kc-hash">#ganzhi</span>
+        </a>
+        <a href="#wuxing" class="knowledge-card">
+          <span class="kc-icon">🔥</span>
+          <span class="kc-title">五行生克 · 脏腑经络</span>
+          <span class="kc-sub">相生相克 · 乘侮 · 五脏五色五味</span>
+          <span class="kc-hash">#wuxing</span>
+        </a>
+        <a href="#meridian-detail" class="knowledge-card">
+          <span class="kc-icon">🕐</span>
+          <span class="kc-title">子午流注 · 十二经</span>
+          <span class="kc-sub">十二时辰对应十二正经 · 养生要点</span>
+          <span class="kc-hash">#meridian-detail</span>
+        </a>
+        <a href="#sishi" class="knowledge-card">
+          <span class="kc-icon">🌿</span>
+          <span class="kc-title">四时调养 · 道医养生</span>
+          <span class="kc-sub">春发陈 · 夏蕃秀 · 秋容平 · 冬闭藏</span>
+          <span class="kc-hash">#sishi</span>
+        </a>
+        <a href="#herbal-detail" class="knowledge-card">
+          <span class="kc-icon">💊</span>
+          <span class="kc-title">本草经方 · 君臣佐使</span>
+          <span class="kc-sub">四君子汤 · 四物汤 · 常用穴位</span>
+          <span class="kc-hash">#herbal-detail</span>
+        </a>
+        <a href="#wushu-detail" class="knowledge-card">
+          <span class="kc-icon">⛰️</span>
+          <span class="kc-title">山医命相卜 · 五术</span>
+          <span class="kc-sub">道家修炼 · 方剂针灸 · 命理 · 相学 · 占卜</span>
+          <span class="kc-hash">#wushu-detail</span>
+        </a>
+        <a href="#xingchen" class="knowledge-card">
+          <span class="kc-icon">✨</span>
+          <span class="kc-title">三垣四象 · 二十八宿</span>
+          <span class="kc-sub">紫微 · 太微 · 天市 · 青龙朱雀白虎玄武</span>
+          <span class="kc-hash">#xingchen</span>
+        </a>
+        <a href="#mingli" class="knowledge-card">
+          <span class="kc-icon">📚</span>
+          <span class="kc-title">命理基础 · 八字入门</span>
+          <span class="kc-sub">四柱 · 十神 · 大运 · 用神 · 纳音</span>
+          <span class="kc-hash">#mingli</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 1: 天干地支 · 六十甲子             -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="knowledge-section" id="ganzhi">
+    <div class="ks-content">
+      <div class="ks-header">
+        <h2>☯ 天干地支 · 六十甲子</h2>
+        <p class="ks-subtitle">干者犹木之干，支者犹木之枝——相配而六十甲子成</p>
+        <p class="ks-sources">主要出处：《尔雅·释天》《史记·律书》《淮南子·天文训》《五行大义》</p>
+        <a href="#knowledge-top" class="ks-back">↑ 返回分类</a>
+      </div>
+
+      <p>天干地支，简称"干支"，是中华传统历法的核心纪时系统。天干共有十个，地支共有十二个，天干配地支，循环配对，形成六十个组合，称为"六十甲子"或"六十花甲子"。干支不仅用于纪年，亦用于纪月、纪日、纪时，构成了四柱八字的时间坐标体系。</p>
+
+      <h3>一、十天干详释</h3>
+      <div class="stem-detail-grid">
+        <div class="stem-detail-item wood">
+          <div class="sd-char">甲</div>
+          <div class="sd-info">阳木 · 栋梁<br>胆 · 东方</div>
+        </div>
+        <div class="stem-detail-item wood">
+          <div class="sd-char">乙</div>
+          <div class="sd-info">阴木 · 花草<br>肝 · 东方</div>
+        </div>
+        <div class="stem-detail-item fire">
+          <div class="sd-char">丙</div>
+          <div class="sd-info">阳火 · 太阳<br>小肠 · 南方</div>
+        </div>
+        <div class="stem-detail-item fire">
+          <div class="sd-char">丁</div>
+          <div class="sd-info">阴火 · 灯烛<br>心 · 南方</div>
+        </div>
+        <div class="stem-detail-item earth">
+          <div class="sd-char">戊</div>
+          <div class="sd-info">阳土 · 城墙<br>胃 · 中央</div>
+        </div>
+        <div class="stem-detail-item earth">
+          <div class="sd-char">己</div>
+          <div class="sd-info">阴土 · 田园<br>脾 · 中央</div>
+        </div>
+        <div class="stem-detail-item metal">
+          <div class="sd-char">庚</div>
+          <div class="sd-info">阳金 · 斧钺<br>大肠 · 西方</div>
+        </div>
+        <div class="stem-detail-item metal">
+          <div class="sd-char">辛</div>
+          <div class="sd-info">阴金 · 首饰<br>肺 · 西方</div>
+        </div>
+        <div class="stem-detail-item water">
+          <div class="sd-char">壬</div>
+          <div class="sd-info">阳水 · 江河<br>膀胱 · 北方</div>
+        </div>
+        <div class="stem-detail-item water">
+          <div class="sd-char">癸</div>
+          <div class="sd-info">阴水 · 雨露<br>肾 · 北方</div>
+        </div>
+      </div>
+
+      <p>《尔雅·释天》载："太岁在甲曰阏逢，在乙曰旃蒙，在丙曰柔兆，在丁曰强圉，在戊曰著雍，在己曰屠维，在庚曰上章，在辛曰重光，在壬曰玄黓，在癸曰昭阳。"此为十天干之别称。《史记·律书》云："甲者，言万物剖符甲而出也；乙者，言万物生轧轧也。"阐明天干与万物生长收藏的关系。</p>
+
+      <h3>二、十二地支详释</h3>
+      <p>十二地支与生肖、五行、阴阳、方位的对应关系如下：</p>
+      <div class="stem-detail-grid" style="grid-template-columns: repeat(4,1fr);">
+        <div class="stem-detail-item water"><div class="sd-char">子</div><div class="sd-info">水 · 阳 · 🐀鼠 · 北</div></div>
+        <div class="stem-detail-item earth"><div class="sd-char">丑</div><div class="sd-info">土 · 阴 · 🐂牛</div></div>
+        <div class="stem-detail-item wood"><div class="sd-char">寅</div><div class="sd-info">木 · 阳 · 🐅虎 · 东</div></div>
+        <div class="stem-detail-item wood"><div class="sd-char">卯</div><div class="sd-info">木 · 阴 · 🐇兔 · 东</div></div>
+        <div class="stem-detail-item earth"><div class="sd-char">辰</div><div class="sd-info">土 · 阳 · 🐉龙</div></div>
+        <div class="stem-detail-item fire"><div class="sd-char">巳</div><div class="sd-info">火 · 阴 · 🐍蛇 · 南</div></div>
+        <div class="stem-detail-item fire"><div class="sd-char">午</div><div class="sd-info">火 · 阳 · 🐎马 · 南</div></div>
+        <div class="stem-detail-item earth"><div class="sd-char">未</div><div class="sd-info">土 · 阴 · 🐑羊</div></div>
+        <div class="stem-detail-item metal"><div class="sd-char">申</div><div class="sd-info">金 · 阳 · 🐒猴 · 西</div></div>
+        <div class="stem-detail-item metal"><div class="sd-char">酉</div><div class="sd-info">金 · 阴 · 🐓鸡 · 西</div></div>
+        <div class="stem-detail-item earth"><div class="sd-char">戌</div><div class="sd-info">土 · 阳 · 🐕狗</div></div>
+        <div class="stem-detail-item water"><div class="sd-char">亥</div><div class="sd-info">水 · 阴 · 🐖猪 · 北</div></div>
+      </div>
+
+      <p>《淮南子·天文训》曰："帝张四维，运之以斗，月徙一辰，复反其所。正月指寅，十二月指丑，一岁而匝，终而复始。"此说明地支与月建的对应关系——正月建寅，二月建卯，依此类推，十一月建子（冬至所在之月），十二月建丑。</p>
+
+      <h3>三、六十甲子纳音表（完整版）</h3>
+      <p>纳音五行是六十甲子与五行之间的映射体系，每两柱配一纳音，共三十组纳音。纳音五行更细致地描述了年命特征，是八字命理的重要组成部分。此体系最早见于《五行大义》（隋·萧吉），后世《渊海子平》《三命通会》均有详载。</p>
+
+      <table class="nayin-table">
+        <thead>
+          <tr><th>序号</th><th>干支</th><th>纳音</th><th>序号</th><th>干支</th><th>纳音</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>甲子 乙丑</td><td>海中金</td><td>16</td><td>壬午 癸未</td><td>杨柳木</td></tr>
+          <tr><td>2</td><td>丙寅 丁卯</td><td>炉中火</td><td>17</td><td>甲申 乙酉</td><td>泉中水</td></tr>
+          <tr><td>3</td><td>戊辰 己巳</td><td>大林木</td><td>18</td><td>丙戌 丁亥</td><td>屋上土</td></tr>
+          <tr><td>4</td><td>庚午 辛未</td><td>路旁土</td><td>19</td><td>戊子 己丑</td><td>霹雳火</td></tr>
+          <tr><td>5</td><td>壬申 癸酉</td><td>剑锋金</td><td>20</td><td>庚寅 辛卯</td><td>松柏木</td></tr>
+          <tr><td>6</td><td>甲戌 乙亥</td><td>山头火</td><td>21</td><td>壬辰 癸巳</td><td>长流水</td></tr>
+          <tr><td>7</td><td>丙子 丁丑</td><td>涧下水</td><td>22</td><td>甲午 乙未</td><td>沙中金</td></tr>
+          <tr><td>8</td><td>戊寅 己卯</td><td>城头土</td><td>23</td><td>丙申 丁酉</td><td>山下火</td></tr>
+          <tr><td>9</td><td>庚辰 辛巳</td><td>白蜡金</td><td>24</td><td>戊戌 己亥</td><td>平地木</td></tr>
+          <tr><td>10</td><td>壬午 癸未</td><td>杨柳木</td><td>25</td><td>庚子 辛丑</td><td>壁上土</td></tr>
+          <tr><td>11</td><td>甲申 乙酉</td><td>泉中水</td><td>26</td><td>壬寅 癸卯</td><td>金箔金</td></tr>
+          <tr><td>12</td><td>丙戌 丁亥</td><td>屋上土</td><td>27</td><td>甲辰 乙巳</td><td>覆灯火</td></tr>
+          <tr><td>13</td><td>戊子 己丑</td><td>霹雳火</td><td>28</td><td>丙午 丁未</td><td>天河水</td></tr>
+          <tr><td>14</td><td>庚寅 辛卯</td><td>松柏木</td><td>29</td><td>戊申 己酉</td><td>大驿土</td></tr>
+          <tr><td>15</td><td>壬辰 癸巳</td><td>长流水</td><td>30</td><td>庚戌 辛亥</td><td>钗钏金</td></tr>
+        </tbody>
+      </table>
+      <table class="nayin-table">
+        <thead><tr><th>序号</th><th>干支</th><th>纳音</th><th>序号</th><th>干支</th><th>纳音</th></tr></thead>
+        <tbody>
+          <tr><td>31</td><td>壬子 癸丑</td><td>桑柘木</td><td>46</td><td>己巳</td><td>大林木</td></tr>
+          <tr><td>32</td><td>甲寅 乙卯</td><td>大溪水</td><td>47</td><td>庚午 辛未</td><td>路旁土</td></tr>
+          <tr><td>33</td><td>丙辰 丁巳</td><td>沙中土</td><td>48</td><td>壬申 癸酉</td><td>剑锋金</td></tr>
+          <tr><td>34</td><td>戊午 己未</td><td>天上火</td><td>49</td><td>甲戌 乙亥</td><td>山头火</td></tr>
+          <tr><td>35</td><td>庚申 辛酉</td><td>石榴木</td><td>50</td><td>丙子 丁丑</td><td>涧下水</td></tr>
+          <tr><td>36</td><td>壬戌 癸亥</td><td>大海水</td><td>51</td><td>戊寅 己卯</td><td>城头土</td></tr>
+          <tr><td>37</td><td>甲子 乙丑</td><td>海中金</td><td>52</td><td>庚辰 辛巳</td><td>白蜡金</td></tr>
+          <tr><td>38</td><td>丙寅 丁卯</td><td>炉中火</td><td>53</td><td>壬午 癸未</td><td>杨柳木</td></tr>
+          <tr><td>39</td><td>戊辰 己巳</td><td>大林木</td><td>54</td><td>甲申 乙酉</td><td>泉中水</td></tr>
+          <tr><td>40</td><td>庚午 辛未</td><td>路旁土</td><td>55</td><td>丙戌 丁亥</td><td>屋上土</td></tr>
+          <tr><td>41</td><td>壬申 癸酉</td><td>剑锋金</td><td>56</td><td>戊子 己丑</td><td>霹雳火</td></tr>
+          <tr><td>42</td><td>甲戌 乙亥</td><td>山头火</td><td>57</td><td>庚寅 辛卯</td><td>松柏木</td></tr>
+          <tr><td>43</td><td>丙子 丁丑</td><td>涧下水</td><td>58</td><td>壬辰 癸巳</td><td>长流水</td></tr>
+          <tr><td>44</td><td>戊寅 己卯</td><td>城头土</td><td>59</td><td>甲午 乙未</td><td>沙中金</td></tr>
+          <tr><td>45</td><td>庚辰 辛巳</td><td>白蜡金</td><td>60</td><td>丙申 丁酉</td><td>山下火</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.72rem;color:var(--text-dim);text-align:center;">注：六十甲子完整循环依次为 甲子→乙丑→丙寅→...→壬戌→癸亥，共60组，每组两柱配同一纳音，共30种纳音。</p>
+
+      <div class="ks-quote">
+        <blockquote>"天干地支，黄帝使大挠作之。天干以计日，地支以计月。干支相配，以成六旬。"</blockquote>
+        <cite>——《广雅·释天》引《世本》</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 2: 五行生克 · 脏腑经络             -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="knowledge-section" id="wuxing">
+    <div class="ks-content">
+      <div class="ks-header">
+        <h2>🔥 五行生克 · 脏腑经络</h2>
+        <p class="ks-subtitle">五行者，金木水火土也，更贵更贱，以知死生，以决成败</p>
+        <p class="ks-sources">主要出处：《黄帝内经·素问·阴阳应象大论》《尚书·洪范》《难经》</p>
+        <a href="#knowledge-top" class="ks-back">↑ 返回分类</a>
+      </div>
+
+      <p>五行学说，是中国古代哲学的核心理论之一。五行——木、火、土、金、水——并非单指五种具体物质，而是五种基本属性及其运动变化规律的抽象概括。《尚书·洪范》首次系统论述五行："一曰水，二曰火，三曰木，四曰金，五曰土。水曰润下，火曰炎上，木曰曲直，金曰从革，土爰稼穑。"在中医体系里，五行被用于概括五脏六腑、五色、五味、五志等生理病理现象，构建起天人相应的整体医学模型。</p>
+
+      <h3>一、五行相生</h3>
+      <p>相生，即相互资生、促进的关系。其顺序为：<strong>木生火 → 火生土 → 土生金 → 金生水 → 水生木</strong>，形成一个循环无端的闭环。木燃而生火，火尽而成灰（土），土中藏矿而生金，金熔而成液态（生水），水润而草木生（生木）。</p>
+
+      <h3>二、五行相克</h3>
+      <p>相克，即相互制约、克制的关系。其顺序为：<strong>木克土 → 土克水 → 水克火 → 火克金 → 金克木</strong>。木根穿土而克土，土筑堤坝以制水，水能灭火，火能熔金，金斧伐木。</p>
+
+      <div class="ks-quote">
+        <blockquote>"木得金而伐，火得水而灭，土得木而达，金得火而缺，水得土而绝。万物尽然，不可胜竭。"</blockquote>
+        <cite>——《黄帝内经·素问·宝命全形论》</cite>
+      </div>
+
+      <h3>三、五行乘侮</h3>
+      <p><strong>相乘</strong>：即过度克制，指某一行对被克的一行克制太过。如木本克土，若木气过旺或土气过弱，则出现"木乘土"的病理状态。相乘的次序与相克相同，但强度过盛。</p>
+      <p><strong>相侮</strong>：即反向克制，指被克的一行反过来克制所克之行。如金本克木，若木气过旺，则出现"木侮金"的反克现象。相侮的次序与相克相反：木侮金、金侮火、火侮水、水侮土、土侮木。</p>
+      <p>相乘与相侮皆为五行关系的异常状态，在中医诊断中指示脏腑病理传变的方向，是辨证论治的重要依据。</p>
+
+      <h3>四、五行与五脏系统对应</h3>
+      <div class="wuxing-diagram">
+        <div class="wuxing-node-lg wl-wood">
+          <span class="wn-symbol">🌳</span>
+          <span class="wn-name">木</span>
+          <span class="wn-organs">肝 · 胆</span>
+        </div>
+        <span class="wx-arrow">→</span>
+        <div class="wuxing-node-lg wl-fire">
+          <span class="wn-symbol">🔥</span>
+          <span class="wn-name">火</span>
+          <span class="wn-organs">心 · 小肠</span>
+        </div>
+        <span class="wx-arrow">→</span>
+        <div class="wuxing-node-lg wl-earth">
+          <span class="wn-symbol">⛰️</span>
+          <span class="wn-name">土</span>
+          <span class="wn-organs">脾 · 胃</span>
+        </div>
+        <span class="wx-arrow">→</span>
+        <div class="wuxing-node-lg wl-metal">
+          <span class="wn-symbol">⚔️</span>
+          <span class="wn-name">金</span>
+          <span class="wn-organs">肺 · 大肠</span>
+        </div>
+        <span class="wx-arrow">→</span>
+        <div class="wuxing-node-lg wl-water">
+          <span class="wn-symbol">💧</span>
+          <span class="wn-name">水</span>
+          <span class="wn-organs">肾 · 膀胱</span>
+        </div>
+      </div>
+
+      <h3>五、五行大类对应表</h3>
+      <table class="tengod-table">
+        <thead>
+          <tr><th>类别</th><th>木</th><th>火</th><th>土</th><th>金</th><th>水</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="tg-name">五脏</td><td>肝</td><td>心</td><td>脾</td><td>肺</td><td>肾</td></tr>
+          <tr><td class="tg-name">六腑</td><td>胆</td><td>小肠</td><td>胃</td><td>大肠</td><td>膀胱</td></tr>
+          <tr><td class="tg-name">五色</td><td>青</td><td>赤</td><td>黄</td><td>白</td><td>黑</td></tr>
+          <tr><td class="tg-name">五味</td><td>酸</td><td>苦</td><td>甘</td><td>辛</td><td>咸</td></tr>
+          <tr><td class="tg-name">五志</td><td>怒</td><td>喜</td><td>思</td><td>悲</td><td>恐</td></tr>
+          <tr><td class="tg-name">五官</td><td>目</td><td>舌</td><td>口</td><td>鼻</td><td>耳</td></tr>
+          <tr><td class="tg-name">五体</td><td>筋</td><td>脉</td><td>肉</td><td>皮</td><td>骨</td></tr>
+          <tr><td class="tg-name">五液</td><td>泪</td><td>汗</td><td>涎</td><td>涕</td><td>唾</td></tr>
+          <tr><td class="tg-name">五季</td><td>春</td><td>夏</td><td>长夏</td><td>秋</td><td>冬</td></tr>
+          <tr><td class="tg-name">五方</td><td>东</td><td>南</td><td>中</td><td>西</td><td>北</td></tr>
+          <tr><td class="tg-name">五化</td><td>生</td><td>长</td><td>化</td><td>收</td><td>藏</td></tr>
+        </tbody>
+      </table>
+
+      <div class="ks-quote">
+        <blockquote>"东方生风，风生木，木生酸，酸生肝，肝生筋，筋生心，肝主目。其在天为玄，在人为道，在地为化。化生五味，道生智，玄生神。神在天为风，在地为木，在体为筋，在脏为肝，在色为苍，在音为角，在声为呼，在变动为握，在窍为目，在味为酸，在志为怒。"</blockquote>
+        <cite>——《黄帝内经·素问·阴阳应象大论》</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 3: 子午流注 · 十二经               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="knowledge-section" id="meridian-detail">
+    <div class="ks-content">
+      <div class="ks-header">
+        <h2>🕐 子午流注 · 十二经时辰</h2>
+        <p class="ks-subtitle">气血应时而行，十二经各有旺时</p>
+        <p class="ks-sources">主要出处：《灵枢·经脉》《灵枢·营卫生会》《针灸甲乙经》（晋·皇甫谧）</p>
+        <a href="#knowledge-top" class="ks-back">↑ 返回分类</a>
+      </div>
+
+      <p>子午流注学说，是中医时间医学的核心理论。其基本思想为：人体气血运行于十二经脉之中，随着一日十二时辰的推移而呈现周期性的盛衰变化。每一时辰（2小时）有一条经脉气血最为旺盛，称为"当令"。顺应这一节律安排作息，即为"顺时养生"；违背则易致病。《灵枢·经脉》曰："经脉者，所以能决死生，处百病，调虚实，不可不通。"</p>
+
+      <div class="ks-quote">
+        <blockquote>"经脉者，所以能决死生，处百病，调虚实，不可不通。"</blockquote>
+        <cite>——《灵枢·经脉》</cite>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">子时</div>
+          <div class="md-range">23:00-01:00</div>
+          <div class="md-organ">胆经</div>
+          <div class="md-channel">足少阳胆经</div>
+        </div>
+        <div class="md-body">
+          <h4>一阳初生 · 胆汁更新</h4>
+          <p>子时是阴尽阳生之时，一阳初动。此时胆经当令，胆汁开始更新代谢。中医认为"凡十一脏取决于胆"，胆气升发则诸脏腑之气随之而动。此段时间应进入深度睡眠状态，不可熬夜、进食或剧烈活动，否则损伤胆气，日久导致口苦、偏头痛、胆结石等症。</p>
+          <span class="md-tip">养生：宜入睡，忌熬夜</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">丑时</div>
+          <div class="md-range">01:00-03:00</div>
+          <div class="md-organ">肝经</div>
+          <div class="md-channel">足厥阴肝经</div>
+        </div>
+        <div class="md-body">
+          <h4>肝藏血 · 解毒排毒</h4>
+          <p>丑时肝经当令。"肝藏血"，此时周身血液回流于肝脏进行净化和解毒。肝脏将代谢废物分解，同时制造新的凝血因子。若此时未眠，肝血不得归藏，长期则面色晦暗、易生色斑、情绪烦躁。肝主筋，丑时深度睡眠有助于筋脉柔韧。</p>
+          <span class="md-tip">养生：深度睡眠，忌饮酒</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">寅时</div>
+          <div class="md-range">03:00-05:00</div>
+          <div class="md-organ">肺经</div>
+          <div class="md-channel">手太阴肺经</div>
+        </div>
+        <div class="md-body">
+          <h4>肺朝百脉 · 气血输布</h4>
+          <p>寅时肺经当令。"肺朝百脉"，此时气血由静转动，肺将新鲜气血输布至全身。人体从睡眠中渐渐苏醒，深度呼吸有助于肺的宣发肃降。老年人常于此时醒来，多因肺气虚弱。此时段应注意保暖，避免寒气伤肺，诱发咳嗽哮喘。</p>
+          <span class="md-tip">养生：深度呼吸，忌受寒</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">卯时</div>
+          <div class="md-range">05:00-07:00</div>
+          <div class="md-organ">大肠经</div>
+          <div class="md-channel">手阳明大肠经</div>
+        </div>
+        <div class="md-body">
+          <h4>天门开 · 地户通</h4>
+          <p>卯时大肠经当令。此时天已破晓，地户（肛门）应时开启，为一日之中最佳排便时间。大肠传导糟粕，此时排出宿便，清除体内毒素。起床后应饮一杯温水以助肠蠕动。便秘者可在此时按摩天枢穴（肚脐旁2寸），效果尤佳。</p>
+          <span class="md-tip">养生：起床排便，喝温水</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">辰时</div>
+          <div class="md-range">07:00-09:00</div>
+          <div class="md-organ">胃经</div>
+          <div class="md-channel">足阳明胃经</div>
+        </div>
+        <div class="md-body">
+          <h4>胃气最旺 · 早餐黄金期</h4>
+          <p>辰时胃经当令，胃气最为旺盛，消化吸收能力最强。此时进餐最易化生气血，故早餐不仅非吃不可，而且要吃得营养丰富。"早餐如皇帝"，辰时进餐所摄取的能量可以高效转化为一日之精力。若不进早餐，胃酸侵蚀胃壁，易患胃炎、胃溃疡。</p>
+          <span class="md-tip">养生：吃丰富早餐，忌空腹</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">巳时</div>
+          <div class="md-range">09:00-11:00</div>
+          <div class="md-organ">脾经</div>
+          <div class="md-channel">足太阴脾经</div>
+        </div>
+        <div class="md-body">
+          <h4>脾主运化 · 黄金工作期</h4>
+          <p>巳时脾经当令。脾主运化水谷精微及水湿，将胃中消化的营养物质输送到全身。此时大脑思维最为清晰敏捷，是工作学习的黄金时段。脾在志为思，过思则伤脾。久坐伤肉（脾主肌肉），故每工作一小时应起身活动片刻。</p>
+          <span class="md-tip">养生：高效工作，忌久坐思虑过度</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">午时</div>
+          <div class="md-range">11:00-13:00</div>
+          <div class="md-organ">心经</div>
+          <div class="md-channel">手少阴心经</div>
+        </div>
+        <div class="md-body">
+          <h4>阳极一阴生 · 养心神</h4>
+          <p>午时心经当令，为一日之中阳气最盛之时。阳极而一阴生，此时应顺应自然适当休息。"午时小憩"为千百年来养生之要诀，哪怕闭目养神15-20分钟也对心脏大有裨益。午餐不宜过饱，七分即可，以免加重心脏负担。心主神明，午休后头脑清醒。</p>
+          <span class="md-tip">养生：午餐后小憩20分钟，忌饱食</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">未时</div>
+          <div class="md-range">13:00-15:00</div>
+          <div class="md-organ">小肠经</div>
+          <div class="md-channel">手太阳小肠经</div>
+        </div>
+        <div class="md-body">
+          <h4>泌别清浊 · 吸收营养</h4>
+          <p>未时小肠经当令。小肠主受盛化物、泌别清浊——将午餐中的精微物质吸收输布，残渣下传大肠。此时应适当饮水以助小肠分清泌浊。若心火下移小肠，可见小便赤涩、舌尖红痛，此时可按揉少泽穴（小指外侧指甲角旁）清热降火。</p>
+          <span class="md-tip">养生：多饮温水，忌冷饮</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">申时</div>
+          <div class="md-range">15:00-17:00</div>
+          <div class="md-organ">膀胱经</div>
+          <div class="md-channel">足太阳膀胱经</div>
+        </div>
+        <div class="md-body">
+          <h4>气化津液 · 排毒清体</h4>
+          <p>申时膀胱经当令。膀胱经是人体最长、穴位最多的经络，从头走足贯穿全身。此时膀胱气化功能增强，应及时补充水分并适时排尿，将体内代谢废物排出。申时也是运动的好时段，此时适度运动可疏通膀胱经，改善全身气血循环。</p>
+          <span class="md-tip">养生：多喝水，适量运动，忌憋尿</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">酉时</div>
+          <div class="md-range">17:00-19:00</div>
+          <div class="md-organ">肾经</div>
+          <div class="md-channel">足少阴肾经</div>
+        </div>
+        <div class="md-body">
+          <h4>肾主藏精 · 养阴固本</h4>
+          <p>酉时肾经当令。"肾藏精"为先天之本，此时段应进入休养状态而非剧烈活动。晚餐宜少而精，不可过食咸味（咸入肾，过则伤）。酉时敲打或按摩涌泉穴（足底前1/3凹陷处）可引火归元，为夜间安眠奠定基础。肾气虚者易在酉时感到腰膝酸软。</p>
+          <span class="md-tip">养生：减少活动，忌过劳过咸</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">戌时</div>
+          <div class="md-range">19:00-21:00</div>
+          <div class="md-organ">心包经</div>
+          <div class="md-channel">手厥阴心包经</div>
+        </div>
+        <div class="md-body">
+          <h4>护心之宫城 · 放松身心</h4>
+          <p>戌时心包经当令。心包为心之外卫，代心受邪。此时应保持心情愉悦、放松，适合散步、听音乐、与家人交流，不宜进行高强度工作或激烈争论，以防扰动心神。按揉内关穴（腕横纹上2寸）可宁心安神、缓解一日之疲劳。</p>
+          <span class="md-tip">养生：散步放松，忌激动</span>
+        </div>
+      </div>
+
+      <div class="meridian-detail-item">
+        <div class="md-time">
+          <div class="md-hour">亥时</div>
+          <div class="md-range">21:00-23:00</div>
+          <div class="md-organ">三焦经</div>
+          <div class="md-channel">手少阳三焦经</div>
+        </div>
+        <div class="md-body">
+          <h4>三焦通调 · 准备安眠</h4>
+          <p>亥时三焦经当令。三焦为六腑之一，主持诸气、总司人体气化。百岁药王孙思邈主张"亥时入眠"，此时百脉通畅，若能安卧，利于阴阳二气的交接。应在23点（子时）之前完成洗漱，进入睡眠准备。亥时是性生活的适宜时段，但需节制。</p>
+          <span class="md-tip">养生：准备入睡，忌激烈活动</span>
+        </div>
+      </div>
+
+      <p style="margin-top:24px;">皇甫谧（215-282年）在《针灸甲乙经》中系统整理了十二经脉的循行路线、穴位位置及主治症候，奠定了子午流注理论的临床基础。后世针灸学家在此基础上发展出"子午流注针法"——按照时辰选取特定穴位进行针刺，以提高疗效。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 4: 四时调养 · 道医养生             -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="knowledge-section" id="sishi">
+    <div class="ks-content">
+      <div class="ks-header">
+        <h2>🌿 四时调养 · 道医养生</h2>
+        <p class="ks-subtitle">夫四时阴阳者，万物之根本也，所以圣人春夏养阳，秋冬养阴</p>
+        <p class="ks-sources">主要出处：《黄帝内经·素问·四气调神大论》</p>
+        <a href="#knowledge-top" class="ks-back">↑ 返回分类</a>
+      </div>
+
+      <p>《素问·四气调神大论》是中医时间医学与养生学的纲领性篇章，系统论述了人在春、夏、秋、冬四季应如何调整作息、情志、饮食与运动，以顺应天地阴阳之气的变化。其核心原则为"春夏养阳，秋冬养阴"——春夏季自然界阳气升发，人应助养自身阳气；秋冬季阴气渐盛，人应蓄养阴精。</p>
+
+      <div class="ks-quote">
+        <blockquote>"夫四时阴阳者，万物之根本也。所以圣人春夏养阳，秋冬养阴，以从其根，故与万物沉浮于生长之门。逆其根，则伐其本，坏其真矣。"</blockquote>
+        <cite>——《黄帝内经·素问·四气调神大论》</cite>
+      </div>
+
+      <div class="season-detail">
+        <div class="sd-header">
+          <span class="sd-icon">🌸</span>
+          <div>
+            <div class="sd-title">春三月 · 发陈</div>
+            <div class="sd-subtitle">正月至三月 · 木气当令 · 肝气主之</div>
+          </div>
+        </div>
+        <div class="ks-quote">
+          <blockquote>"春三月，此谓发陈。天地俱生，万物以荣。夜卧早起，广步于庭，被发缓形，以使志生。生而勿杀，予而勿夺，赏而勿罚。此春气之应，养生之道也。逆之则伤肝，夏为寒变，奉长者少。"</blockquote>
+          <cite>——《素问·四气调神大论》</cite>
+        </div>
+        <p>春季是推陈出新的季节，天地万物开始生发。在作息上应晚睡（不晚于23点）早起，在庭院中缓步慢行，松开头发、宽松衣物，以使形体舒缓、意志生发。情志上应心存仁爱，多给予少夺取，多奖赏少惩罚——以顺应春气的生发之性。若违背春生之道，则损伤肝气，至夏季将出现寒性病变（因为春生不足，夏长无源）。</p>
+        <div class="sd-modern">
+          <h5>现代应用</h5>
+          <ul>
+            <li>饮食宜辛甘发散之品（葱、姜、韭菜、芽菜），少食酸收之物</li>
+            <li>晨起梳头百下，促进头部气血循环</li>
+            <li>多到户外踏青，接触阳光与绿色植物</li>
+            <li>春季为肝胆排毒季，可适当饮用菊花、枸杞茶</li>
+            <li>情绪宜舒畅，忌郁怒——怒则气上，伤肝</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="season-detail">
+        <div class="sd-header">
+          <span class="sd-icon">☀️</span>
+          <div>
+            <div class="sd-title">夏三月 · 蕃秀</div>
+            <div class="sd-subtitle">四月至六月 · 火气当令 · 心气主之</div>
+          </div>
+        </div>
+        <div class="ks-quote">
+          <blockquote>"夏三月，此谓蕃秀。天地气交，万物华实。夜卧早起，无厌于日，使志无怒，使华英成秀，使气得泄，若所爱在外。此夏气之应，养长之道也。逆之则伤心，秋为痎疟，奉收者少，冬至重病。"</blockquote>
+          <cite>——《素问·四气调神大论》</cite>
+        </div>
+        <p>夏季是繁茂秀美的季节，天地之气相交，万物开花结果。作息仍宜晚睡早起，不要厌烦白日之长。情绪上应保持平和，勿使怒气生发；使体内阳气能向外宣通泄发，如同有所钟爱在外。若违背夏长之道，则损伤心气，至秋季发为疟疾（因夏长不足，秋收无获），冬季则更生重病。</p>
+        <div class="sd-modern">
+          <h5>现代应用</h5>
+          <ul>
+            <li>午时（11-13点）小憩20-30分钟以养心神</li>
+            <li>饮食宜苦味清心火（苦瓜、莲子心），忌过食寒凉</li>
+            <li>适度出汗有益，夏季不出汗反而是病态</li>
+            <li>心静自然凉——保持心情愉悦，避免大喜伤心</li>
+            <li>可用荷叶、竹叶、麦冬泡茶，清暑益气</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="season-detail">
+        <div class="sd-header">
+          <span class="sd-icon">🍂</span>
+          <div>
+            <div class="sd-title">秋三月 · 容平</div>
+            <div class="sd-subtitle">七月至九月 · 金气当令 · 肺气主之</div>
+          </div>
+        </div>
+        <div class="ks-quote">
+          <blockquote>"秋三月，此谓容平。天气以急，地气以明。早卧早起，与鸡俱兴，使志安宁，以缓秋刑。收敛神气，使秋气平，无外其志，使肺气清。此秋气之应，养收之道也。逆之则伤肺，冬为飧泄，奉藏者少。"</blockquote>
+          <cite>——《素问·四气调神大论》</cite>
+        </div>
+        <p>秋季是万物成熟而平定的季节，天气肃杀，地气清明。作息应早睡早起，鸡鸣即起。情绪上应保持安宁，以缓和秋气的肃杀之性。收敛心神、不使心意外驰，保持肺气清宁。若违背秋收之道，则损伤肺气，至冬季发生完谷不化的泄泻（因秋收不足，冬藏无资）。</p>
+        <div class="sd-modern">
+          <h5>现代应用</h5>
+          <ul>
+            <li>饮食宜酸味收敛（梨、葡萄、银耳），忌辛辣发散</li>
+            <li>秋燥伤肺，宜多食润肺之品：百合、杏仁、蜂蜜</li>
+            <li>晨起叩齿吞津（"赤龙搅海"），滋养肺肾之阴</li>
+            <li>适度深呼吸锻炼，增强肺的宣发肃降功能</li>
+            <li>情绪宜从容平和，忌过度悲忧——悲伤肺</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="season-detail">
+        <div class="sd-header">
+          <span class="sd-icon">❄️</span>
+          <div>
+            <div class="sd-title">冬三月 · 闭藏</div>
+            <div class="sd-subtitle">十月至十二月 · 水气当令 · 肾气主之</div>
+          </div>
+        </div>
+        <div class="ks-quote">
+          <blockquote>"冬三月，此谓闭藏。水冰地坼，无扰乎阳。早卧晚起，必待日光，使志若伏若匿，若有私意，若已有得。去寒就温，无泄皮肤，使气亟夺。此冬气之应，养藏之道也。逆之则伤肾，春为痿厥，奉生者少。"</blockquote>
+          <cite>——《素问·四气调神大论》</cite>
+        </div>
+        <p>冬季是万物闭藏的时节，水结冰、地冻裂。人应早睡晚起，等待日光再起床。情绪应收敛深藏，如同有私密之事，如同已经有所收获——不露声色。远离寒冷、靠近温暖，不要使皮肤过度出汗（以免阳气外泄）。若违背冬藏之道，则损伤肾气，至春季发为痿软厥逆之症（因冬藏不足，春生无根）。</p>
+        <div class="sd-modern">
+          <h5>现代应用</h5>
+          <ul>
+            <li>饮食宜苦味以坚肾，适度摄入坚果、黑豆、黑芝麻</li>
+            <li>冬季进补——羊肉、当归、生姜炖汤（当归生姜羊肉汤出自《金匮要略》）</li>
+            <li>足部保暖最重要（寒从足下生），睡前热水泡脚</li>
+            <li>避免剧烈运动大量出汗，冬季宜"藏"而非"泄"</li>
+            <li>节制房事，以藏肾精；避免过度恐惧——恐伤肾</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>春夏养阳 · 秋冬养阴 —— 核心原则</h3>
+      <p>"春夏养阳"：春夏之时，自然界阳气由生发到旺盛，人体阳气亦随之浮越于外。此时应保护并助长阳气，不可过度贪凉饮冷以伤阳气。"冬吃萝卜夏吃姜"正是此理。</p>
+      <p>"秋冬养阴"：秋冬之季，自然界阴气由收敛到闭藏，人体阳气内收。此时应滋养阴精、减少消耗，为来年春季的生发储备物质基础。秋冬进补正是为了养阴藏精。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 5: 本草经方 · 君臣佐使             -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="knowledge-section" id="herbal-detail">
+    <div class="ks-content">
+      <div class="ks-header">
+        <h2>💊 本草经方 · 君臣佐使</h2>
+        <p class="ks-subtitle">主病之谓君，佐君之谓臣，应臣之谓佐，引经之谓使</p>
+        <p class="ks-sources">主要出处：《神农本草经》《伤寒论》《金匮要略》《针灸甲乙经》《太平惠民和剂局方》</p>
+        <a href="#knowledge-top" class="ks-back">↑ 返回分类</a>
+      </div>
+
+      <p>中药方剂是在辨证论治基础上，按照"君臣佐使"的原则配伍而成的复方。《神农本草经》（成书于东汉，现存最早中药学专著）将365种药物分为上中下三品。张仲景《伤寒论》与《金匮要略》创立了辨证论治体系，载方269首，被誉为"方书之祖"。其组方严谨、配伍精当，被尊为"经方"。</p>
+
+      <h3>君臣佐使释义</h3>
+      <p><strong>君药</strong>：针对主病或主证起主要治疗作用的药物，药力居方中之首。<br>
+      <strong>臣药</strong>：辅助君药加强治疗作用，或针对兼病兼证起治疗作用。<br>
+      <strong>佐药</strong>：配合君臣药以加强疗效，或抑制君臣药的毒性与峻烈之性，或反佐以因势利导。<br>
+      <strong>使药</strong>：引经报使——引导诸药直达病所，或调和药性。</p>
+
+      <div class="formula-card">
+        <div class="fc-header">
+          <span class="fc-herb jun">君</span>
+          <div>
+            <div class="fc-name">四君子汤 · 补气祖方</div>
+            <div class="fc-source">出处：《太平惠民和剂局方》（宋·太医局编，1151年）</div>
+          </div>
+        </div>
+        <div class="fc-herbs">
+          <span class="fc-herb jun">人参<span class="fc-role">君</span></span>
+          <span class="fc-herb chen">白术<span class="fc-role">臣</span></span>
+          <span class="fc-herb zuo">茯苓<span class="fc-role">佐</span></span>
+          <span class="fc-herb shi">炙甘草<span class="fc-role">使</span></span>
+        </div>
+        <p class="fc-desc"><strong>人参</strong>甘温，大补元气、健脾养胃，为君药；<strong>白术</strong>苦温，健脾燥湿，助人参益气健脾之力，为臣药；<strong>茯苓</strong>甘淡，渗湿健脾，与白术同用则健脾祛湿之功更强，为佐药；<strong>炙甘草</strong>甘温，益气和胃、调和诸药，为使药。四药相合，共奏益气健脾之功，主治脾胃气虚证——面色萎白、语声低微、四肢乏力、食少便溏。</p>
+      </div>
+
+      <div class="formula-card">
+        <div class="fc-header">
+          <span class="fc-herb jun">君</span>
+          <div>
+            <div class="fc-name">四物汤 · 补血祖方</div>
+            <div class="fc-source">出处：《仙授理伤续断秘方》（唐·蔺道人，约846年）</div>
+          </div>
+        </div>
+        <div class="fc-herbs">
+          <span class="fc-herb jun">熟地黄<span class="fc-role">君</span></span>
+          <span class="fc-herb chen">当归<span class="fc-role">臣</span></span>
+          <span class="fc-herb zuo">白芍<span class="fc-role">佐</span></span>
+          <span class="fc-herb shi">川芎<span class="fc-role">使</span></span>
+        </div>
+        <p class="fc-desc"><strong>熟地黄</strong>甘温味厚，滋阴养血、填精益髓，为君药；<strong>当归</strong>辛甘温，补血活血、养血调经，为臣药；<strong>白芍</strong>酸苦微寒，养血敛阴、柔肝止痛，为佐药；<strong>川芎</strong>辛温，活血行气、祛风止痛，为使药。四药合用，补血而不滞血，行血而不破血，补中有行，散中有收，为补血调经之要方。主治血虚证——面色萎黄、头晕目眩、心悸失眠、月经不调。</p>
+      </div>
+
+      <div class="formula-card">
+        <div class="fc-header">
+          <span class="fc-herb jun">君</span>
+          <div>
+            <div class="fc-name">六味地黄丸 · 滋阴祖方</div>
+            <div class="fc-source">出处：《小儿药证直诀》（宋·钱乙，约1119年）</div>
+          </div>
+        </div>
+        <div class="fc-herbs">
+          <span class="fc-herb jun">熟地黄<span class="fc-role">君</span></span>
+          <span class="fc-herb chen">山茱萸<span class="fc-role">臣</span></span>
+          <span class="fc-herb chen">山药<span class="fc-role">臣</span></span>
+          <span class="fc-herb zuo">泽泻<span class="fc-role">佐</span></span>
+          <span class="fc-herb zuo">茯苓<span class="fc-role">佐</span></span>
+          <span class="fc-herb zuo">牡丹皮<span class="fc-role">佐</span></span>
+        </div>
+        <p class="fc-desc">此方为宋代儿科名医钱乙从《金匮要略》肾气丸化裁而来，专治小儿"五迟五软"（肝肾阴虚证）。<strong>熟地黄</strong>滋阴补肾、填精益髓，为君药；<strong>山茱萸</strong>补养肝肾、涩精，<strong>山药</strong>补脾固肾，共为臣药；<strong>泽泻</strong>利湿泄肾浊，<strong>茯苓</strong>淡渗脾湿，<strong>牡丹皮</strong>清泄肝火，三药称为"三泻"，为佐药。六药合用，三补三泻，补重于泻，滋阴而不生湿，为"滋阴补肾第一方"。</p>
+      </div>
+
+      <h3>常用穴位详解</h3>
+      <p>以下穴位选自《针灸甲乙经》（皇甫谧）、《针灸大成》（明·杨继洲）等经典，均为临床常用且疗效确切之要穴。</p>
+
+      <div class="acupoint-card">
+        <div>
+          <div class="ap-name">足三里</div>
+          <div class="ap-channel">足阳明胃经 · 合穴</div>
+        </div>
+        <div class="ap-location">
+          <strong>定位：</strong>犊鼻穴（外膝眼）下3寸，胫骨前嵴外一横指处。简便取法：掌心按膝盖，中指指尖向外下方按压处即是。
+        </div>
+        <div class="ap-indication">
+          <strong>主治：</strong>调理脾胃、扶正培元、通经活络。为全身强壮要穴，主治胃肠疾患（胃痛、呕吐、腹胀、泄泻）、虚劳、下肢痿痹等。"若要安，三里常不干"——常灸足三里可延年益寿。
+        </div>
+      </div>
+
+      <div class="acupoint-card">
+        <div>
+          <div class="ap-name">合谷</div>
+          <div class="ap-channel">手阳明大肠经 · 原穴</div>
+        </div>
+        <div class="ap-location">
+          <strong>定位：</strong>手背第1、2掌骨之间，约第2掌骨桡侧中点。简便取法：一手拇指指间关节横纹对准另一手虎口，拇指尖按压处即是。
+        </div>
+        <div class="ap-indication">
+          <strong>主治：</strong>头痛、齿痛、目赤肿痛、面瘫、发热、痛经。"面口合谷收"——四总穴歌之一，面部及口腔疾患之要穴。孕妇禁针。
+        </div>
+      </div>
+
+      <div class="acupoint-card">
+        <div>
+          <div class="ap-name">三阴交</div>
+          <div class="ap-channel">足太阴脾经 · 交会穴</div>
+        </div>
+        <div class="ap-location">
+          <strong>定位：</strong>内踝尖上3寸，胫骨内侧缘后方。为足太阴、厥阴、少阴三经交会之处。
+        </div>
+        <div class="ap-indication">
+          <strong>主治：</strong>妇科要穴——月经不调、痛经、带下、崩漏、不孕。亦治脾胃虚弱、腹胀、遗精、失眠。孕妇禁针。每晚按揉可调经安神。
+        </div>
+      </div>
+
+      <div class="acupoint-card">
+        <div>
+          <div class="ap-name">内关</div>
+          <div class="ap-channel">手厥阴心包经 · 络穴 · 八脉交会穴</div>
+        </div>
+        <div class="ap-location">
+          <strong>定位：</strong>腕横纹上2寸，掌长肌腱与桡侧腕屈肌腱之间。
+        </div>
+        <div class="ap-indication">
+          <strong>主治：</strong>心痛、心悸、胸闷、失眠、胃痛、呕吐。"心胸内关谋"——四总穴歌之补充，心胸胃脘疾患之要穴。晕车晕船时按压内关可即时止呕。
+        </div>
+      </div>
+
+      <div class="acupoint-card">
+        <div>
+          <div class="ap-name">太冲</div>
+          <div class="ap-channel">足厥阴肝经 · 输穴 · 原穴</div>
+        </div>
+        <div class="ap-location">
+          <strong>定位：</strong>足背第1、2跖骨结合部前方凹陷处。以指尖沿第1、2趾之间向足背推至骨缝尽头即是。
+        </div>
+        <div class="ap-indication">
+          <strong>主治：</strong>头痛、眩晕、急躁易怒、胁痛、月经不调、高血压。"太冲泻肝火，合谷散外风"——与合谷配合称为"开四关"，疏肝理气之力尤强。
+        </div>
+      </div>
+
+      <div class="acupoint-card">
+        <div>
+          <div class="ap-name">百会</div>
+          <div class="ap-channel">督脉 · 诸阳之会</div>
+        </div>
+        <div class="ap-location">
+          <strong>定位：</strong>头顶正中，两耳尖直上连线与前后正中线交点。前发际正中直上5寸。
+        </div>
+        <div class="ap-indication">
+          <strong>主治：</strong>升阳举陷——脱肛、阴挺、久泻。亦治头痛眩晕、脑卒中、癫痫、失眠健忘。为督脉之巅顶要穴，常灸可升阳益气。
+        </div>
+      </div>
+
+      <div class="acupoint-card">
+        <div>
+          <div class="ap-name">涌泉</div>
+          <div class="ap-channel">足少阴肾经 · 井穴</div>
+        </div>
+        <div class="ap-location">
+          <strong>定位：</strong>足底前1/3凹陷处，蜷足时足底部最凹陷处。
+        </div>
+        <div class="ap-indication">
+          <strong>主治：</strong>引火归元——虚火上炎（口腔溃疡、咽痛、失眠）。亦治头痛、眩晕、小儿惊风、小便不利。每晚以热水泡脚后按揉涌泉，可交通心肾、安神助眠。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 6: 山医命相卜 · 五术               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="knowledge-section" id="wushu-detail">
+    <div class="ks-content">
+      <div class="ks-header">
+        <h2>⛰️ 山医命相卜 · 五术</h2>
+        <p class="ks-subtitle">道门五术——中国古代天人智慧的系统集成</p>
+        <p class="ks-sources">主要出处：《周易参同契》《黄帝内经》《渊海子平》《麻衣相法》《易经》</p>
+        <a href="#knowledge-top" class="ks-back">↑ 返回分类</a>
+      </div>
+
+      <p>"山医命相卜"合称道门五术，是道家修炼与济世的五大法门体系，源于上古天人合一的宇宙观。五术以阴阳五行为哲学基础，以《易经》为理论源头，涵盖修炼、医学、命理、相学、占卜五大领域，形成完整的人与天地沟通的知识体系。</p>
+
+      <div class="wushu-card">
+        <div class="ws-icon">⛰️</div>
+        <h3>山 · 道家修炼</h3>
+        <div class="ws-sub">食饵 / 筑基 / 玄典 / 拳法 / 符咒</div>
+        <p>山术是道家修炼养生的实践体系，包含五大法门：<strong>食饵</strong>——以药食调和阴阳，辅以辟谷、采气等法；<strong>筑基</strong>——以静坐、导引、吐纳动静相兼，筑就可堪修炼的身体基础；<strong>玄典</strong>——研读老庄等道家经典，修心养性；<strong>拳法</strong>——以太极拳、八段锦等动功通利经脉；<strong>符咒</strong>——以符箓、咒语、祝由沟通天地能量。山术的终极目标是通过"炼精化气→炼气化神→炼神还虚→炼虚合道"四阶段，达成天人合一之境。</p>
+        <div class="ws-books">
+          <span class="ws-book">《周易参同契》· 东汉 · 魏伯阳</span>
+          <span class="ws-book">《悟真篇》· 北宋 · 张伯端</span>
+          <span class="ws-book">《黄庭经》· 魏晋 · 传魏华存</span>
+          <span class="ws-book">《抱朴子》· 东晋 · 葛洪</span>
+        </div>
+      </div>
+
+      <div class="wushu-card">
+        <div class="ws-icon">🩺</div>
+        <h3>医 · 中医诊疗</h3>
+        <div class="ws-sub">方剂 / 针灸 / 推拿 / 导引</div>
+        <p>医术是道教济世利人的核心法门，与中医同源异流。包含：<strong>方剂</strong>——以《伤寒论》《金匮要略》等经方体系辨证处方；<strong>针灸</strong>——以经络学说为基础，通过针刺和艾灸调节气血、平衡阴阳；<strong>推拿</strong>——以手法作用于人体特定部位，疏通经络、调和气血；<strong>导引</strong>——以五禽戏、八段锦等肢体运动配合呼吸，达到"导气令和、引体令柔"的效果。医术的最高境界为"上工治未病"——在疾病未成时即行干预。</p>
+        <div class="ws-books">
+          <span class="ws-book">《黄帝内经》· 战国至汉</span>
+          <span class="ws-book">《伤寒论》· 东汉 · 张仲景</span>
+          <span class="ws-book">《神农本草经》· 东汉</span>
+          <span class="ws-book">《本草纲目》· 明 · 李时珍</span>
+          <span class="ws-book">《针灸甲乙经》· 晋 · 皇甫谧</span>
+        </div>
+      </div>
+
+      <div class="wushu-card">
+        <div class="ws-icon">🔮</div>
+        <h3>命 · 命理推演</h3>
+        <div class="ws-sub">四柱八字 / 紫微斗数 / 七政四余</div>
+        <p>命术是推演个体先天禀赋与人生轨迹的方法体系。主要有三大流派：<strong>四柱八字</strong>——以出生年月日时排定四柱（年柱、月柱、日柱、时柱），通过天干地支的五行生克及十神关系推断命格与运程，滥觞于唐代李虚中、成熟于宋代徐子平；<strong>紫微斗数</strong>——以紫微星（北极星）为核心的星命体系，根据命盘十二宫中十四主星的分布推演人生百态；<strong>七政四余</strong>——结合日月五星（七政）与四余星的星象来断命，源自古印度占星术的中国化。命术的核心价值在于"知天命而尽人事"。</p>
+        <div class="ws-books">
+          <span class="ws-book">《渊海子平》· 宋 · 徐大升</span>
+          <span class="ws-book">《滴天髓》· 明 · 刘基（传）</span>
+          <span class="ws-book">《三命通会》· 明 · 万民英</span>
+          <span class="ws-book">《子平真诠》· 清 · 沈孝瞻</span>
+        </div>
+      </div>
+
+      <div class="wushu-card">
+        <div class="ws-icon">👁️</div>
+        <h3>相 · 相学体系</h3>
+        <div class="ws-sub">面相十二宫 / 手相三才纹 / 阳宅风水</div>
+        <p>相术是以"观形察象"之法推断人事吉凶的学问，涵盖人相、地相两大分支：<strong>面相</strong>——将面部分为十二宫（命宫、财帛宫、兄弟宫、田宅宫、男女宫、奴仆宫、妻妾宫、疾厄宫、迁移宫、官禄宫、福德宫、相貌宫），以五官气色形态断一生之富贵穷通；<strong>手相</strong>——以掌中天、人、地三才纹（感情线、智慧线、生命线）为主，参以丘位形态断运势；<strong>阳宅风水（形法派）</strong>——勘察住宅之来龙去脉、坐向形势，强调"峦头"形态对居住者运势的影响。另有阴宅风水（理气派）以罗盘定向、玄空飞星等法定吉凶。</p>
+        <div class="ws-books">
+          <span class="ws-book">《麻衣相法》· 宋 · 麻衣道者（传）</span>
+          <span class="ws-book">《太清神鉴》· 后周 · 王朴</span>
+          <span class="ws-book">《撼龙经》· 唐 · 杨筠松</span>
+          <span class="ws-book">《葬书》· 东晋 · 郭璞</span>
+        </div>
+      </div>
+
+      <div class="wushu-card">
+        <div class="ws-icon">🐢</div>
+        <h3>卜 · 占卜预测</h3>
+        <div class="ws-sub">六爻 / 奇门遁甲 / 太乙神数 / 六壬</div>
+        <p>卜术是以数理推演事理、预测吉凶的方术体系，有"三式"（太乙、奇门、六壬）为最高层次的占卜术：<strong>六爻（纳甲筮法）</strong>——以三枚铜钱摇卦，装卦配六亲六兽，推断所占之事吉凶，源于西汉京房易学，最为普及；<strong>奇门遁甲</strong>——以洛书九宫配三奇六仪、八门九星，被誉为"帝王之学"，原用于行军布阵，今可用于商业决策与时运选择；<strong>太乙神数</strong>——以九州分野推国运兴衰、天灾人祸，为古代帝王秘藏之术；<strong>大六壬</strong>——以天地盘、四课三传推人事吉凶，在"三式"中被称为"人事之王"。</p>
+        <div class="ws-books">
+          <span class="ws-book">《易经》· 周（文王演卦）</span>
+          <span class="ws-book">《奇门遁甲》· 传黄帝/风后</span>
+          <span class="ws-book">《大六壬指南》· 明 · 陈公献</span>
+          <span class="ws-book">《梅花易数》· 宋 · 邵雍</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 7: 三垣四象 · 二十八宿             -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="knowledge-section" id="xingchen">
+    <div class="ks-content">
+      <div class="ks-header">
+        <h2>✨ 三垣四象 · 二十八宿</h2>
+        <p class="ks-subtitle">天有三垣二十八宿，地有九州十二分野</p>
+        <p class="ks-sources">主要出处：《史记·天官书》《步天歌》（唐·丹元子）《晋书·天文志》《尚书·尧典》</p>
+        <a href="#knowledge-top" class="ks-back">↑ 返回分类</a>
+      </div>
+
+      <p>中国古代天文学将天球划分为"三垣二十八宿"的星官体系，这是世界天文学史上最为独特的星象分区系统，不仅服务于历法制定，更深刻地融入了占星、堪舆、命理等多重文化领域。</p>
+
+      <h3>一、三垣</h3>
+      <p><strong>紫微垣</strong>：位于北天正中，以北极星（帝星）为中心，被视作"天帝之居所"，象征人间皇宫中枢。紫微垣内有紫微星、北斗七星等尊贵星官。在紫微斗数中，紫微星为"众星之主"，命宫坐紫微者被视为吉格。司马迁在《史记·天官书》中称"中宫天极星，其一明者，太一常居也"。</p>
+      <p><strong>太微垣</strong>：位于紫微垣之南，被视为"天庭政府"——三公九卿、诸藩将相办公之所。太微垣涵盖室女座、狮子座后发座等星座范围，其星官多为政府官职之象征。在星占中，太微垣明亮则朝廷政治清明。</p>
+      <p><strong>天市垣</strong>：位于紫微垣之东南，象征"天庭贸易市场"，星官多以市场、度量衡、商贾命名，反映人间经济活动的天界映像。</p>
+
+      <h3>二、四象 · 二十八宿</h3>
+      <p>二十八宿分布在黄道与天赤道附近，分为四组，每组七宿，配以四种灵兽（四象），并与五行、四季及方位紧密对应。此体系在《尚书·尧典》已有雏形记载，"日中星鸟，以殷仲春""日永星火，以正仲夏"即是观测星宿以定季节的实践。</p>
+
+      <div class="xingchen-grid">
+        <div class="xingchen-item">
+          <div class="xc-icon">🐉</div>
+          <h4>青龙 · 东方七宿</h4>
+          <div class="xc-stars">角 亢 氐 房 心 尾 箕</div>
+          <div class="xc-attr">五行属木 · 主春<br>司万物生发之象</div>
+        </div>
+        <div class="xingchen-item">
+          <div class="xc-icon">🐦</div>
+          <h4>朱雀 · 南方七宿</h4>
+          <div class="xc-stars">井 鬼 柳 星 张 翼 轸</div>
+          <div class="xc-attr">五行属火 · 主夏<br>司万物长养之象</div>
+        </div>
+        <div class="xingchen-item">
+          <div class="xc-icon">🐅</div>
+          <h4>白虎 · 西方七宿</h4>
+          <div class="xc-stars">奎 娄 胃 昴 毕 觜 参</div>
+          <div class="xc-attr">五行属金 · 主秋<br>司万物收敛之象</div>
+        </div>
+        <div class="xingchen-item">
+          <div class="xc-icon">🐢</div>
+          <h4>玄武 · 北方七宿</h4>
+          <div class="xc-stars">斗 牛 女 虚 危 室 壁</div>
+          <div class="xc-attr">五行属水 · 主冬<br>司万物闭藏之象</div>
+        </div>
+      </div>
+
+      <h3>三、分野学说</h3>
+      <p>分野学说是将天上星宿与地上州郡对应起来的天人感应体系。古人认为"天有列宿，地有州域"，天上某一星宿的异常变化，预示着对应地域的人事祸福。《史记·天官书》详细记载了二十八宿与战国各诸侯国之间的对应关系：角亢对应郑国、氐房心对应宋国（豫州）、尾箕对应燕国（幽州）、斗牛对应吴越（扬州）、女虚危对应齐国（青州）、室壁对应卫国（并州）、奎娄胃对应鲁国（徐州）、昴毕对应赵国（冀州）、觜参对应魏国（益州）、井鬼对应秦国（雍州）、柳星张对应周朝（三河）、翼轸对应楚国（荆州）。</p>
+
+      <div class="ks-quote">
+        <blockquote>"天则有列宿，地则有州域。三光者，阴阳之精，气本在地，而圣人统理之。"</blockquote>
+        <cite>——《史记·天官书》</cite>
+      </div>
+
+      <p>唐代丹元子（王希明）所作《步天歌》，以七言诗歌形式将三垣二十八宿的星名、星数、相对位置编成易记的口诀，是古代天文学入门教材，影响深远。《晋书·天文志》（唐·房玄龄等撰）则在总结历代天文观测成果的基础上，对三垣二十八宿体系做了最为系统的梳理与记录。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 8: 命理基础 · 八字入门             -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="knowledge-section" id="mingli">
+    <div class="ks-content">
+      <div class="ks-header">
+        <h2>📚 命理基础 · 八字入门</h2>
+        <p class="ks-subtitle">不知命，无以为君子也</p>
+        <p class="ks-sources">主要出处：《渊海子平》（宋·徐大升）、《三命通会》（明·万民英）、《滴天髓》（明·刘基传）、《子平真诠》（清·沈孝瞻）</p>
+        <a href="#knowledge-top" class="ks-back">↑ 返回分类</a>
+      </div>
+
+      <p>八字命理学（又称子平术），以人出生时的年月日时四柱天干地支（共八个字）为基础，结合阴阳五行生克规律，推断人的先天禀赋、性格特点、事业财运、婚姻感情、健康状况等人生轨迹。此法滥觞于唐代殿中侍御史李虚中（以年月日三柱推算），至宋代徐子平（徐大升）加入时柱，形成完整的四柱八字体系，后世遂以"子平"命名此法。</p>
+
+      <div class="mingli-card">
+        <h3>一、四柱八字的推算</h3>
+        <p><strong>年柱</strong>：以立春为年柱分界（非农历正月初一，亦非公历1月1日）。立春通常在公历2月4日前后。年柱天干地支由六十甲子纪年循环确定。</p>
+        <p><strong>月柱</strong>：以节气分界，正月从立春到惊蛰，二月从惊蛰到清明，以此类推。月柱的地支固定（正月寅、二月卯……），天干则根据年柱天干按"五虎遁"口诀推算：甲己之年丙作首，乙庚之岁戊为头，丙辛必定寻庚起，丁壬壬位顺行流，若问戊癸何方发，甲寅之上好追求。</p>
+        <p><strong>日柱</strong>：以公历日期为基准，通过万年历查表或数学公式推导可得。日柱为四柱之首，天干称为"日主"或"日元"，代表命主自身。</p>
+        <p><strong>时柱</strong>：以时辰为单位，子时23:00-01:00、丑时01:00-03:00……每个时辰2小时。时柱地支固定，天干根据日柱天干按"五鼠遁"口诀推算：甲己还加甲，乙庚丙作初，丙辛从戊起，丁壬庚子居，戊癸何方发，壬子是真途。</p>
+        <p style="font-size:0.75rem;color:var(--text-dim);">参考：《渊海子平》卷一论起月卦法、《三命通会》卷二论年上起月例、日上起时例。</p>
+      </div>
+
+      <div class="mingli-card">
+        <h3>二、十神</h3>
+        <p>十神是以日主天干为中心，将其他七个天干与日主进行五行生克关系比对而得的十种角色关系，是八字命理的核心分析工具。十神的确定规则为"生我、我生、克我、我克、同我"五组关系，每组又分阴阳同性（偏）与异性（正），合为十神：</p>
+        <table class="tengod-table">
+          <thead>
+            <tr><th>十神</th><th>关系</th><th>阴阳</th><th>核心含义</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="tg-name">比肩</td><td>同我</td><td>同性</td><td>兄弟、朋友、同事、竞争</td></tr>
+            <tr><td class="tg-name">劫财</td><td>同我</td><td>异性</td><td>姐妹、合作伙伴、耗财</td></tr>
+            <tr><td class="tg-name">食神</td><td>我生</td><td>同性</td><td>才华、口才、子女、享乐</td></tr>
+            <tr><td class="tg-name">伤官</td><td>我生</td><td>异性</td><td>智慧、创造力、叛逆、伤病</td></tr>
+            <tr><td class="tg-name">正财</td><td>我克</td><td>异性</td><td>正当财富、妻子、薪水</td></tr>
+            <tr><td class="tg-name">偏财</td><td>我克</td><td>同性</td><td>意外之财、父亲、投资</td></tr>
+            <tr><td class="tg-name">正官</td><td>克我</td><td>异性</td><td>官职、法律、规矩、丈夫</td></tr>
+            <tr><td class="tg-name">七杀</td><td>克我</td><td>同性</td><td>压力、挑战、权力、暴力</td></tr>
+            <tr><td class="tg-name">正印</td><td>生我</td><td>异性</td><td>学历、文凭、母亲、庇护</td></tr>
+            <tr><td class="tg-name">偏印</td><td>生我</td><td>同性</td><td>偏门学术、继母、特殊技能</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:12px;">十神之间的生克组合构成了命局的格局高低，如"官印相生"为贵格、"食神制杀"为武贵之格、"财官双美"为富贵双全之格等。《滴天髓》云："何知其人贵，官星有理会。何知其人富，财气通门户。"即是十神分析的精辟总结。</p>
+      </div>
+
+      <div class="mingli-card">
+        <h3>三、大运起法</h3>
+        <p>大运是每十年一个阶段的运势走向。大运的顺排或逆排、起运年龄的计算，是八字命理中最为关键的技术步骤之一：</p>
+        <ul>
+          <li><strong>阳年男命</strong>：年柱天干为阳（甲丙戊庚壬）的男性，大运从月柱开始<strong>顺排</strong>（沿六十甲子顺序依次后推）。</li>
+          <li><strong>阴年女命</strong>：年柱天干为阴（乙丁己辛癸）的女性，大运从月柱开始<strong>顺排</strong>。</li>
+          <li><strong>阴年男命</strong>：年柱天干为阴的男性，大运从月柱开始<strong>逆排</strong>（沿六十甲子顺序依次前推）。</li>
+          <li><strong>阳年女命</strong>：年柱天干为阳的女性，大运从月柱开始<strong>逆排</strong>。</li>
+        </ul>
+        <p>起运年龄的计算：从出生日数至下一个节气（顺排）或上一个节气（逆排）的天数，以3天为1岁计。例如从出生日数至下一节气有9天，则3岁起运。每一大运管10年。</p>
+        <p style="font-size:0.75rem;color:var(--text-dim);">参考：《渊海子平》卷一论起大运法、《滴天髓》起运章。</p>
+      </div>
+
+      <div class="mingli-card">
+        <h3>四、用神 · 忌神 · 喜神 · 闲神</h3>
+        <p><strong>用神</strong>：八字命局中最关键、最需要的五行。它是调和命局平衡的"药"。日主过强则取克泄耗为用神，日主过弱则取生扶为用神。用神得力者一生平顺、事业有成。</p>
+        <p><strong>忌神</strong>：命局中最不利的五行，加重命局失衡。如身强再遇比劫或印星即为忌神。忌神当道的大运或流年需格外谨慎。</p>
+        <p><strong>喜神</strong>：生扶用神的五行。如木为用神，水生木，则水为喜神。喜神运是人生的黄金时期。</p>
+        <p><strong>闲神</strong>：对命局影响微弱的五行，既非喜亦非忌。闲神旺衰对命局吉凶无明显影响。</p>
+        <p>"捉得用神，则全局皆活"——用神的选取是八字分析的核心。《滴天髓》原文强调："有病方为贵，无伤不是奇。格中如去病，财禄两相随。"此谓命局有偏颇之处（病），但能用神得力去其病，方为富贵之命。</p>
+      </div>
+
+      <div class="mingli-card">
+        <h3>五、纳音五行与命局关系</h3>
+        <p>纳音五行是六十甲子命理的重要组成部分，在《渊海子平》中占有重要篇幅。年柱纳音代表命主的"本命"，常用于合婚、择日等。纳音与正五行（干支本身的五行）互相参看，丰富了命局分析维度。如甲子年出生者，纳音为"海中金"，正五行甲为木、子为水，两套系统同时存在——纳音定"根基"，正五行显"表相"。《三命通会》万民英在前几卷中详细论述了纳音取象的来源并列举了纳音冲克合化在命局判断中的实际应用。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- Footer                                    -->
+  <!-- ═══════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-logo">道器</span>
+        <ul class="footer-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="knowledge.html">知识中心</a></li>
+          <li><a href="form.html">立即测算</a></li>
+          <li><a href="about.html">关于我们</a></li>
+          <li><a href="terms.html">服务条款</a></li>
+          <li><a href="privacy.html">隐私政策</a></li>
+        </ul>
+      </div>
+      <p class="footer-copy">© 2026 道器命理 · 仅供参考</p>
+      <p class="site-disclaimer">⚠️ 内容纯属虚构，仅供娱乐参考，请勿用于实际决策</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    lucide.createIcons();
+
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Scroll progress bar
+    const scrollProgress = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const winH = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (window.scrollY / winH) * 100;
+      scrollProgress.style.width = scrolled + '%';
+    });
+
+    // Back to top
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('visible', window.scrollY > 500);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -30px 0px'
+    };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.knowledge-card, .mingli-card, .formula-card, .wushu-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(16px)';
+      el.style.transition = 'all 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

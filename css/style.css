@@ -1102,6 +1102,31 @@ a:hover { color: #e0c06a; }
   letter-spacing: 0.5px; margin-top: 12px;
 }
 
+/* --- Knowledge More Link --- */
+.know-more-link {
+  display: inline-block; padding: 6px 18px;
+  border: 1px solid var(--gold-soft);
+  border-radius: 100px;
+  color: var(--gold); font-size: 0.8rem;
+  text-decoration: none;
+  transition: all 0.25s;
+  background: rgba(201,168,76,0.04);
+}
+.know-more-link:hover {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  box-shadow: 0 0 16px rgba(201,168,76,0.12);
+}
+
+/* Ensure anchor-wrapped cards keep their styling */
+a.organ-item, a.season-card, a.pulse-card, a.glass-card {
+  color: inherit;
+}
+a.organ-item:hover, a.season-card:hover, a.pulse-card:hover, a.glass-card:hover {
+  border-color: rgba(201,168,76,0.3);
+  box-shadow: 0 0 24px rgba(201,168,76,0.08);
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
   .custom-cursor-ring, .custom-cursor-dot { display: none !important; }
