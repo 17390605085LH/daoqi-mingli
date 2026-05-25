@@ -22,6 +22,15 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <!-- Custom Cursor -->
+  <div class="custom-cursor-ring" id="cursorRing"></div>
+  <div class="custom-cursor-dot" id="cursorDot"></div>
+  <!-- Back to Top -->
+  <div class="back-to-top" id="backToTop" title="返回顶部">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </div>
 
   <!-- Navigation -->
   <nav class="nav">
@@ -47,6 +56,13 @@
   <section class="hero" id="hero">
     <div class="hero-bg">
       <canvas id="particle-canvas"></canvas>
+      <div class="mist-layer mist-1"></div>
+      <div class="mist-layer mist-2"></div>
+      <div class="mist-layer mist-3"></div>
+      <div class="mountain-bg"></div>
+      <div class="cloud-float" style="top:12%;animation-duration:55s;font-size:5rem;">☁</div>
+      <div class="cloud-float" style="top:28%;animation-duration:65s;font-size:3.5rem;animation-delay:-20s;">☁</div>
+      <div class="cloud-float" style="top:45%;animation-duration:70s;font-size:4.5rem;animation-delay:-35s;">☁</div>
     </div>
     <div class="hero-content">
       <span class="hero-badge animate-fade-in-up">道器合一 · 数智命理</span>
@@ -68,6 +84,35 @@
       <div class="tao-content">
         <h2>道生一 · 一生二 · 二生三 · 三生万物</h2>
         <p>形而上者谓之道，形而下者谓之器。<br>道器命理，以「器」之算法推演天地之数，以「道」之智慧洞察人生轨迹。<br>八字为器，五行为道；排盘为术，医命为用。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Stats Counter · 道器传承 ═══ -->
+  <section class="section" id="stats">
+    <div class="container">
+      <div class="yy-spinner" style="margin-bottom:20px;"></div>
+      <div class="section-header">
+        <h2 class="gradient-heading">数智传承 · 千年智慧</h2>
+        <p>道器命理，以算法之器承载大道之体</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number" data-target="2500" data-suffix="+">0</div>
+          <div class="stat-label">📜 经典典籍传承（年）</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="12" data-suffix="万+">0</div>
+          <div class="stat-label">🔮 累计排盘解析</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="60" data-suffix="">0</div>
+          <div class="stat-label">🎯 甲子轮回组合</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="365" data-suffix="">0</div>
+          <div class="stat-label">🌿 道医养生精粹</div>
+        </div>
       </div>
     </div>
   </section>
@@ -113,6 +158,47 @@
           <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">开窍于耳<br>主骨·藏精</div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ═══ Stem-Branch · 天干地支 ═══ -->
+  <section class="section" id="stembranch" style="background:rgba(13,17,23,0.6);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="gradient-heading">☯ 天干地支 · 六十甲子</h2>
+        <p>天干地支，纪年月日时。干者犹木之干，支者犹木之枝——相配而六十甲子成</p>
+      </div>
+      <div class="stem-wheel">
+        <div class="stem-column">
+          <div class="col-label">十天干</div>
+          <span class="stem-tag wood">甲</span>
+          <span class="stem-tag wood">乙</span>
+          <span class="stem-tag fire">丙</span>
+          <span class="stem-tag fire">丁</span>
+          <span class="stem-tag earth">戊</span>
+          <span class="stem-tag earth">己</span>
+          <span class="stem-tag metal">庚</span>
+          <span class="stem-tag metal">辛</span>
+          <span class="stem-tag water">壬</span>
+          <span class="stem-tag water">癸</span>
+        </div>
+        <div class="stem-column" style="margin-top:28px;">
+          <div class="col-label">十二地支</div>
+          <span class="branch-tag">子<span class="animal-emoji">🐀</span></span>
+          <span class="branch-tag">丑<span class="animal-emoji">🐂</span></span>
+          <span class="branch-tag">寅<span class="animal-emoji">🐅</span></span>
+          <span class="branch-tag">卯<span class="animal-emoji">🐇</span></span>
+          <span class="branch-tag">辰<span class="animal-emoji">🐉</span></span>
+          <span class="branch-tag">巳<span class="animal-emoji">🐍</span></span>
+          <span class="branch-tag">午<span class="animal-emoji">🐎</span></span>
+          <span class="branch-tag">未<span class="animal-emoji">🐑</span></span>
+          <span class="branch-tag">申<span class="animal-emoji">🐒</span></span>
+          <span class="branch-tag">酉<span class="animal-emoji">🐓</span></span>
+          <span class="branch-tag">戌<span class="animal-emoji">🐕</span></span>
+          <span class="branch-tag">亥<span class="animal-emoji">🐖</span></span>
+        </div>
+      </div>
+      <p style="text-align:center;color:var(--text-muted);font-size:0.78rem;margin-top:20px;">天干属阳者：甲丙戊庚壬 · 属阴者：乙丁己辛癸<br>地支属阳者：子寅辰午申戌 · 属阴者：丑卯巳未酉亥</p>
     </div>
   </section>
 
@@ -331,6 +417,78 @@
             <h4>冬三月 · 闭藏</h4>
             <p>早卧晚起，必待日光，使志若伏若匿。肾气旺，宜食苦味坚肾，忌过咸伤肾。情绪宜藏守，忌惊恐伤肾。</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Meridian Clock · 子午流注 ═══ -->
+  <section class="section" id="meridian">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="gradient-heading">🕐 子午流注 · 十二经时辰</h2>
+        <p>《灵枢·经脉》：经脉者，所以能决死生，处百病，调虚实，不可不通</p>
+      </div>
+      <div class="meridian-grid" id="meridianGrid">
+        <div class="meridian-item" data-hour="23-1">
+          <div class="meridian-hour">23:00-01:00</div>
+          <div class="meridian-organ">胆经</div>
+          <div class="meridian-channel">足少阳 · 子时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="1-3">
+          <div class="meridian-hour">01:00-03:00</div>
+          <div class="meridian-organ">肝经</div>
+          <div class="meridian-channel">足厥阴 · 丑时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="3-5">
+          <div class="meridian-hour">03:00-05:00</div>
+          <div class="meridian-organ">肺经</div>
+          <div class="meridian-channel">手太阴 · 寅时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="5-7">
+          <div class="meridian-hour">05:00-07:00</div>
+          <div class="meridian-organ">大肠经</div>
+          <div class="meridian-channel">手阳明 · 卯时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="7-9">
+          <div class="meridian-hour">07:00-09:00</div>
+          <div class="meridian-organ">胃经</div>
+          <div class="meridian-channel">足阳明 · 辰时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="9-11">
+          <div class="meridian-hour">09:00-11:00</div>
+          <div class="meridian-organ">脾经</div>
+          <div class="meridian-channel">足太阴 · 巳时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="11-13">
+          <div class="meridian-hour">11:00-13:00</div>
+          <div class="meridian-organ">心经</div>
+          <div class="meridian-channel">手少阴 · 午时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="13-15">
+          <div class="meridian-hour">13:00-15:00</div>
+          <div class="meridian-organ">小肠经</div>
+          <div class="meridian-channel">手太阳 · 未时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="15-17">
+          <div class="meridian-hour">15:00-17:00</div>
+          <div class="meridian-organ">膀胱经</div>
+          <div class="meridian-channel">足太阳 · 申时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="17-19">
+          <div class="meridian-hour">17:00-19:00</div>
+          <div class="meridian-organ">肾经</div>
+          <div class="meridian-channel">足少阴 · 酉时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="19-21">
+          <div class="meridian-hour">19:00-21:00</div>
+          <div class="meridian-organ">心包经</div>
+          <div class="meridian-channel">手厥阴 · 戌时当令</div>
+        </div>
+        <div class="meridian-item" data-hour="21-23">
+          <div class="meridian-hour">21:00-23:00</div>
+          <div class="meridian-organ">三焦经</div>
+          <div class="meridian-channel">手少阳 · 亥时当令</div>
         </div>
       </div>
     </div>
@@ -707,6 +865,39 @@
     </div>
   </section>
 
+  <!-- ═══ Cosmic Stars · 九天星辰 ═══ -->
+  <section class="section cosmic-section" id="cosmic" style="background:rgba(13,17,23,0.7);">
+    <div class="cosmic-field" id="cosmicField"></div>
+    <div class="container" style="position:relative;z-index:1;">
+      <div class="section-header">
+        <h2 class="gradient-heading">✨ 九天星辰 · 三垣四象</h2>
+        <p>天有三垣二十八宿，地有九州十二分野。仰观天文，俯察地理——以星象照命途</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;max-width:860px;margin:0 auto;">
+        <div class="glass-card" style="text-align:center;">
+          <div style="font-size:2.2rem;margin-bottom:10px;">🐉</div>
+          <h4 style="color:var(--gold);margin-bottom:6px;">青龙 · 东方七宿</h4>
+          <p style="font-size:0.8rem;color:var(--text-muted);">角亢氐房心尾箕<br>属木 · 主春 · 司生发</p>
+        </div>
+        <div class="glass-card" style="text-align:center;">
+          <div style="font-size:2.2rem;margin-bottom:10px;">🐦</div>
+          <h4 style="color:var(--gold);margin-bottom:6px;">朱雀 · 南方七宿</h4>
+          <p style="font-size:0.8rem;color:var(--text-muted);">井鬼柳星张翼轸<br>属火 · 主夏 · 司长养</p>
+        </div>
+        <div class="glass-card" style="text-align:center;">
+          <div style="font-size:2.2rem;margin-bottom:10px;">🐅</div>
+          <h4 style="color:var(--gold);margin-bottom:6px;">白虎 · 西方七宿</h4>
+          <p style="font-size:0.8rem;color:var(--text-muted);">奎娄胃昴毕觜参<br>属金 · 主秋 · 司收敛</p>
+        </div>
+        <div class="glass-card" style="text-align:center;">
+          <div style="font-size:2.2rem;margin-bottom:10px;">🐢</div>
+          <h4 style="color:var(--gold);margin-bottom:6px;">玄武 · 北方七宿</h4>
+          <p style="font-size:0.8rem;color:var(--text-muted);">斗牛女虚危室壁<br>属水 · 主冬 · 司闭藏</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="container"><div class="dao-divider"><div class="dao-symbol"></div></div></div>
 
   <!-- CTA Section -->
@@ -732,6 +923,7 @@
         </ul>
       </div>
       <p class="footer-copy">© 2026 道器命理 · 仅供参考</p>
+      <p class="site-disclaimer">⚠️ 内容纯属虚构，仅供娱乐参考，请勿用于实际决策</p>
     </div>
   </footer>
 
@@ -747,7 +939,157 @@
       navLinks.classList.toggle('open');
     });
 
-    // Particle animation
+    // ========================================
+    // SCROLL PROGRESS BAR
+    // ========================================
+    const scrollProgress = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const winH = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (window.scrollY / winH) * 100;
+      scrollProgress.style.width = scrolled + '%';
+    });
+
+    // ========================================
+    // CUSTOM CURSOR
+    // ========================================
+    if (window.innerWidth > 768) {
+      const cursorRing = document.getElementById('cursorRing');
+      const cursorDot = document.getElementById('cursorDot');
+      let cursorX = 0, cursorY = 0;
+      let ringX = 0, ringY = 0;
+      
+      document.addEventListener('mousemove', (e) => {
+        cursorX = e.clientX;
+        cursorY = e.clientY;
+        cursorDot.style.left = cursorX + 'px';
+        cursorDot.style.top = cursorY + 'px';
+      });
+
+      function animateRing() {
+        ringX += (cursorX - ringX) * 0.15;
+        ringY += (cursorY - ringY) * 0.15;
+        cursorRing.style.left = ringX + 'px';
+        cursorRing.style.top = ringY + 'px';
+        requestAnimationFrame(animateRing);
+      }
+      animateRing();
+
+      // Hover effect on interactive elements
+      const hoverTargets = document.querySelectorAll('a, button, .card, .faq-item, .pricing-card, .stat-item, .meridian-item, .stem-tag, .branch-tag, .glass-card');
+      hoverTargets.forEach(el => {
+        el.addEventListener('mouseenter', () => cursorRing.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursorRing.classList.remove('hover'));
+      });
+    }
+
+    // ========================================
+    // COUNT-UP ANIMATION
+    // ========================================
+    let statsAnimated = false;
+    function animateStats() {
+      if (statsAnimated) return;
+      const statsSection = document.getElementById('stats');
+      if (!statsSection) return;
+      const rect = statsSection.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.8 && rect.bottom > 0) {
+        statsAnimated = true;
+        document.querySelectorAll('.stat-number').forEach(el => {
+          const target = parseInt(el.dataset.target);
+          const suffix = el.dataset.suffix || '';
+          const duration = 2000;
+          const startTime = performance.now();
+          
+          function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(target * eased) + suffix;
+            if (progress < 1) requestAnimationFrame(update);
+          }
+          requestAnimationFrame(update);
+        });
+      }
+    }
+    window.addEventListener('scroll', animateStats);
+    animateStats();
+
+    // ========================================
+    // MERIDIAN CLOCK HIGHLIGHT
+    // ========================================
+    function highlightMeridian() {
+      const now = new Date();
+      const hours = now.getHours();
+      const ranges = [
+        {h: '23-1',  start: 23, end: 23}, {h: '23-1',  start: 0, end: 1},
+        {h: '1-3',   start: 1, end: 3},   {h: '3-5',   start: 3, end: 5},
+        {h: '5-7',   start: 5, end: 7},   {h: '7-9',   start: 7, end: 9},
+        {h: '9-11',  start: 9, end: 11},  {h: '11-13', start: 11, end: 13},
+        {h: '13-15', start: 13, end: 15}, {h: '15-17', start: 15, end: 17},
+        {h: '17-19', start: 17, end: 19}, {h: '19-21', start: 19, end: 21},
+        {h: '21-23', start: 21, end: 23}
+      ];
+      const currentRange = ranges.find(r => {
+        if (r.start === 0 && hours === 0) return true;
+        if (r.start === 23 && hours === 23) return true;
+        return hours >= r.start && hours < r.end;
+      });
+      if (currentRange) {
+        document.querySelectorAll('.meridian-item').forEach(el => el.classList.remove('active-meridian'));
+        const active = document.querySelector('.meridian-item[data-hour="' + currentRange.h + '"]');
+        if (active) active.classList.add('active-meridian');
+      }
+    }
+    highlightMeridian();
+    setInterval(highlightMeridian, 60000);
+
+    // ========================================
+    // COSMIC STAR FIELD
+    // ========================================
+    (function() {
+      const field = document.getElementById('cosmicField');
+      if (!field || window.innerWidth < 768) return;
+      const count = 40;
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'cosmic-star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        const size = Math.random() * 2.5 + 1;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.animationDuration = (Math.random() * 4 + 3) + 's';
+        star.style.animationDelay = Math.random() * 5 + 's';
+        field.appendChild(star);
+      }
+      // Add constellation-like lines
+      const stars = field.querySelectorAll('.cosmic-star');
+      for (let i = 0; i < 5; i++) {
+        const s1 = stars[Math.floor(Math.random() * count)];
+        const s2 = stars[Math.floor(Math.random() * count)];
+        const line = document.createElement('div');
+        line.className = 'cosmic-line';
+        line.style.width = '60px';
+        line.style.left = Math.random() * 100 + '%';
+        line.style.top = Math.random() * 100 + '%';
+        line.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+        field.appendChild(line);
+      }
+    })();
+
+    // ========================================
+    // BACK TO TOP
+    // ========================================
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('visible', window.scrollY > 500);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ========================================
+    // PARTICLE ANIMATION
+    // ========================================
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
