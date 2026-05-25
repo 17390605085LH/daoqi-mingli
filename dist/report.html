@@ -58,6 +58,10 @@
 </footer>
 
 <script>
+// ===== HELPERS =====
+function safeArr(v) { return Array.isArray(v) ? v : []; }
+function safeStr(v, fallback) { return (typeof v === 'string' && v) ? v : (fallback || ''); }
+
 // ===== GUARD =====
 const birthData = JSON.parse(sessionStorage.getItem('birthData') || 'null');
 if (!birthData || !birthData.name || !birthData.year) { window.location.replace('form.html'); throw new Error('redirect'); }
@@ -106,16 +110,20 @@ async function loadReport() {
     const text = await resp.text();
     try { baziResult = JSON.parse(text); } catch { throw new Error('数据解析失败'); }
     if (baziResult.error) throw new Error(baziResult.error);
-    loading.remove();
+    loading.style.display = 'none';
     renderHeader();
     renderAllTabs();
     initTabs();
     renderExpertCTA();
+    loading.remove();
   } catch (err) {
-    loading.innerHTML = `<div style="text-align:center;padding:40px 20px;">
+    console.error('Report load error:', err);
+    loading.style.display = 'none';
+    const panels = document.getElementById('tabPanels');
+    panels.innerHTML = `<div style="text-align:center;padding:40px 20px;">
       <div style="font-size:3rem;margin-bottom:16px;">⚠️</div>
       <h3 style="color:var(--gold);margin-bottom:12px;">加载失败</h3>
-      <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6;margin-bottom:20px;">${err.message}</p>
+      <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6;margin-bottom:20px;">${err.message || err}</p>
       <button onclick="location.reload()" class="btn btn-primary" style="margin-right:8px;">重新加载</button>
       <a href="form.html" class="btn btn-ghost">返回填写</a>
     </div>`;
@@ -159,12 +167,13 @@ function renderHeader() {
 // ===== Render all tabs =====
 function renderAllTabs() {
   const d = baziResult;
-  document.getElementById('panel-bazi').innerHTML = buildBaziPanel(d);
-  document.getElementById('panel-ziwei').innerHTML = buildZiweiPanel(d);
-  document.getElementById('panel-mianxiang').innerHTML = hasFacePhoto ? buildMianXiangPanel(d) : buildPhotoPlaceholder('面相', 'face');
-  document.getElementById('panel-shouxiang').innerHTML = hasPalmPhoto ? buildShouXiangPanel(d) : buildPhotoPlaceholder('手相', 'palm');
-  document.getElementById('panel-fengshui').innerHTML = buildFengshuiPanel(d);
-  document.getElementById('panel-liunian').innerHTML = buildLiunianPanel(d);
+  const safeBuild = (fn) => { try { return fn(); } catch(e) { console.error(e); return '<div class="tech-card"><p style="color:var(--red);text-align:center;padding:20px;">⚠ 数据加载异常：' + (e.message || e) + '</p></div>'; } };
+  document.getElementById('panel-bazi').innerHTML = safeBuild(() => buildBaziPanel(d));
+  document.getElementById('panel-ziwei').innerHTML = safeBuild(() => buildZiweiPanel(d));
+  document.getElementById('panel-mianxiang').innerHTML = safeBuild(() => hasFacePhoto ? buildMianXiangPanel(d) : buildPhotoPlaceholder('面相', 'face'));
+  document.getElementById('panel-shouxiang').innerHTML = safeBuild(() => hasPalmPhoto ? buildShouXiangPanel(d) : buildPhotoPlaceholder('手相', 'palm'));
+  document.getElementById('panel-fengshui').innerHTML = safeBuild(() => buildFengshuiPanel(d));
+  document.getElementById('panel-liunian').innerHTML = safeBuild(() => buildLiunianPanel(d));
 }
 
 function renderExpertCTA() {
@@ -216,9 +225,9 @@ function techCard(icon, title, subtitle, content) {
 //  TAB 1: 命盘总览
 // =====================================================
 function buildBaziPanel(d) {
-  const p = d.personality;
-  let pos = p.positive.map(t => '<li style="padding:2px 0;">✦ ' + t + '</li>').join('');
-  let neg = p.negative.map(t => '<li style="padding:2px 0;">◇ ' + t + '</li>').join('');
+  const p = d.personality || {};
+  let pos = safeArr(p.traits || p.positive).map(t => '<li style="padding:2px 0;">✦ ' + t + '</li>').join('');
+  let neg = safeArr(p.flaws || p.negative).map(t => '<li style="padding:2px 0;">◇ ' + t + '</li>').join('');
 
   const wc = d.wuxingCount;
   const wn = ['金','木','水','火','土'];
@@ -234,8 +243,8 @@ function buildBaziPanel(d) {
     </div>`;
   }).join('');
 
-  const g = d.luckyGuide;
-  const ss = d.shiShen;
+  const g = d.luckyGuide || {};
+  const ss = d.shiShen || {};
   const pn = { year:'年柱', month:'月柱', day:'日柱', hour:'时柱' };
   let shenRows = Object.entries(ss).map(([k, v]) =>
     `<div style="display:flex;justify-content:space-between;padding:6px 8px;background:rgba(26,31,46,0.4);border-radius:6px;margin-bottom:4px;font-size:0.9rem;">
@@ -247,7 +256,7 @@ function buildBaziPanel(d) {
 
   return `
     ${techCard('🧬', '日主性格', `日主${d.dayMaster}${d.dayWuxing} · ${d.strength}`,
-      `<p style="margin-bottom:16px;font-size:0.9rem;">日主 <strong style="color:var(--gold);">${d.dayMaster}${d.dayWuxing}</strong>，命局${d.strength}。${d.yongShen.principle}</p>
+      `<p style="margin-bottom:16px;font-size:0.9rem;">日主 <strong style="color:var(--gold);">${d.dayMaster}${d.dayWuxing}</strong>，命局${d.strength}。${(d.yongShen||{}).principle || ''}</p>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
         <div style="padding:12px;background:rgba(26,31,46,0.4);border-radius:8px;border-left:3px solid #4A9E8B;">
           <div style="font-size:0.8rem;color:var(--jade);margin-bottom:6px;">✦ 优势特质</div>
@@ -259,10 +268,10 @@ function buildBaziPanel(d) {
         </div>
       </div>`)}
 
-    ${techCard('📊', '五行分布', d.yongShen.principle,
+    ${techCard('📊', '五行分布', (d.yongShen||{}).principle || '',
       bars + `<div style="margin-top:12px;padding:10px;background:rgba(201,168,76,0.05);border-radius:8px;border-left:3px solid var(--gold);font-size:0.9rem;">
-        <strong style="color:var(--gold);">用神：${d.yongShen.yongShen}</strong>
-        <span style="color:var(--red);margin-left:12px;">忌：${d.yongShen.avoid}</span>
+        <strong style="color:var(--gold);">用神：${(d.yongShen||{}).yongShen || '—'}</strong>
+        <span style="color:var(--red);margin-left:12px;">忌：${(d.yongShen||{}).avoid || '—'}</span>
       </div>`)}
 
     ${d.daoyi ? techCard('🩺', '道医体质辨识', '五行偏颇 → 体质归类 → 调养方案',
@@ -277,20 +286,20 @@ function buildBaziPanel(d) {
       `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;">
         <div style="text-align:center;padding:12px;background:rgba(26,31,46,0.4);border-radius:8px;">
           <div style="font-size:1.5rem;">🧭</div><div style="font-size:0.75rem;color:var(--text-muted);">幸运方位</div>
-          <div style="font-weight:600;font-size:0.9rem;">${g.directions.join(' / ')}</div>
+          <div style="font-weight:600;font-size:0.9rem;">${safeArr(g.directions).join(' / ') || '—'}</div>
         </div>
         <div style="text-align:center;padding:12px;background:rgba(26,31,46,0.4);border-radius:8px;">
           <div style="font-size:1.5rem;">🎨</div><div style="font-size:0.75rem;color:var(--text-muted);">幸运颜色</div>
-          <div style="font-weight:600;font-size:0.9rem;">${g.colors.join(' / ')}</div>
+          <div style="font-weight:600;font-size:0.9rem;">${safeArr(g.colors).join(' / ') || '—'}</div>
         </div>
         <div style="text-align:center;padding:12px;background:rgba(26,31,46,0.4);border-radius:8px;">
           <div style="font-size:1.5rem;">🔢</div><div style="font-size:0.75rem;color:var(--text-muted);">幸运数字</div>
-          <div style="font-weight:600;font-size:0.9rem;">${g.numbers.join(', ')}</div>
+          <div style="font-weight:600;font-size:0.9rem;">${safeArr(g.numbers).join(', ') || '—'}</div>
         </div>
       </div>
       <div style="padding:10px;background:rgba(74,158,139,0.06);border-radius:8px;font-size:0.9rem;">
         <strong style="color:var(--jade);">适合行业</strong>
-        <p style="margin-top:4px;">${g.industries.join('、')}</p>
+        <p style="margin-top:4px;">${safeArr(g.industries).join('、') || '—'}</p>
       </div>`)}
 
     ${buildJixiongCard(d)}
@@ -299,6 +308,7 @@ function buildBaziPanel(d) {
 
 function buildDaoyiPanel(d) {
   const dy = d.daoyi;
+  if (!dy) return '<p style="text-align:center;padding:20px;color:var(--text-muted);">道医体质分析数据暂不可用，请尝试提供更多个人信息。</p>';
   const sc = {'春季':'#6B8E23','夏季':'#DC3545','秋季':'#A8A9AD','冬季':'#4682B4'};
   return `<div style="margin-bottom:16px;">
     <div style="font-size:1.3rem;color:${sc[dy.season]||'#CD853F'};font-weight:700;font-family:var(--font-serif);margin-bottom:4px;">${dy.primaryType}</div>
@@ -307,11 +317,11 @@ function buildDaoyiPanel(d) {
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
     <div>
       <div style="font-weight:600;color:var(--gold);margin-bottom:6px;">📋 典型症状</div>
-      <ul style="list-style:none;font-size:0.85rem;">${dy.primarySymptoms.map(s => '<li style="padding:4px 0;border-bottom:1px solid rgba(201,168,76,0.06);">🔸 ' + s + '</li>').join('')}</ul>
+      <ul style="list-style:none;font-size:0.85rem;">${safeArr(dy.primarySymptoms).map(s => '<li style="padding:4px 0;border-bottom:1px solid rgba(201,168,76,0.06);">🔸 ' + s + '</li>').join('')}</ul>
     </div>
     <div>
       <div style="font-weight:600;color:var(--gold);margin-bottom:6px;">🎯 关联体质</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">${dy.secondaryTypes.map(t => '<span style="padding:4px 10px;background:rgba(74,158,139,0.08);border-radius:100px;font-size:0.8rem;color:var(--jade);">' + t + '</span>').join('')}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">${safeArr(dy.secondaryTypes).map(t => '<span style="padding:4px 10px;background:rgba(74,158,139,0.08);border-radius:100px;font-size:0.8rem;color:var(--jade);">' + t + '</span>').join('')}</div>
       <div style="font-weight:600;color:var(--gold);margin-bottom:6px;">🏥 薄弱脏腑</div>
       <p style="font-size:0.9rem;"><strong style="color:var(--red);">脏：${dy.weakOrgan}</strong> · <strong style="color:var(--red);">腑：${dy.weakFu}</strong></p>
       <p style="font-size:0.85rem;color:var(--text-muted);">${dy.organAdvice}</p>
@@ -324,7 +334,7 @@ function buildDaoyiPanel(d) {
   <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
     <div style="padding:10px;background:rgba(201,168,76,0.05);border-radius:8px;">
       <strong style="color:var(--gold);">💆 穴位调理</strong>
-      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;">${dy.acupoints.map(a => '<span style="padding:3px 8px;background:rgba(201,168,76,0.1);border:1px solid var(--gold-dim);border-radius:100px;font-size:0.78rem;font-family:monospace;">' + a + '</span>').join('')}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;">${safeArr(dy.acupoints).map(a => '<span style="padding:3px 8px;background:rgba(201,168,76,0.1);border:1px solid var(--gold-dim);border-radius:100px;font-size:0.78rem;font-family:monospace;">' + a + '</span>').join('')}</div>
     </div>
     <div style="padding:10px;background:rgba(201,168,76,0.05);border-radius:8px;">
       <strong style="color:var(--gold);">🏃 日常调养</strong>
@@ -340,7 +350,7 @@ function buildDaoyiPanel(d) {
 // ===== 人生阶段分析 =====
 function buildLifeStageAnalysis(d) {
   const dayWx = d.dayWuxing, strength = d.strength, dayStem = d.dayMaster;
-  const yongWx = d.yongShen.yongWuxing[0], avoidWx = d.yongShen.avoid;
+  const yongWx = safeArr((d.yongShen||{}).yongWuxing)[0] || '土', avoidWx = (d.yongShen||{}).avoid || '';
   const isStrong = strength.includes('强');
 
   const P = {
@@ -439,6 +449,7 @@ window.switchStage = switchStage;
 // =====================================================
 function buildZiweiPanel(d) {
   const zw = d.ziwei;
+  if (!zw) return '<div class="tech-card"><p style="text-align:center;padding:20px;color:var(--text-muted);">紫微斗数数据暂不可用</p></div>';
 
   const rawBranches = ['巳','午','未','申','辰','酉','卯','戌','寅','丑','子','亥'];
   const branchPalaceMap = {};
@@ -472,7 +483,7 @@ function buildZiweiPanel(d) {
       if ((detail.siHuas || []).length > 0) {
         const labels = {'lu':'化禄','quan':'化权','ke':'化科','ji':'化忌'};
         const colors = {'lu':'#4A9E8B','quan':'#C9A84C','ke':'#6B5B95','ji':'#C75B5B'};
-        starsHtml += '<span style="font-size:0.68rem;">' + detail.siHuas.map(sh => `<span style="color:${colors[sh.type]||'#C9A84C'};">${labels[sh.type]||sh.type}</span>`).join(' ') + '</span><br>';
+        if ((detail.siHuas || []).length > 0) starsHtml += '<span style="font-size:0.68rem;">' + detail.siHuas.map(sh => `<span style="color:${colors[sh.type]||'#C9A84C'};">${labels[sh.type]||sh.type}</span>`).join(' ') + '</span><br>';
       }
       if ((detail.luckyStars || []).length > 0) starsHtml += '<span style="font-size:0.65rem;color:#4A9E8B;">' + detail.luckyStars.join(' ') + '</span><br>';
       if ((detail.fierceStars || []).length > 0) starsHtml += '<span style="font-size:0.65rem;color:#C75B5B;">' + detail.fierceStars.join(' ') + '</span><br>';
@@ -490,8 +501,8 @@ function buildZiweiPanel(d) {
       <p style="margin-top:4px;line-height:1.6;">${ka[palace]}</p></div>`;
   }
 
-  const mingStars = zw.mingStars.length ? zw.mingStars.join('、') : '无主星';
-  const shenStars = zw.shenStars.length ? zw.shenStars.join('、') : '无主星';
+  const mingStars = safeArr(zw.mingStars).length ? safeArr(zw.mingStars).join('、') : '无主星';
+  const shenStars = safeArr(zw.shenStars).length ? safeArr(zw.shenStars).join('、') : '无主星';
 
   return `
     ${techCard('🧭', '命身宫', '紫微斗数核心',
@@ -531,67 +542,52 @@ function buildZiweiPanel(d) {
 // =====================================================
 function buildMianXiangPanel(d) {
   const mx = d.mianxiang;
-  let gongsHtml = Object.entries(mx.keyGongs || {}).map(([name, analysis]) =>
-    `<div style="padding:10px;background:rgba(26,31,46,0.4);border-radius:8px;margin-bottom:4px;font-size:0.9rem;">
-      <strong style="color:var(--gold);">${name}</strong> — <span style="line-height:1.6;">${analysis}</span></div>`
-  ).join('');
-
-  const f = mx.features || {};
+  if (!mx) return '<div class="tech-card"><p style="text-align:center;padding:20px;color:var(--text-muted);">面相分析数据暂不可用，请上传照片解锁。</p></div>';
+  const items = [
+    { label: '面型', value: mx.faceShape },
+    { label: '鼻子（财帛宫）', value: mx.nose },
+    { label: '事业运', value: mx.career },
+    { label: '综合解读', value: mx.overall },
+  ].filter(i => i.value);
   return `
-    ${techCard('👁', '面相全图', `面型：${mx.faceShape}`,
+    ${techCard('👁', '面相分析', `基于五行木属性的面相特征`,
       `<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">
         <div style="flex:0 0 260px;text-align:center;">
           <img src="assets/mianxiang-chart-v2.svg" alt="面相十二宫全图" style="width:100%;max-width:260px;border-radius:8px;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
           <p style="display:none;color:var(--text-muted);font-size:0.8rem;">面相全图 · 十二宫标注</p>
         </div>
         <div style="flex:1;min-width:220px;">
-          <p style="margin-bottom:8px;"><strong style="color:var(--gold);">面型：</strong>${mx.faceShape}</p>
-          <p style="margin-bottom:8px;"><strong style="color:var(--gold);">三停：</strong></p>
-          <p style="font-size:0.9rem;line-height:1.6;margin-bottom:12px;">${mx.santing}</p>
-          <p style="margin-bottom:8px;"><strong style="color:var(--gold);">事业运：</strong>${mx.career}</p>
-          <p><strong style="color:var(--gold);">感情运：</strong>${mx.love}</p>
+          ${items.map(i => `<div style="padding:10px 12px;background:rgba(26,31,46,0.4);border-radius:8px;margin-bottom:8px;">
+            <strong style="color:var(--gold);">${i.label}</strong>
+            <p style="font-size:0.9rem;margin-top:4px;line-height:1.6;">${i.value}</p>
+          </div>`).join('')}
         </div>
-      </div>`)}
-    ${techCard('📐', '五官详析', '各部位深度解读',
-      `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;">
-        <div style="padding:10px;background:rgba(26,31,46,0.4);border-radius:8px;"><strong style="color:var(--gold);">额头（天庭）</strong><p style="font-size:0.85rem;margin-top:4px;">${f.forehead}</p></div>
-        <div style="padding:10px;background:rgba(26,31,46,0.4);border-radius:8px;"><strong style="color:var(--gold);">眉眼</strong><p style="font-size:0.85rem;margin-top:4px;">${f.eyes}</p></div>
-        <div style="padding:10px;background:rgba(26,31,46,0.4);border-radius:8px;"><strong style="color:var(--gold);">鼻子（财帛宫）</strong><p style="font-size:0.85rem;margin-top:4px;">${f.nose}</p></div>
-        <div style="padding:10px;background:rgba(26,31,46,0.4);border-radius:8px;"><strong style="color:var(--gold);">嘴唇</strong><p style="font-size:0.85rem;margin-top:4px;">${f.mouth}</p></div>
-        <div style="padding:10px;background:rgba(26,31,46,0.4);border-radius:8px;"><strong style="color:var(--gold);">耳朵（福德宫）</strong><p style="font-size:0.85rem;margin-top:4px;">${f.ears}</p></div>
-        <div style="padding:10px;background:rgba(26,31,46,0.4);border-radius:8px;"><strong style="color:var(--gold);">事业运</strong><p style="font-size:0.85rem;margin-top:4px;">${mx.career}</p></div>
       </div>`)}
   `;
 }
 
 function buildShouXiangPanel(d) {
-  const sx = d.shouxiang, l = sx.lines || {};
+  const sx = d.shouxiang;
+  if (!sx) return '<div class="tech-card"><p style="text-align:center;padding:20px;color:var(--text-muted);">手相分析数据暂不可用，请上传照片解锁。</p></div>';
   const items = [
-    { color:'var(--jade)', name:'生命线', text: l.lifeLine },
-    { color:'var(--gold)', name:'智慧线', text: l.headLine },
-    { color:'var(--red)', name:'感情线', text: l.heartLine },
-    { color:'#6B5B95', name:'命运线', text: l.fateLine },
-  ];
+    { color:'var(--jade)', name:'生命线', text: sx.lifeLine },
+  ].filter(i => i.text);
   return `
-    ${techCard('✋', '手相全图', `掌型：${sx.palmType}`,
+    ${techCard('✋', '手相分析', `掌型：${sx.palmType || '—'}`,
       `<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">
         <div style="flex:0 0 240px;text-align:center;">
           <img src="assets/palm-chart.svg" alt="手相全图" style="width:100%;max-width:240px;border-radius:8px;">
-          <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">道器 · 手相全图 · 四大主线</p>
+          <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">道器 · 手相全图</p>
         </div>
         <div style="flex:1;min-width:220px;">
-          ${items.map(it => `<div style="margin-bottom:8px;padding:8px;background:${it.color}08;border-radius:6px;border-left:3px solid ${it.color};">
+          ${items.map(it => `<div style="margin-bottom:8px;padding:10px;background:${it.color}08;border-radius:6px;border-left:3px solid ${it.color};">
             <strong style="color:${it.color};">${it.name}</strong>
-            <p style="font-size:0.85rem;margin:4px 0 0;">${it.text}</p></div>`).join('')}
+            <p style="font-size:0.9rem;margin:4px 0 0;">${it.text}</p></div>`).join('')}
+          <div style="margin-top:8px;padding:12px;background:var(--gold-dim);border-radius:8px;border-left:3px solid var(--gold);">
+            <strong>综合解读：</strong><p style="margin-top:4px;font-size:0.9rem;line-height:1.6;">${sx.summary || '—'}</p>
+          </div>
         </div>
       </div>`)}
-    ${techCard('📋', '掌丘与总结', '综合手相解读',
-      `<div style="margin-bottom:8px;padding:10px;background:rgba(26,31,46,0.4);border-radius:8px;">
-        <strong style="color:var(--gold);">掌丘分析：</strong>
-        <p style="font-size:0.9rem;margin-top:4px;line-height:1.6;">${sx.mounts || ''}</p></div>
-      <div style="padding:12px;background:var(--gold-dim);border-radius:8px;border-left:3px solid var(--gold);">
-        <strong>综合解读：</strong>${sx.summary || ''}
-        <p style="margin-top:8px;color:var(--text-muted);font-size:0.85rem;">💡 ${sx.advice || ''}</p></div>`)}
   `;
 }
 
@@ -599,7 +595,9 @@ function buildShouXiangPanel(d) {
 //  TAB 5: 风水布局
 // =====================================================
 function buildFengshuiPanel(d) {
-  const yf = d.fengshui.yongShenFengshui;
+  const fs = d.fengshui || {};
+  const yf = fs.yongShenFengshui || {};
+  if (!fs.generalAdvice) return '<div class="tech-card"><p style="text-align:center;padding:20px;color:var(--text-muted);">风水布局数据暂不可用</p></div>';
   const rooms = [
     { icon:'🚪', name:'大门', text: yf.door },
     { icon:'🛋', name:'客厅', text: yf.livingRoom },
@@ -625,6 +623,7 @@ function buildFengshuiPanel(d) {
 // =====================================================
 function buildLiunianPanel(d) {
   const cl = d.currentYearLuck;
+  if (!cl) return '<div class="tech-card"><p style="text-align:center;padding:20px;color:var(--text-muted);">流年运势数据暂不可用</p></div>';
   const colors = { '大吉':'#4A9E8B','小吉':'#4A9E8B','平稳':'#C9A84C','需注意':'#C75B5B','挑战多':'#C75B5B' };
   const ml = d.monthlyLuck || [];
   const mColors = { '上升':'#4A9E8B','平稳':'#C9A84C','波动':'#C75B5B' };
@@ -668,7 +667,7 @@ function buildLiunianPanel(d) {
 // ===== 趋吉避凶 =====
 function buildJixiongCard(d) {
   const g = d.luckyGuide;
-  const yiItems = [`穿戴${g.colors[0]}色系衣物饰品`, `多接近${g.directions[0]}方位`, `从事${g.industries.slice(0,2).join('、')}相关行业`, '上午（7-11点）做重要决定', '保持积极心态，顺势而为'];
+  const yiItems = [`穿戴${safeArr(g.colors)[0] || '—'}色系衣物饰品`, `多接近${safeArr(g.directions)[0] || '—'}方位`, `从事${safeArr(g.industries).slice(0,2).join('、') || '—'}相关行业`, '上午（7-11点）做重要决定', '保持积极心态，顺势而为'];
   const jiItems = ['避免过于鲜艳的衣物', '下午（13-17点）不宜做重大决策', '忌冲动行事、与人争执', '忌长期熬夜透支', '忌投机取巧'];
   return techCard('🛡', '趋吉避凶 · 行动指南', '基于命局的实用建议',
     `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
