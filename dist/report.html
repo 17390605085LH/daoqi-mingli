@@ -247,13 +247,15 @@ function buildBaziPanel(d) {
   const g = d.luckyGuide || {};
   const ss = d.shiShen || {};
   const pn = { year:'年柱', month:'月柱', day:'日柱', hour:'时柱' };
-  let shenRows = Object.entries(ss).map(([k, v]) =>
-    `<div style="display:flex;justify-content:space-between;padding:6px 8px;background:rgba(26,31,46,0.4);border-radius:6px;margin-bottom:4px;font-size:0.9rem;">
+  let shenRows = Object.entries(ss).map(([k, v]) => {
+    const name = (typeof v === 'object' && v !== null) ? (v.name || v[0] || '—') : (v || '—');
+    const desc = (typeof v === 'object' && v !== null) ? (v.desc || v[1] || '') : '';
+    return `<div style="display:flex;justify-content:space-between;padding:6px 8px;background:rgba(26,31,46,0.4);border-radius:6px;margin-bottom:4px;font-size:0.9rem;">
       <span style="color:var(--text-muted);min-width:40px;">${pn[k]||k}</span>
-      <span style="color:var(--gold);font-weight:600;">${v[0]}</span>
-      <span style="color:var(--text-muted);font-size:0.8rem;">${v[1]}</span>
-    </div>`
-  ).join('');
+      <span style="color:var(--gold);font-weight:600;">${name}</span>
+      <span style="color:var(--text-muted);font-size:0.8rem;">${desc}</span>
+    </div>`;
+  }).join('');
 
   return `
     ${techCard('🧬', '日主性格', `日主${d.dayMaster}${d.dayWuxing} · ${d.strength}`,
@@ -271,8 +273,8 @@ function buildBaziPanel(d) {
 
     ${techCard('📊', '五行分布', (d.yongShen||{}).principle || '',
       bars + `<div style="margin-top:12px;padding:10px;background:rgba(201,168,76,0.05);border-radius:8px;border-left:3px solid var(--gold);font-size:0.9rem;">
-        <strong style="color:var(--gold);">用神：${(d.yongShen||{}).yongShen || '—'}</strong>
-        <span style="color:var(--red);margin-left:12px;">忌：${(d.yongShen||{}).avoid || '—'}</span>
+        <strong style="color:var(--gold);">用神：${(d.yongShen||{}).shen ? safeArr(d.yongShen.shen).join('、') : ((d.yongShen||{}).yongShen || '—')}</strong>
+        <span style="color:var(--red);margin-left:12px;">忌：${(d.yongShen||{}).avoid ? safeArr(d.yongShen.avoid).join('、') : '—'}</span>
       </div>`)}
 
     ${d.daoyi ? techCard('🩺', '道医体质辨识', '五行偏颇 → 体质归类 → 调养方案',
@@ -351,7 +353,11 @@ function buildDaoyiPanel(d) {
 // ===== 人生阶段分析 =====
 function buildLifeStageAnalysis(d) {
   const dayWx = d.dayWuxing, strength = d.strength, dayStem = d.dayMaster;
-  const yongWx = safeArr((d.yongShen||{}).yongWuxing)[0] || '土', avoidWx = (d.yongShen||{}).avoid || '';
+  const yongArr = safeArr((d.yongShen||{}).yongWuxing);
+  const yongWx = yongArr[0] || '土';
+  const avoidArr = safeArr((d.yongShen||{}).avoid);
+  const avoidWx = avoidArr[0] || '';
+  const avoidWxStr = avoidArr.join('');
   const isStrong = strength.includes('强');
 
   const P = {
