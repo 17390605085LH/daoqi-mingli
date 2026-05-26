@@ -169,10 +169,12 @@ function calcMonthPillar(yearStem, month, day) {
   }
 
   const baseStem = YEAR_MONTH_STEM[yearStem] ?? 2;
-  const stemIdx = (baseStem + (adjMonth - 1)) % 10;
-  const branchIdx = (adjMonth + 1) % 12; // 寅月=1 → index=2
+  // 节气月与地支索引精确映射：丑月(adj=1) → index=1, 寅月(adj=2) → index=2, ..., 子月(adj=12) → index=0
+  const branchIdx = adjMonth % 12;
+  // 天干：寅月=baseStem, 每增一月+1, 丑月=baseStem-1 (即baseStem+11)
+  const stemIdx = (baseStem + adjMonth - 2 + 10) % 10;
 
-  return [STEMS[stemIdx % 10], BRANCHES[branchIdx % 12]];
+  return [STEMS[stemIdx], BRANCHES[branchIdx]];
 }
 
 // 计算日柱（基于公历日期，基准：1900年1月1日 = 甲子）
@@ -186,8 +188,8 @@ function calcDayPillar(year, month, day) {
   }
   totalDays += day - 1;
 
-  // 1900年1月1日 = 甲子 = index 0
-  const idx = (totalDays) % 60;
+  // 1900年1月1日 = 甲戌 (60甲子序号 11, 0-based index 10)
+  const idx = (totalDays + 10) % 60;
   return [STEMS[idx % 10], BRANCHES[idx % 12]];
 }
 
@@ -220,17 +222,21 @@ function getShiShen(dayStem, otherStem) {
   const otherIdx = STEMS.indexOf(otherStem);
   const diff = (otherIdx - dayIdx + 10) % 10;
 
+  // 基于diff(甲=0基准)的正确十神映射
+  // 甲(0)vs甲(0)diff=0→比肩, 甲vs乙(1)diff=1→劫财, 甲vs丙(2)diff=2→食神,
+  // 甲vs丁(3)diff=3→伤官, 甲vs戊(4)diff=4→偏财, 甲vs己(5)diff=5→正财,
+  // 甲vs庚(6)diff=6→七杀, 甲vs辛(7)diff=7→正官, 甲vs壬(8)diff=8→偏印, 甲vs癸(9)diff=9→正印
   const map = {
-    0: '比肩', 5: '劫财',
-    1: '食神', 2: '伤官',
-    3: '偏财', 4: '正财',
+    0: '比肩', 1: '劫财',
+    2: '食神', 3: '伤官',
+    4: '偏财', 5: '正财',
     6: '七杀', 7: '正官',
     8: '偏印', 9: '正印'
   };
   const desc = {
-    0: '同五行相助', 5: '同五行竞争',
-    1: '才华表达', 2: '创造突破',
-    3: '意外之财', 4: '稳定收入',
+    0: '同五行相助', 1: '同五行竞争',
+    2: '才华表达', 3: '创造突破',
+    4: '意外之财', 5: '稳定收入',
     6: '挑战压力', 7: '事业名声',
     8: '非常规学习', 9: '正统学识'
   };
